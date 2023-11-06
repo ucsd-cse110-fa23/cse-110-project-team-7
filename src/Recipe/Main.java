@@ -8,7 +8,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        AppframeOne root = new AppframeOne();
+        ListView root = new ListView();
 
         // Set the title of the app
         primaryStage.setTitle("PantryPal Recipes");

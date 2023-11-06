@@ -3,9 +3,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 
 class FooterTwo extends HBox {
-    private Button updateButton;
-    private Button deleteButton;
-    private Button uploadImgButton;
+    // private Button updateButton;
+    // private Button deleteButton;
+    // private Button uploadImgButton;
 
     FooterTwo() {
         this.setPrefSize(500, 60);

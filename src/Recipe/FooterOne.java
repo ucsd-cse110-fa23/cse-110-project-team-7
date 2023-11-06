@@ -4,7 +4,7 @@ import javafx.scene.layout.*;
 
 class FooterOne extends HBox {
 
-    private Button addButton;
+    private Button createButton;
     // private Button sortButton;
     // private Button saveCSVButton;
 
@@ -15,8 +15,8 @@ class FooterOne extends HBox {
 
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
-        addButton = new Button("Create Recipe"); // text displayed on add button
-        addButton.setStyle(defaultButtonStyle); // styling the button
+        createButton = new Button("Create Recipe"); // text displayed on add button
+        createButton.setStyle(defaultButtonStyle); // styling the button
         // sortButton = new Button("Sort"); // text displayed on clear tasks button
         // sortButton.setStyle(defaultButtonStyle);
         // saveCSVButton = new Button("Save as CSV");
@@ -24,7 +24,7 @@ class FooterOne extends HBox {
         
         // CSV Button should be implemeneted here
 
-        this.getChildren().addAll(addButton);
+        this.getChildren().addAll(createButton);
 
         // this.getChildren().addAll(addButton, sortButton, saveCSVButton); // adding buttons to footer
         this.setAlignment(Pos.CENTER); // aligning the buttons to center
@@ -32,8 +32,8 @@ class FooterOne extends HBox {
         // TODO: Create loadButton, saveButton and sortButton to the footer
     }
 
-    public Button getAddButton() {
-        return addButton;
+    public Button getCreateButton() {
+        return createButton;
     }
 
     // public Button getSortButton() {
