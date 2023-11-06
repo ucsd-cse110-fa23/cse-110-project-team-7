@@ -76,6 +76,7 @@ class Ingredient extends HBox{
     }
 }
 
+
 class AppFrame extends FlowPane {
     private Ingredient ingredient;
     private mealType mType;
@@ -152,7 +153,7 @@ class AppFrame extends FlowPane {
                 Whisper whisper = new Whisper();
                 String result = whisper.display();
                 if(currentTarget.equals("meal type")){
-                    if(checkMealType(result)){
+                    if(recipe.checkMealType(result)){
                         mType.getTypeField().setText(result);
                         currentTarget = "";
                         recipe.setMealType(result);
@@ -183,16 +184,6 @@ class AppFrame extends FlowPane {
         //backButton.setOnAction();
     }
 
-    public boolean checkMealType(String input){
-        String result = input.replaceAll("[^a-zA-Z]+$", "").toLowerCase();
-
-        if(result.equals("breakfast") || result.equals("lunch") ||
-                     result.equals("dinner") ){
-                        return true;
-            }
-        return false; 
-
-    }
 
     private AudioFormat getAudioFormat() {
         // the number of samples of audio per second.
