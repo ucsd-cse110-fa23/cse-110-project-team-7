@@ -1,4 +1,5 @@
 package main.CreateRecipe;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -17,11 +18,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import javax.sound.sampled.*;
+import main.Recipe;
 
 import org.json.JSONException;
 
 class mealType extends HBox{
-    private TextField type;
+    private Label type;
     private Label prompt;
 
     mealType() throws Exception{
@@ -29,13 +31,13 @@ class mealType extends HBox{
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
         
         prompt = new Label();
-        prompt.setText("meal type: "); // create index label
+        prompt.setText("Meal type: "); // create index label
         prompt.setPrefSize(60, 20); // set size of Index label
         prompt.setTextAlignment(TextAlignment.CENTER); // Set alignment of index label
         prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
         this.getChildren().add(prompt); // add index label to task
 
-        type = new TextField(); // create recipe name text field
+        type = new Label(); // create recipe name text field
         type.setPrefSize(380, 20); // set size of text field
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         type.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
@@ -43,32 +45,32 @@ class mealType extends HBox{
         
     }
 
-    public TextField getTypeField()  {
+    public Label getTypeField()  {
         return this.type;
     }
 }
 
 class Ingredient extends HBox{
-    private TextField list;
+    private Label list;
     private Label prompt;
     Ingredient(){
         this.setPrefSize(500, 20);
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
         
         prompt = new Label();
-        prompt.setText("ingredient list: "); // create index label
+        prompt.setText("Ingredient list: "); // create index label
         prompt.setPrefSize(80, 20); // set size of Index label
         prompt.setTextAlignment(TextAlignment.CENTER); // Set alignment of index label
         prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
         this.getChildren().add(prompt); // add index label to task
 
-        list = new TextField(); // create recipe name text field
+        list = new Label(); // create recipe name text field
         list.setPrefSize(380, 20); // set size of text field
         list.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         list.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(list); // add textlabel to recipe
     }
-    public TextField getTypeField()  {
+    public Label getTypeField()  {
         return this.list;
     }
 }
@@ -151,7 +153,7 @@ class AppFrame extends FlowPane {
                 String result = whisper.display();
                 if(currentTarget.equals("meal type")){
                     if(recipe.checkMealType(result)){
-                        mType.getTypeField().setText(result);
+                        mType.getTypeField().setText(result.toLowerCase());
                         currentTarget = "";
                         recipe.setMealType(result);
                         mealSelected = false;
@@ -164,7 +166,7 @@ class AppFrame extends FlowPane {
 
                 }
                 if(currentTarget.equals("ingredient list")){
-                    ingredient.getTypeField().setText(result);
+                    ingredient.getTypeField().setText(result.toLowerCase());
                     recipe.setIngredients(result);
                     currentTarget = "";
                 }
