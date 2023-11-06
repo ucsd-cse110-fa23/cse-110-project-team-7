@@ -1,6 +1,7 @@
 package main.CreateRecipe;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import ListView.Recipe;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,8 +21,6 @@ import java.net.URL;
 import javax.sound.sampled.*;
 
 import org.json.JSONException;
-
-import main.ListView.Recipe;
 
 class mealType extends HBox{
     private TextField type;

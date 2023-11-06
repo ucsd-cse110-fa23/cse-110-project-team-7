@@ -25,7 +25,7 @@ public class Recipe{
     public String getInstructions(){
         return this.instructions;
     }
-    
+
     public boolean checkMealType(String input){
         String result = input.replaceAll("[^a-zA-Z]+$", "").toLowerCase();
 
