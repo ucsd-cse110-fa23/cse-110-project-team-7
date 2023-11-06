@@ -1,4 +1,3 @@
-package main.ListView;
 public class Recipe{ 
 
     public String mealType; 

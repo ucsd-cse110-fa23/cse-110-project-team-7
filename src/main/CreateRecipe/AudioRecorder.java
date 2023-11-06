@@ -1,7 +1,6 @@
 package main.CreateRecipe;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ListView.Recipe;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import javax.sound.sampled.*;
 
 import org.json.JSONException;
