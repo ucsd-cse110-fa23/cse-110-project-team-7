@@ -1,4 +1,4 @@
-package CreateRecipe;
+package main.CreateRecipe;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

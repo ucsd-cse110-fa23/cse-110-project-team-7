@@ -1,4 +1,4 @@
-package CreateRecipe;
+package main.CreateRecipe;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;

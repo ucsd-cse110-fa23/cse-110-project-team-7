@@ -30,8 +30,9 @@ public class Recipe{
         this.instructions = input;
     }
 
-    Recipe(){
+    public Recipe(){
         this.mealType = ""; 
         this.ingredients = "";
+        this.instructions = "";
     }
 }

@@ -1,4 +1,4 @@
-package ListView;
+package main.ListView;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -301,7 +301,7 @@ class AppFrame extends BorderPane{
         // Add button functionality
         addButton.setOnAction(e -> {
             // Create a new task
-            Recipe recipe = new Recipe();
+            RecipeApp recipe = new RecipeApp();
             // Add task to tasklist
             recipeList.getChildren().add(recipe);
             // Add doneButtonToggle to the Done button
