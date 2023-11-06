@@ -1,7 +1,7 @@
 {
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
+    "java.project.sourcePaths": ["/Users/j/Desktop/Workspace/cse-110-project-team-7/src"],
+    "java.project.outputPath": "/Users/j/Desktop/Workspace/cse-110-project-team-7/bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "/Users/j/Desktop/Workspace/cse-110-project-team-7/lib/**/*.jar"
     ]
 }

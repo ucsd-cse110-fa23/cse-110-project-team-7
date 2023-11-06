@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "App",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b",
-            "vmArgs": "--module-path '/Users/ajk/cse-110-project-team-7/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/j/Desktop/Workspace/cse-110-project-team-7/lib' --add-modules javafx.controls,javafx.fxml"
         },
         {
             "type": "java",
@@ -24,7 +24,7 @@
             "request": "launch",
             "mainClass": "CreateRecipe.AudioRecorder",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b",
-            "vmArgs": "--module-path '/Users/ajk/cse-110-project-team-7/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/j/Desktop/Workspace/cse-110-project-team-7/lib' --add-modules javafx.controls,javafx.fxml"
         
         },
         {
@@ -32,7 +32,8 @@
             "name": "ChatGPT",
             "request": "launch",
             "mainClass": "CreateRecipe.ChatGPT",
-            "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b"
+            "projectName": "cse-110-project-team-7-feature-CreateRecipe",
+            "vmArgs": "--module-path '/Users/j/Desktop/Workspace/cse-110-project-team-7/lib' --add-modules javafx.controls,javafx.fxml"
         },
         {
             "type": "java",
