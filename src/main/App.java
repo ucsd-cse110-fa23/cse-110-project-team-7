@@ -301,43 +301,21 @@ class AppFrame extends BorderPane{
         // Add button functionality
         addButton.setOnAction(e -> {
             Stage secondaryStage = new Stage();
-            CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(secondaryStage);
-            Scene secondScene = new Scene(detailFrame, 500, 600);
-            secondaryStage.setTitle("Create Recipe");
-            secondaryStage.setScene(secondScene);
-            secondaryStage.setResizable(false);
-            secondaryStage.show();
+            try {
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(secondaryStage);
+                Scene secondScene = new Scene(detailFrame, 500, 600);
+                secondaryStage.setTitle("Create Recipe");
+                secondaryStage.setScene(secondScene);
+                secondaryStage.setResizable(false);
+                secondaryStage.show();
+
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
 
         });
-        
-        // Clear finished tasks
-        // clearButton.setOnAction(e -> {
-        //     recipeList.removeCompletedTasks();
-        // });
-
-        // // Load tasks 
-        // loadButton.setOnAction(e->{
-        //     recipeList.loadTasks();
-        //     for(int i = 0; i< recipeList.getChildren().size(); i++ ){
-        //         Recipe task = (Recipe)recipeList.getChildren().get(i);
-        //         Button doneButton = task.getDoneButton();
-        //         doneButton.setOnAction(e1 -> {
-        //         // Call toggleDone on click
-        //             task.toggleDone();
-        //     });
-        //     }
-        // });
-
-        // // save tasks
-
-        // saveButton.setOnAction(e->{
-        //     recipeList.saveTasks();
-        // });
-
-        // // sort tasks
-        // sortButton.setOnAction(e->{
-        //     recipeList.sortTasks();
-        // });
     }
 }
 

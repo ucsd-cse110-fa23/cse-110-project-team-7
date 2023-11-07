@@ -1,4 +1,4 @@
-package main.CreateRecipe;
+package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -257,7 +257,7 @@ public class AudioRecorder extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window (Flow Pane)
-        AppFrame root = new AppFrame();
+        CreateRecipeAppFrame root = new CreateRecipeAppFrame(primaryStage);
 
         // Set the title of the app
         primaryStage.setTitle("Voice Input");
