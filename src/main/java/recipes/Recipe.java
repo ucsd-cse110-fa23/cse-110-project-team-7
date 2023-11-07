@@ -1,4 +1,4 @@
-package main;
+package recipes;
 public class Recipe{ 
 
     public String mealType; 

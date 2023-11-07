@@ -1,6 +1,5 @@
+package recipes;
 import org.junit.jupiter.api.Test;
-
-import main.Recipe;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

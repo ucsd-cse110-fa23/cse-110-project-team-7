@@ -18,7 +18,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-// import AppFrame; 
 
 class RecipeApp extends HBox {
 
@@ -103,77 +102,6 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
     }
 
-    // public void updateTaskIndices() {
-    //     int index = 1;
-    //     for (int i = 0; i < this.getChildren().size(); i++) {
-    //         if (this.getChildren().get(i) instanceof Recipe) {
-    //             ((Recipe) this.getChildren().get(i)).setRecipeIndex(index);
-    //             index++;
-    //         }
-    //     }
-    // }
-
-    // public void removeCompleteds() {
-    //     this.getChildren().removeIf(recipe -> recipe instanceof Recipe && ((Recipe) recipe).isMarkedDone());
-    //     this.updateTaskIndices();
-    // }
-
-    
-
-    // /*
-    //  * Save tasks to a file called "tasks.txt"
-    //  */
-    // public void saveRecipes() {
-    //     // hint 1: use try-catch block
-    //     // hint 2: use FileWriter
-    //     // hint 3: this.getChildren() gets the list of tasks
-
-    //     try{
-    //         FileWriter fw = new FileWriter("/Users/ajk/CSE110_FA23_Lab1/src/TodoList/tasks.txt");
-    //         for (int i = 0; i < this.getChildren().size(); i++) {
-    //             if (this.getChildren().get(i) instanceof Recipe) {
-    //                 Recipe task = (Recipe) this.getChildren().get(i);
-    //                 fw.write((String) recipe.getrecipeName().getText() + "\n");
-    //             }Task
-    //         }
-    //         fw.close();
-
-    //     }
-    //     catch(Exception e){
-    //         System.out.println("savetasks() not implemented!");
-    //     }
-
-    // }
-
-    // /*
-    //  * Sort the tasks lexicographically
-    //  */
-    // public void sortTasks() {
-    //     // hint 1: this.getChildren() gets the list of tasks
-    //     // hint 2: Collections.sort() can be used to sort the tasks
-    //     // hint 3: task.getrecipeName().setText() sets the text of the task
-    //     try{
-    //         ArrayList<String> taskArrayList = new ArrayList<String>();
-    //         for (int i = 0; i < this.getChildren().size(); i++) {
-    //             if (this.getChildren().get(i) instanceof Task) {
-    //                 Recipe task = (Task)this.getChildren().get(i);
-    //                 taskArrayList.add(task.getrecipeName().getText());
-    //             }
-    //         }
-
-    //         Collections.sort(taskArrayList);
-    //         for (int i = 0; i < taskArrayList.size(); i++) {
-    //             Task task = (Task) this.getChildren().get(i);
-    //             task.getrecipeName().setText(taskArrayList.get(i));
-                
-    //         }
-
-    //     }
-    //     catch(Exception e){
-    //         System.out.println("sorttasks() not implemented!");
-
-    //     }
-    // }
 }
 
 class Footer extends HBox {
@@ -193,15 +121,7 @@ class Footer extends HBox {
 
         addButton = new Button("Create Recipe"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
-        // clearButton = new Button("Clear finished"); // text displayed on clear tasks button
-        // clearButton.setStyle(defaultButtonStyle);
-        // loadButton = new Button("Load Tasks"); // text displayed on load button
-        // loadButton.setStyle(defaultButtonStyle); // styling the button
-        // saveButton = new Button("Save Tasks"); // text displayed on save tasks button
-        // saveButton.setStyle(defaultButtonStyle);
-        // sortButton = new Button("Sort Tasks"); // text displayed on sort tasks button
-        // sortButton.setStyle(defaultButtonStyle);
-
+        
         this.getChildren().addAll(addButton); // adding buttons to footer
         this.setAlignment(Pos.CENTER); // aligning the buttons to center
 
@@ -212,21 +132,6 @@ class Footer extends HBox {
         return addButton;
     }
 
-    // public Button getClearButton() {
-    //     return clearButton;
-    // }
-
-    // public Button getLoadButton() {
-    //     return loadButton;
-    // }
-
-    // public Button getSaveButton() {
-    //     return saveButton;
-    // }
-
-    // public Button getSortButton() {
-    //     return sortButton;
-    // }
 
 }
 
@@ -250,10 +155,6 @@ class AppFrame extends BorderPane{
     private RecipeList recipeList;
 
     private Button addButton;
-    // private Button clearButton;
-    // private Button loadButton;
-    // private Button saveButton;
-    // private Button sortButton;
 
     AppFrame()
     {
@@ -265,10 +166,6 @@ class AppFrame extends BorderPane{
         
         // Initialise the Footer Object
         footer = new Footer();
-
-        // hint 1: ScrollPane() is the Pane Layout used to add a scroller - it will take the tasklist as a parameter
-        // hint 2: setFitToWidth, and setFitToHeight attributes are used for setting width and height
-        // hint 3: The center of the AppFrame layout should be the scroller window instead  of tasklist
 
         ScrollPane scroll = new ScrollPane(recipeList);
         scroll.setFitToWidth(true);
@@ -285,11 +182,7 @@ class AppFrame extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
-        // clearButton = footer.getClearButton();
-        // loadButton = footer.getLoadButton();
-        // saveButton = footer.getSaveButton();
-        // sortButton = footer.getSortButton();
-        
+       
 
         // Call Event Listeners for the Buttons
         addListeners();
