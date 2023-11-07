@@ -2,7 +2,6 @@ package main;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import recipes.Recipe;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -89,6 +88,7 @@ class CreateRecipeAppFrame extends FlowPane {
     private Label recordingLabel;
 
     public Recipe recipe = new Recipe(); 
+
     
 
     // Set a default style for buttons and fields - background color, font size,

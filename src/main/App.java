@@ -1,4 +1,5 @@
 package main;
+
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -104,14 +105,14 @@ class RecipeList extends VBox {
 
 }
 
-class Footer extends HBox {
+class Footer1 extends HBox {
 
     private Button addButton;
     // private Button clearButton;
     // private Button loadButton;
     // private Button saveButton;
     // private Button sortButton;
-    Footer() {
+    Footer1() {
         this.setPrefSize(500, 60);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setSpacing(15);
@@ -135,9 +136,9 @@ class Footer extends HBox {
 
 }
 
-class Header extends HBox {
+class Header1 extends HBox {
 
-    Header() {
+    Header1() {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
 
@@ -150,8 +151,8 @@ class Header extends HBox {
 
 class AppFrame extends BorderPane{
 
-    private Header header;
-    private Footer footer;
+    private Header1 header;
+    private Footer1 footer;
     private RecipeList recipeList;
 
     private Button addButton;
@@ -159,13 +160,13 @@ class AppFrame extends BorderPane{
     AppFrame()
     {
         // Initialise the header Object
-        header = new Header();
+        header = new Header1();
 
         // Create a tasklist Object to hold the tasks
         recipeList = new RecipeList();
         
         // Initialise the Footer Object
-        footer = new Footer();
+        footer = new Footer1();
 
         ScrollPane scroll = new ScrollPane(recipeList);
         scroll.setFitToWidth(true);
