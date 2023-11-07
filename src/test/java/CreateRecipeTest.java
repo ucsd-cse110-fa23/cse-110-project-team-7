@@ -1,11 +1,11 @@
-package test;
 import org.junit.jupiter.api.Test;
 
-import Recipe;
+import main.Recipe;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 public class CreateRecipeTest {
 
     private Recipe recipe = new Recipe();
