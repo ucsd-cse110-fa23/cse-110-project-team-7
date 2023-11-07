@@ -83,7 +83,7 @@ class CreateRecipeAppFrame extends FlowPane {
     
     private Button startButton;
     private Button stopButton;
-    private Button backButton;
+    private Button createButton;
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
     private Label recordingLabel;
@@ -115,13 +115,15 @@ class CreateRecipeAppFrame extends FlowPane {
         stopButton = new Button("Stop");
         stopButton.setStyle(defaultButtonStyle);
 
+        createButton = new Button("Create");
+        createButton.setStyle(defaultButtonStyle);
+
+
         recordingLabel = new Label("Recording...");
         recordingLabel.setStyle(defaultLabelStyle);
 
-        backButton = new Button("Back");
-        backButton.setStyle(defaultLabelStyle);
-
-        this.getChildren().addAll(startButton, stopButton, recordingLabel, backButton);
+        
+        this.getChildren().addAll(startButton, stopButton, createButton, recordingLabel);
 
         // Get the audio format
         audioFormat = getAudioFormat();
@@ -179,8 +181,23 @@ class CreateRecipeAppFrame extends FlowPane {
 
         });
 
-        // Back Button later
-        //backButton.setOnAction();
+        // create Button later
+        createButton.setOnAction(e -> {
+            Stage detailViewStage = new Stage();
+            try {
+                DetailView detailFrame = new DetailView(detailViewStage);
+                Scene scene = new Scene(detailFrame, 500, 600);
+                detailViewStage.setTitle("detail view");
+                detailViewStage.setScene(scene);
+                detailViewStage.setResizable(false);
+                detailViewStage.show();
+                
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
+        });
     }
 
 

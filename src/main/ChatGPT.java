@@ -15,7 +15,7 @@ public class ChatGPT{
     private static final String MODEL = "text-davinci-003";
 
     
-    private static String getCookingInstruction() throws IOException, InterruptedException, URISyntaxException {
+    public static String getCookingInstruction() throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
         Recipe newRecipe = new Recipe();
         Recipe currentRecipe = newRecipe;
