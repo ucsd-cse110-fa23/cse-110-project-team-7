@@ -1,4 +1,4 @@
-package CreateRecipe;
+package main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +19,7 @@ public class Whisper {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
     private static final String TOKEN = "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";
     private static final String MODEL = "whisper-1";
-    private static final String File_path = "/Users/Desktop/CSE110/cse-110-project-team-7-feature-CreateRecipe/recording.wav";
+    private static final String File_path = "recording.wav";
     
 
     // Helper method to write a parameter to the output stream in multipart form data format
@@ -88,6 +88,7 @@ public class Whisper {
         System.out.println("Transcription Result: " + generatedText);
         return generatedText;
     }
+
     
 
     // Helper method to handle an error response
@@ -158,6 +159,7 @@ public class Whisper {
             // Disconnect connection
             connection.disconnect();
             return message;
+            
         } else {
             String error = handleErrorResponse(connection);
             // Disconnect connection

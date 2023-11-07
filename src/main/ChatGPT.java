@@ -1,4 +1,4 @@
-package CreateRecipe;
+package main;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,14 +13,24 @@ public class ChatGPT{
     private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
     private static final String API_KEY = "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";
     private static final String MODEL = "text-davinci-003";
-    public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
+
+    
+    private static String getCookingInstruction() throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
-        String prompt = "";
-        for(int i = 1; i <args.length; i++){
-            prompt = prompt+ args[i] + " ";
-            //System.out.println(prompt);
-        }
-        int maxTokens =Integer.parseInt(args[0]);
+        Recipe newRecipe = new Recipe();
+        Recipe currentRecipe = newRecipe;
+        currentRecipe.setIngredients("garlic, marinara sauce, and beef");
+        currentRecipe.setMealType("dinner");
+
+        String ingredientInHand = currentRecipe.getIngredients();
+        String mealType = currentRecipe.getMealType();
+
+
+        String prompt = "I have following ingredients : "+ingredientInHand+" and I would like to get a budjet friendly and easy to make recipe for my "+ mealType+" with a list of step by step instructions";
+        
+        int maxTokens = 400;
+        //System.out.println(prompt);
+
         //System.out.println(prompt);
 
         // Create a request body which you will pass into request object
@@ -63,5 +73,10 @@ public class ChatGPT{
 
 
         System.out.println(generatedText);
+        return generatedText;
     }
+    public static void main(String[] args) throws Exception {
+        getCookingInstruction();
+    }
+
 }

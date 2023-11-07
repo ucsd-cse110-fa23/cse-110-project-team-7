@@ -1,4 +1,4 @@
-package CreateRecipe;
+package main;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -22,7 +22,7 @@ import javax.sound.sampled.*;
 import org.json.JSONException;
 
 class mealType extends HBox{
-    private TextField type;
+    private Label type;
     private Label prompt;
 
     mealType() throws Exception{
@@ -30,13 +30,13 @@ class mealType extends HBox{
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
         
         prompt = new Label();
-        prompt.setText("meal type: "); // create index label
+        prompt.setText("Meal type: "); // create index label
         prompt.setPrefSize(60, 20); // set size of Index label
         prompt.setTextAlignment(TextAlignment.CENTER); // Set alignment of index label
         prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
         this.getChildren().add(prompt); // add index label to task
 
-        type = new TextField(); // create recipe name text field
+        type = new Label(); // create recipe name text field
         type.setPrefSize(380, 20); // set size of text field
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         type.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
@@ -44,38 +44,38 @@ class mealType extends HBox{
         
     }
 
-    public TextField getTypeField()  {
+    public Label getTypeField()  {
         return this.type;
     }
 }
 
 class Ingredient extends HBox{
-    private TextField list;
+    private Label list;
     private Label prompt;
     Ingredient(){
         this.setPrefSize(500, 20);
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
         
         prompt = new Label();
-        prompt.setText("ingredient list: "); // create index label
+        prompt.setText("Ingredient list: "); // create index label
         prompt.setPrefSize(80, 20); // set size of Index label
         prompt.setTextAlignment(TextAlignment.CENTER); // Set alignment of index label
         prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
         this.getChildren().add(prompt); // add index label to task
 
-        list = new TextField(); // create recipe name text field
+        list = new Label(); // create recipe name text field
         list.setPrefSize(380, 20); // set size of text field
         list.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         list.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(list); // add textlabel to recipe
     }
-    public TextField getTypeField()  {
+    public Label getTypeField()  {
         return this.list;
     }
 }
 
 
-class AppFrame extends FlowPane {
+class CreateRecipeAppFrame extends FlowPane {
     private Ingredient ingredient;
     private mealType mType;
     private String currentTarget;
@@ -87,6 +87,8 @@ class AppFrame extends FlowPane {
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
     private Label recordingLabel;
+
+    public Recipe recipe = new Recipe(); 
     
 
     // Set a default style for buttons and fields - background color, font size,
@@ -94,7 +96,7 @@ class AppFrame extends FlowPane {
     String defaultButtonStyle = "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
-    AppFrame() throws Exception {
+    CreateRecipeAppFrame(Stage currStage) throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
         
@@ -134,7 +136,6 @@ class AppFrame extends FlowPane {
         startButton.setOnAction(e -> {
             if(mealSelected){
                 currentTarget = "meal type";
-                mealSelected = false;
             }
             else{
                 currentTarget = "ingredient list";
@@ -150,11 +151,23 @@ class AppFrame extends FlowPane {
                 Whisper whisper = new Whisper();
                 String result = whisper.display();
                 if(currentTarget.equals("meal type")){
-                    mType.getTypeField().setText(result);
-                    currentTarget = "";
+                    if(recipe.checkMealType(result)){
+                        mType.getTypeField().setText(result.toLowerCase());
+                        currentTarget = "";
+                        recipe.setMealType(result);
+                        
+                        mealSelected = false;
+                    }
+                    else{
+                        mType.getTypeField().setText("reinput meal type");
+                        currentTarget = "";
+                    }
+
+
                 }
                 if(currentTarget.equals("ingredient list")){
-                    ingredient.getTypeField().setText(result);
+                    ingredient.getTypeField().setText(result.toLowerCase());
+                    recipe.setIngredients(result);
                     currentTarget = "";
                 }
                 
@@ -169,6 +182,7 @@ class AppFrame extends FlowPane {
         // Back Button later
         //backButton.setOnAction();
     }
+
 
     private AudioFormat getAudioFormat() {
         // the number of samples of audio per second.
@@ -243,7 +257,7 @@ public class AudioRecorder extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window (Flow Pane)
-        AppFrame root = new AppFrame();
+        CreateRecipeAppFrame root = new CreateRecipeAppFrame(primaryStage);
 
         // Set the title of the app
         primaryStage.setTitle("Voice Input");
@@ -258,4 +272,5 @@ public class AudioRecorder extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

@@ -22,7 +22,7 @@
             "type": "java",
             "name": "AudioRecorder",
             "request": "launch",
-            "mainClass": "CreateRecipe.AudioRecorder",
+            "mainClass": "main.AudioRecorder",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b",
             "vmArgs": "--module-path '/Users/wangwenshuang/Desktop/CSE110/cse-110-project-team-7-feature-CreateRecipe/lib' --add-modules javafx.controls,javafx.fxml"
         
@@ -31,22 +31,21 @@
             "type": "java",
             "name": "ChatGPT",
             "request": "launch",
-            "mainClass": "CreateRecipe.ChatGPT",
+            "mainClass": "main.ChatGPT",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b"
         },
         {
             "type": "java",
             "name": "Whisper",
             "request": "launch",
-            "mainClass": "CreateRecipe.Whisper",
+            "mainClass": "main.Whisper",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b",
-            "args": "/Users/wangwenshuang/Desktop/CSE110/cse-110-project-team-7-feature-CreateRecipe/recording.wav"
         },
         {
             "type": "java",
             "name": "App(1)",
             "request": "launch",
-            "mainClass": "ListView.App",
+            "mainClass": "main.App",
             "projectName": "cse-110-project-team-7-feature-CreateRecipe_12ce712b",
             "vmArgs": "--module-path '/Users/wangwenshuang/Desktop/CSE110/cse-110-project-team-7-feature-CreateRecipe/lib' --add-modules javafx.controls,javafx.fxml"
         
