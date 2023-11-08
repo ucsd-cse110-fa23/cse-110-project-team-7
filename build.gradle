@@ -14,8 +14,8 @@ plugins {
 }
 
 java { 
-    sourceCompatibility = JavaLanguageVersion.of(21)
-    targetCompatibility = JavaLanguageVersion.of(21)
+    sourceCompatibility = JavaLanguageVersion.of(11)
+    targetCompatibility = JavaLanguageVersion.of(11)
 
 }
 javafx {
