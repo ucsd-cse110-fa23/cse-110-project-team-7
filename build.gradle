@@ -38,7 +38,7 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.json:json:20210307'
-    implementation 'org.openjfx:javafx-controls:11'  // Use the appropriate version
+    implementation 'org.openjfx:javafx-controls:11'  
     implementation 'org.openjfx:javafx-fxml:11' 
 
 }
@@ -50,10 +50,10 @@ tasks.named('test') {
 sourceSets {
      test {
         java.srcDirs += [
-            'src/main'
+            'src/main/java'
             ]
         java.srcDirs += [
-            'src/test'
+            'src/test/java'
             ]
     print(java.srcDirs) // Clean
 }
