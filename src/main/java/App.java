@@ -46,12 +46,7 @@ class RecipeApp extends HBox {
         recipeName.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(recipeName); // add textlabel to recipe
 
-        doneButton = new Button("Done"); // creates a button for marking the task as done
-        doneButton.setPrefSize(100, 20);
-        doneButton.setPrefHeight(Double.MAX_VALUE);
-        doneButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // sets style of button
 
-        this.getChildren().add(doneButton);
     }
 
     public void setRecipeIndex(int num) {

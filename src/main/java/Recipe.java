@@ -3,11 +3,17 @@ public class Recipe{
 
     public String mealType; 
     public String ingredients;
+    public String title;
     public String instructions; 
 
 
     public String getMealType(){
         return this.mealType;
+    }
+
+    public String getTitle(){
+        return this.title;
+
     }
 
     public String getIngredients(){
@@ -20,6 +26,20 @@ public class Recipe{
 
     public void setIngredients(String input){
         this.ingredients = input;
+    }
+
+    public void setTitle(String input){
+        int start = input.indexOf("[");
+        int end = input.indexOf("]");
+        this.title = input.substring(start + 1, end).trim();
+        
+    }
+
+
+    public void setInstructions(String input){
+        int start = input.indexOf("]");
+
+        this.instructions = input.substring(start + 1, input.length());
     }
 
     public String getInstructions(){
@@ -37,13 +57,11 @@ public class Recipe{
 
     }
 
-    public void setInstructions(String input){
-        this.instructions = input;
-    }
 
     public Recipe(){
         this.mealType = ""; 
         this.ingredients = "";
         this.instructions = "";
+        this.title = "";
     }
 }

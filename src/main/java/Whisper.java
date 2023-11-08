@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,9 +12,11 @@ import java.io.*;
 import java.net.*;
 import org.json.*;
 
+interface IWhisper{
+    String display() throws IOException, URISyntaxException;
+}
 
-
-public class Whisper {
+public class Whisper implements IWhisper {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
     private static final String TOKEN = "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";
     private static final String MODEL = "whisper-1";
@@ -107,6 +108,7 @@ public class Whisper {
         System.out.println("Error Result: " + errorResult);
         return errorResult;
     }
+
     public String display() throws IOException, URISyntaxException {
         // Create file object from file path
         File file = new File(File_path);

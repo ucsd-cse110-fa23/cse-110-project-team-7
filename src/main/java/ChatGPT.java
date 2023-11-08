@@ -7,14 +7,18 @@ import java.net.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ChatGPT{
+interface IChatGPT{
+    String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException;
+
+}
+public class ChatGPT implements IChatGPT{
 
     private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
     private static final String API_KEY = "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";
     private static final String MODEL = "text-davinci-003";
 
     
-    public static String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
+    public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
         Recipe currentRecipe = recipe;
 
@@ -22,7 +26,8 @@ public class ChatGPT{
         String mealType = currentRecipe.getMealType();
 
 
-        String prompt = "I have following ingredients : "+ingredientInHand+" and I would like to get a budget friendly and easy to make recipe for my "+ mealType+" with a list of step by step instructions";
+        String prompt = "I have following ingredients : "+ingredientInHand+" and I would like to get a budget friendly and easy to make recipe for my "+ mealType+" with a list of step by step instructions. Please put title in square brackets.";
+
         
         int maxTokens = 400;
         //System.out.println(prompt);
