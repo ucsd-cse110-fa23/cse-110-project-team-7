@@ -185,9 +185,11 @@ class CreateRecipeAppFrame extends FlowPane {
             ChatGPT chatGPT = new ChatGPT(); 
             try {
                 String response = chatGPT.getCookingInstruction(recipe);
-                DetailView detailFrame = new DetailView(detailViewStage, response);
+                recipe.setTitle(response);
+                recipe.setInstructions(response);
+                DetailView detailFrame = new DetailView(detailViewStage, recipe);
                 Scene scene = new Scene(detailFrame, 500, 600);
-                detailViewStage.setTitle("detail view");
+                detailViewStage.setTitle("Detail View");
                 detailViewStage.setScene(scene);
                 detailViewStage.setResizable(false);
                 detailViewStage.show();

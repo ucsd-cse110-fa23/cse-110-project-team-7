@@ -15,10 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChatGPTTest {
 
-    interface IChatGPT {
-        String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException;
-    }
-
     class ChatGPTMock implements IChatGPT {
 
         @Override
