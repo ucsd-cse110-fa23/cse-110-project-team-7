@@ -19,7 +19,7 @@ java {
 
 }
 javafx {
-    version = "21"
+    version = "11"
     modules = [ 'javafx.controls' ]
 }
 
@@ -38,6 +38,8 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'org.json:json:20210307'
+    implementation 'org.openjfx:javafx-controls:11'  // Use the appropriate version
+    implementation 'org.openjfx:javafx-fxml:11' 
 
 }
 tasks.named('test') {
