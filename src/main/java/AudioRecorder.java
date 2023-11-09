@@ -86,6 +86,7 @@ class CreateRecipeAppFrame extends FlowPane {
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
     private Label recordingLabel;
+    private Label errorLabel;
 
     public Recipe recipe = new Recipe(); 
     
@@ -121,8 +122,12 @@ class CreateRecipeAppFrame extends FlowPane {
         recordingLabel = new Label("Recording...");
         recordingLabel.setStyle(defaultLabelStyle);
 
+        errorLabel = new Label("Please input details.");
+        errorLabel.setStyle(defaultLabelStyle);
+
+
         
-        this.getChildren().addAll(startButton, stopButton, createButton, recordingLabel);
+        this.getChildren().addAll(startButton, stopButton, createButton, recordingLabel, errorLabel);
 
         // Get the audio format
         audioFormat = getAudioFormat();
@@ -184,15 +189,22 @@ class CreateRecipeAppFrame extends FlowPane {
             Stage detailViewStage = new Stage();
             ChatGPT chatGPT = new ChatGPT(); 
             try {
-                String response = chatGPT.getCookingInstruction(recipe);
-                recipe.setTitle(response);
-                recipe.setInstructions(response);
-                DetailView detailFrame = new DetailView(detailViewStage, recipe);
-                Scene scene = new Scene(detailFrame, 500, 600);
-                detailViewStage.setTitle("Detail View");
-                detailViewStage.setScene(scene);
-                detailViewStage.setResizable(false);
-                detailViewStage.show();
+                if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
+                    String response = chatGPT.getCookingInstruction(recipe);
+                    recipe.setTitle(response);
+                    recipe.setInstructions(response);
+                    DetailView detailFrame = new DetailView(detailViewStage, recipe);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    detailViewStage.setTitle("Detail View");
+                    detailViewStage.setScene(scene);
+                    detailViewStage.setResizable(false);
+                    detailViewStage.show();
+                }
+                else{
+                    errorLabel.setVisible(true);
+
+                }
+                
                 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -243,6 +255,7 @@ class CreateRecipeAppFrame extends FlowPane {
                         targetDataLine.open(audioFormat);
                         targetDataLine.start();
                         recordingLabel.setVisible(true);
+                        errorLabel.setVisible(false);
 
                         // the AudioInputStream that will be used to write the audio data to a file
                         AudioInputStream audioInputStream = new AudioInputStream(
@@ -255,6 +268,8 @@ class CreateRecipeAppFrame extends FlowPane {
                                 AudioFileFormat.Type.WAVE,
                                 audioFile);
                         recordingLabel.setVisible(false);
+                        errorLabel.setVisible(false);
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }       
