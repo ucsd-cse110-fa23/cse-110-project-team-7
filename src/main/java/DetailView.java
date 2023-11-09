@@ -1,8 +1,10 @@
 import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -23,11 +25,15 @@ public class DetailView extends BorderPane{
     private Button editButton;
     private Button deleteButton;
     private Button saveButton;
+    private boolean inEditMode = false; 
+    String instructions;
 
     DetailView(Stage currStage, Recipe response) throws Exception{
         header2 = new Header2(response.getTitle());
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
+        instructions = details.getInstructions().getText();
+
         
         this.setTop(header2);
         this.setBottom(footer2);
@@ -37,6 +43,36 @@ public class DetailView extends BorderPane{
         editButton = footer2.getEditButton();
         deleteButton = footer2.getDeleteButton();
         saveButton = footer2.getSaveButton();
+        
+
+    // Add button functionality
+        editButton.setOnAction(e -> {
+            details.setEditable(true);
+            inEditMode = true;
+            instructions = details.getInstructions().getText();
+
+
+        });
+
+        saveButton.setOnAction(e ->{
+            // if in edit mode 
+            if(inEditMode){
+                details.setEditable(false);
+                inEditMode = false; 
+                instructions = details.getInstructions().getText();
+                //details.getInstructions().setText(instructions);
+            }
+        });
+
+        // if in edit mode, revert changes
+        backButton.setOnAction(e->{
+            if(inEditMode){
+                details.getInstructions().setText(instructions);
+                details.setEditable(false);
+                inEditMode = false; 
+
+            }
+        });        
 
         
 
@@ -44,15 +80,21 @@ public class DetailView extends BorderPane{
     }
 
 }
+
 class Header2 extends HBox{
     private Button backButton;
     Header2(String title) {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
+        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
         Text titleText = new Text(title); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
+
+        backButton = new Button("Back"); 
+        backButton.setStyle(defaultButtonStyle);
+
+        this.getChildren().addAll(backButton, titleText);
         this.setAlignment(Pos.CENTER); // Align the text to the Center
     }
 
@@ -64,6 +106,7 @@ class Footer2 extends HBox {
     private Button editButton;
     private Button saveButton;
     private Button deleteButton;
+    private Button cancelButton; 
 
     Footer2() {
         this.setPrefSize(500, 60);
@@ -81,6 +124,10 @@ class Footer2 extends HBox {
 
         deleteButton = new Button("Delete");
         deleteButton.setStyle(defaultButtonStyle);
+
+        cancelButton = new Button("Cancel");
+        cancelButton.setStyle(defaultButtonStyle);
+
 
         this.getChildren().addAll(editButton, saveButton, deleteButton); // adding buttons to footer
     }
@@ -111,6 +158,13 @@ class Details extends VBox {
         instructions.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color
         instructions.setWrapText(true); // Enable text wrapping for multi-line content
         instructions.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text area
+        instructions.setEditable(false);
         this.getChildren().add(instructions); // add text area to the VBox
+    }
+    public TextInputControl getInstructions() {
+        return instructions;
+    }
+    public void setEditable(boolean editable) {
+        instructions.setEditable(editable);
     }
 }
