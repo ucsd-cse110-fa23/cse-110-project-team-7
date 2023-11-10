@@ -33,7 +33,7 @@ public class saveRecipe {
 
 
        // Replace the placeholder with your MongoDB deployment's connection string
-       String uri = "Your own uri";
+       String uri = "Your URI";
        
        try (MongoClient mongoClient = MongoClients.create(uri)) {
            MongoDatabase database = mongoClient.getDatabase("project_db");
