@@ -21,7 +21,7 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
-    private Button doneButton;
+    //private Button doneButton;
     
 
     private boolean markedDone;
@@ -43,14 +43,23 @@ class RecipeApp extends HBox {
         recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         index.setTextAlignment(TextAlignment.LEFT); // set alignment of text field
         recipeName.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
+
+        String csvFile = "./recipeName.csv"; // Replace with the actual file path
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line = br.readLine(); // Read the first line
+            if (line != null) {
+                // Use comma as separator
+                String[] fields = line.split(",");
+                recipeName.setText(String.join(" ", fields));
+                //this.getChildren().add(recipe);
+            }
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
         this.getChildren().add(recipeName); // add textlabel to recipe
 
-        doneButton = new Button("Done"); // creates a button for marking the task as done
-        doneButton.setPrefSize(100, 20);
-        doneButton.setPrefHeight(Double.MAX_VALUE);
-        doneButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // sets style of button
 
-        this.getChildren().add(doneButton);
     }
 
     public void setRecipeIndex(int num) {
@@ -62,9 +71,9 @@ class RecipeApp extends HBox {
         return this.recipeName;
     }
 
-    public Button getDoneButton() {
-        return this.doneButton;
-    }
+    // public Button getDoneButton() {
+    //     return this.doneButton;
+    // }
 
     public boolean isMarkedDone() {
         return this.markedDone;
@@ -93,7 +102,7 @@ class RecipeApp extends HBox {
 }
 
 class RecipeList extends VBox {
-
+    //private RecipeApp recipe;
     RecipeList() {
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
@@ -151,9 +160,12 @@ class AppFrame extends BorderPane{
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
+    private DetailView detailView;
 
     private Button addButton;
-
+    public RecipeList getList(){
+        return this.recipeList;
+    }
     AppFrame()
     {
         // Initialise the header Object
@@ -199,6 +211,12 @@ class AppFrame extends BorderPane{
                 secondaryStage.setScene(secondScene);
                 secondaryStage.setResizable(false);
                 secondaryStage.show();
+                //recipeList.getChildren().add(new RecipeApp());
+                //Button saveButton = detailView.saveButton;
+                secondaryStage.setOnHidden(saveEvent->{
+                    this.recipeList.getChildren().add(new RecipeApp());
+                });
+                // System.out.println("最后2");
 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block

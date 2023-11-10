@@ -86,8 +86,10 @@ class CreateRecipeAppFrame extends FlowPane {
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
     private Label recordingLabel;
+    private Label errorLabel;
 
     public Recipe recipe = new Recipe(); 
+    private RecipeList recipeList;
     
 
     // Set a default style for buttons and fields - background color, font size,
@@ -183,13 +185,24 @@ class CreateRecipeAppFrame extends FlowPane {
         // create Button later
         createButton.setOnAction(e -> {
             Stage detailViewStage = new Stage();
+            ChatGPT chatGPT = new ChatGPT();
             try {
-                DetailView detailFrame = new DetailView(detailViewStage);
-                Scene scene = new Scene(detailFrame, 500, 600);
-                detailViewStage.setTitle("detail view");
-                detailViewStage.setScene(scene);
-                detailViewStage.setResizable(false);
-                detailViewStage.show();
+                if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
+                    String response = chatGPT.getCookingInstruction(recipe);
+                    recipe.setTitle(response);
+                    recipe.setInstructions(response);
+                    DetailView detailFrame = new DetailView(detailViewStage, recipe);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    detailViewStage.setTitle("Detail View");
+                    detailViewStage.setScene(scene);
+                    detailViewStage.setResizable(false);
+                    detailViewStage.show();
+                }
+                else{
+                    errorLabel.setVisible(true);
+
+                }
+                
                 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -268,11 +281,13 @@ class CreateRecipeAppFrame extends FlowPane {
 }
 
 public class AudioRecorder extends Application {
+    private RecipeList recipeList;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window (Flow Pane)
+        recipeList = new RecipeList();
         CreateRecipeAppFrame root = new CreateRecipeAppFrame(primaryStage);
 
         // Set the title of the app

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "saveRecipe",
+            "request": "launch",
+            "mainClass": "saveRecipe",
+            "projectName": "cse-110-project-team-7-feature-CreateRecipe"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

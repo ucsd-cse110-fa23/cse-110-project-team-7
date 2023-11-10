@@ -56,5 +56,9 @@ sourceSets {
             'src/test/java'
             ]
     print(java.srcDirs) // Clean
+    }
 }
+
+dependencies {
+  implementation 'org.mongodb:mongodb-driver-sync:4.11.0'
 }
