@@ -26,9 +26,10 @@ public class DetailView extends BorderPane{
     private Button deleteButton;
     private Button saveButton;
     private boolean inEditMode = false; 
+    public saveRecipe saveRecipe = new saveRecipe();
     String instructions;
 
-    DetailView(Stage currStage, Recipe response) throws Exception{
+    DetailView(Stage currStage, Recipe response, App currApp) throws Exception{
         header2 = new Header2(response.getTitle());
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
@@ -62,6 +63,17 @@ public class DetailView extends BorderPane{
                 instructions = details.getInstructions().getText();
                 //details.getInstructions().setText(instructions);
             }
+            else {
+                /*
+                 * Saves recipe to recipelist and list shows title of recipe
+                 */
+                try {
+                    saveRecipe.saveToDB();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
         });
 
         // if in edit mode, revert changes
@@ -70,7 +82,14 @@ public class DetailView extends BorderPane{
                 details.getInstructions().setText(instructions);
                 details.setEditable(false);
                 inEditMode = false; 
-
+            }
+            else {
+                /*
+                 * Takes the app back to the previous Scene (or maybe even take it back to the first Scene)
+                 */
+                //App goBack = new App();
+                //currStage.setScene(goBack.getRecipeListScene());
+                currStage.setScene(currApp.getRecipeListScene());
             }
         });        
 
