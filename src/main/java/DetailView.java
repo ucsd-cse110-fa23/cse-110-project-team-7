@@ -27,7 +27,7 @@ public class DetailView extends BorderPane{
     String instructions;
     public saveRecipe saveRecipe = new saveRecipe();
 
-    DetailView(Stage currStage, Recipe response) throws Exception{
+    DetailView(Stage currStage, Recipe response, App currApp) throws Exception{
         header2 = new Header2(response.getTitle());
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
@@ -49,8 +49,6 @@ public class DetailView extends BorderPane{
             details.setEditable(true);
             inEditMode = true;
             instructions = details.getInstructions().getText();
-
-
         });
 
         saveButton.setOnAction(e ->{
@@ -60,22 +58,20 @@ public class DetailView extends BorderPane{
                 details.setEditable(false);
                 inEditMode = false; 
                 instructions = details.getInstructions().getText();
-                System.out.println("注意" + instructions);
-
-                //save to csv file
-                response.saveToFile(response);
-                // save to database
-                try {
-                    saveRecipe.saveToDB();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                //list.addRecipe();
-                System.out.println("执行完毕");
-                //System.out.println("执行完毕2");
-                
+                response.setInstructions(response.getTitle() + instructions);
             }
+            //save to csv file
+            response.saveToFile(response);
+            // save to database
+            try {
+                saveRecipe.saveToDB();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            //list.addRecipe();
+            currApp.setRecipeList();
+            currStage.setScene(currApp.getRecipeListScene());
         });
 
         // if in edit mode, revert changes
@@ -84,6 +80,14 @@ public class DetailView extends BorderPane{
                 details.getInstructions().setText(instructions);
                 details.setEditable(false);
                 inEditMode = false; 
+            }
+            else {
+                /*
+                 * Takes the app back to the previous Scene (or maybe even take it back to the first Scene)
+                 */
+                //App goBack = new App();
+                //currStage.setScene(goBack.getRecipeListScene());
+                currStage.setScene(currApp.getRecipeListScene());
             }
         });        
 

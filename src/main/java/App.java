@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
@@ -9,8 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
@@ -21,7 +20,7 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
-    //private Button doneButton;
+    private Button doneButton;
     
 
     private boolean markedDone;
@@ -69,35 +68,6 @@ class RecipeApp extends HBox {
 
     public TextField getRecipeName() {
         return this.recipeName;
-    }
-
-    // public Button getDoneButton() {
-    //     return this.doneButton;
-    // }
-
-    public boolean isMarkedDone() {
-        return this.markedDone;
-    }
-
-    public void toggleDone() {
-        
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            if(markedDone == false){
-                this.getChildren().get(i).setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;"); // remove border of recipe
-                this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;"); // change color of recipe to green
-                recipeName.setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");
-                markedDone = true;
-            }
-            else{
-                this.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
-                recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
-                markedDone = false;
-            }
-           
-
-        }
-
-        
     }
 }
 
@@ -160,14 +130,14 @@ class AppFrame extends BorderPane{
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
-    private DetailView detailView;
 
     private Button addButton;
     public RecipeList getList(){
         return this.recipeList;
     }
-    AppFrame()
+    AppFrame(Stage primaryStage, App currApp)
     {
+        //SomeOtherClass someOtherClass = new SomeOtherClass(this);
         // Initialise the header Object
         header = new Header();
 
@@ -195,27 +165,27 @@ class AppFrame extends BorderPane{
        
 
         // Call Event Listeners for the Buttons
-        addListeners();
+        addListeners(primaryStage, currApp);
     }
 
-    public void addListeners()
+    public void addListeners(Stage primaryStage, App currApp)
     {
 
         // Add button functionality
         addButton.setOnAction(e -> {
-            Stage secondaryStage = new Stage();
+            //Stage secondaryStage = new Stage();
             try {
-                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(secondaryStage);
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
-                secondaryStage.setTitle("Create Recipe");
-                secondaryStage.setScene(secondScene);
-                secondaryStage.setResizable(false);
-                secondaryStage.show();
+                primaryStage.setTitle("Create Recipe");
+                primaryStage.setScene(secondScene);
+                primaryStage.setResizable(false);
+                primaryStage.show();
                 //recipeList.getChildren().add(new RecipeApp());
                 //Button saveButton = detailView.saveButton;
-                secondaryStage.setOnHidden(saveEvent->{
-                    this.recipeList.getChildren().add(new RecipeApp());
-                });
+                // secondaryStage.setOnHidden(saveEvent->{
+                //     this.recipeList.getChildren().add(new RecipeApp());
+                // });
                 // System.out.println("最后2");
 
             } catch (Exception e1) {
@@ -229,21 +199,31 @@ class AppFrame extends BorderPane{
 }
 
 public class App extends Application {
-
+    private Scene recipeListScene;
+    public AppFrame root;
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        AppFrame root = new AppFrame();
+        root = new AppFrame(primaryStage, this);
+        
+        recipeListScene = new Scene(root, 500, 600);
 
         // Set the title of the app
         primaryStage.setTitle("Recipe List");
         // Create scene of mentioned size with the border pane
-        primaryStage.setScene(new Scene(root, 500, 600));
+        primaryStage.setScene(recipeListScene);
         // Make window non-resizable
         primaryStage.setResizable(false);
         // Show the app
         primaryStage.show();
+    }
+    public void setRecipeList(){
+        this.root.getList().getChildren().add(new RecipeApp());
+        
+    }
+    public Scene getRecipeListScene() {
+        return this.recipeListScene;
     }
 
     public static void main(String[] args) {

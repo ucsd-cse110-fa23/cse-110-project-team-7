@@ -88,8 +88,7 @@ class CreateRecipeAppFrame extends FlowPane {
     private Label recordingLabel;
     private Label errorLabel;
 
-    public Recipe recipe = new Recipe(); 
-    private RecipeList recipeList;
+    public Recipe recipe = new Recipe();
     
 
     // Set a default style for buttons and fields - background color, font size,
@@ -97,7 +96,7 @@ class CreateRecipeAppFrame extends FlowPane {
     String defaultButtonStyle = "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
-    CreateRecipeAppFrame(Stage currStage) throws Exception {
+    CreateRecipeAppFrame(Stage currStage, App currApp) throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
         
@@ -130,10 +129,10 @@ class CreateRecipeAppFrame extends FlowPane {
         audioFormat = getAudioFormat();
 
         // Add the listeners to the buttons
-        addListeners();
+        addListeners(currStage, currApp);
     }
 
-    public void addListeners() {
+    public void addListeners(Stage currStage, App currApp) {
        
         // Start Button
         startButton.setOnAction(e -> {
@@ -184,19 +183,19 @@ class CreateRecipeAppFrame extends FlowPane {
 
         // create Button later
         createButton.setOnAction(e -> {
-            Stage detailViewStage = new Stage();
+            //Stage detailViewStage = new Stage();
             ChatGPT chatGPT = new ChatGPT();
             try {
                 if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
-                    DetailView detailFrame = new DetailView(detailViewStage, recipe);
+                    DetailView detailFrame = new DetailView(currStage, recipe, currApp);
                     Scene scene = new Scene(detailFrame, 500, 600);
-                    detailViewStage.setTitle("Detail View");
-                    detailViewStage.setScene(scene);
-                    detailViewStage.setResizable(false);
-                    detailViewStage.show();
+                    currStage.setTitle("Detail View");
+                    currStage.setScene(scene);
+                    currStage.setResizable(false);
+                    currStage.show();
                 }
                 else{
                     errorLabel.setVisible(true);
@@ -278,30 +277,4 @@ class CreateRecipeAppFrame extends FlowPane {
         targetDataLine.stop();
         targetDataLine.close();
     }
-}
-
-public class AudioRecorder extends Application {
-    private RecipeList recipeList;
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        // Setting the Layout of the Window (Flow Pane)
-        recipeList = new RecipeList();
-        CreateRecipeAppFrame root = new CreateRecipeAppFrame(primaryStage);
-
-        // Set the title of the app
-        primaryStage.setTitle("Voice Input");
-        // Create scene of mentioned size with the border pane
-        primaryStage.setScene(new Scene(root, 400, 200));
-        // Make window non-resizable
-        primaryStage.setResizable(false);
-        // Show the app
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
 }
