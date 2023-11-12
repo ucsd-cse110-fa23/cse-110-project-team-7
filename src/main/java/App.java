@@ -9,8 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
@@ -22,12 +20,15 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
+    private Button doneButton;
     
+
+    private boolean markedDone;
 
     RecipeApp() {
         this.setPrefSize(500, 20); // sets size of recipe
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-
+        markedDone = false;
 
         index = new Label();
         index.setText(""); // create index label
@@ -55,19 +56,75 @@ class RecipeApp extends HBox {
         return this.recipeName;
     }
 
+    public Button getDoneButton() {
+        return this.doneButton;
+    }
+
+    public boolean isMarkedDone() {
+        return this.markedDone;
+    }
+
+    public void toggleDone() {
+        
+        for (int i = 0; i < this.getChildren().size(); i++) {
+            if(markedDone == false){
+                this.getChildren().get(i).setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;"); // remove border of recipe
+                this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;"); // change color of recipe to green
+                recipeName.setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");
+                markedDone = true;
+            }
+            else{
+                this.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
+                recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+                markedDone = false;
+            }
+           
+
+        }
+
+        
+    }
 }
 
 class RecipeList extends VBox {
 
+    private ArrayList<Recipe> recipes;
+    
     RecipeList() {
+        recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
+        //recipes.add(recipe);
+    }
+    
+    public void addRecipe(Recipe recipe){
+        recipes.add(recipe);
     }
 
+    public ArrayList<Recipe> getRecipeList(){
+        return recipes;
+    }
+    
+    public void saveRecipe(){
+        this.getChildren().clear();
+
+        for(Recipe recipe : recipes) {
+            Button recipeButton = new Button(recipe.getTitle());
+            recipeButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
+            recipeButton.setPrefSize(500, 50);
+
+            // recipeButton.setOnAction(e -> {
+            //     recipe.get
+
+            // });
+            
+            this.getChildren().add(recipeButton);
+        }    
+    }
 }
 
-class Footer extends HBox {
+ class Footer extends HBox {
 
     private Button addButton;
     // private Button clearButton;
@@ -90,7 +147,7 @@ class Footer extends HBox {
 
        
     }
-
+        
     public Button getAddButton() {
         return addButton;
     }
@@ -116,7 +173,7 @@ class AppFrame extends BorderPane{
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
-    
+
     private Button addButton;
 
     AppFrame(Stage primaryStage, App currApp)
@@ -124,7 +181,7 @@ class AppFrame extends BorderPane{
         // Initialise the header Object
         header = new Header();
 
-        // Create a tasklist Object to hold the tasks
+        // Create a tasklist Object to hold the recipes
         recipeList = new RecipeList();
         
         // Initialise the Footer Object
@@ -148,15 +205,14 @@ class AppFrame extends BorderPane{
        
 
         // Call Event Listeners for the Buttons
-        addListeners(primaryStage, currApp);
+        addListeners(primaryStage, currApp, recipeList);
     }
 
-    public void addListeners(Stage primaryStage, App currApp)
+    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList)
     {
 
         // Add button functionality
         addButton.setOnAction(e -> {
-            // Stage secondaryStage = new Stage();
             try {
                 /* 
                 StackPane layout1 = new StackPane(addButton);
@@ -164,13 +220,12 @@ class AppFrame extends BorderPane{
                 this.setScene(scene1);
                 */ 
                 
-                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp);
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
                 primaryStage.setTitle("Create Recipe");
                 primaryStage.setScene(secondScene);
                 primaryStage.setResizable(false);
                 primaryStage.show();
-                
 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -187,7 +242,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Setting the Layout of the Window- Should contain a Header, Footer and the RecipeList
+        // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
         AppFrame root = new AppFrame(primaryStage, this);
         recipeListScene = new Scene(root, 500, 600);
 
@@ -200,6 +255,7 @@ public class App extends Application {
         // Show the app
         primaryStage.show();
     }
+
     public Scene getRecipeListScene() {
         return this.recipeListScene;
     }

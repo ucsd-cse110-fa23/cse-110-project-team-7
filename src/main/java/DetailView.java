@@ -26,10 +26,9 @@ public class DetailView extends BorderPane{
     private Button deleteButton;
     private Button saveButton;
     private boolean inEditMode = false; 
-    //public saveRecipe saveRecipe = new saveRecipe();
     String instructions;
 
-    DetailView(Stage currStage, Recipe response, App currApp) throws Exception{
+    DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList) throws Exception{
         header2 = new Header2(response.getTitle());
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
@@ -63,17 +62,20 @@ public class DetailView extends BorderPane{
                 instructions = details.getInstructions().getText();
                 //details.getInstructions().setText(instructions);
             }
-            else {
-                /*
-                 * Saves recipe to recipelist and list shows title of recipe
+            else {  
                  
                 try {
-                    //saveRecipe.saveToDB();
+                    saveRecipe.saveToCSV(recipeList, response);
+                    
+                    //recipeList.add()
+                    //recipeList.saveRecipe();
+
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                */
+                
+                
             }
         });
 
@@ -85,11 +87,6 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                /*
-                 * Takes the app back to the previous Scene (or maybe even take it back to the first Scene)
-                 */
-                //App goBack = new App();
-                //currStage.setScene(goBack.getRecipeListScene());
                 currStage.setScene(currApp.getRecipeListScene());
             }
         });        
@@ -103,12 +100,13 @@ public class DetailView extends BorderPane{
 
 class Header2 extends HBox{
     private Button backButton;
+    private Text titleText;
     Header2(String title) {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
-        Text titleText = new Text(title); // Text of the Header
+        titleText = new Text(title); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
         backButton = new Button("Back"); 
@@ -120,6 +118,9 @@ class Header2 extends HBox{
 
     public Button getBackButton(){
         return backButton;
+    }
+    public Text getTitleText() {
+        return titleText;
     }
 }
 class Footer2 extends HBox {
