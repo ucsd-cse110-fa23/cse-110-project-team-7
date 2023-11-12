@@ -58,6 +58,7 @@ public class Recipe{
     }
 
 
+
     public Recipe(){
         this.mealType = ""; 
         this.ingredients = "";

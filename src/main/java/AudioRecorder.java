@@ -96,7 +96,7 @@ class CreateRecipeAppFrame extends FlowPane {
     String defaultButtonStyle = "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
-    CreateRecipeAppFrame(Stage currStage, App currApp) throws Exception {
+    CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList) throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
         
@@ -133,10 +133,10 @@ class CreateRecipeAppFrame extends FlowPane {
         audioFormat = getAudioFormat();
 
         // Add the listeners to the buttons
-        addListeners(currStage, currApp);
+        addListeners(currStage, currApp, recipeList);
     }
 
-    public void addListeners(Stage currStage, App currApp) {
+    public void addListeners(Stage currStage, App currApp, RecipeList recipeList) {
        
         // Start Button
         startButton.setOnAction(e -> {
@@ -186,14 +186,13 @@ class CreateRecipeAppFrame extends FlowPane {
 
         // create Button later
         createButton.setOnAction(e -> {
-            //Stage detailViewStage = new Stage();
             ChatGPT chatGPT = new ChatGPT(); 
             try {
                 if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
-                    DetailView detailFrame = new DetailView(currStage, recipe, currApp);
+                    DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");
                     currStage.setScene(scene);
@@ -284,6 +283,7 @@ class CreateRecipeAppFrame extends FlowPane {
         targetDataLine.close();
     }
 }
+
 /* 
 public class AudioRecorder extends Application {
 
