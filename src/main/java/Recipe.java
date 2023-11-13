@@ -6,7 +6,6 @@ public class Recipe{
     public String title;
     public String instructions; 
 
-
     public String getMealType(){
         return this.mealType;
     }
@@ -39,7 +38,6 @@ public class Recipe{
         this.title = input;
     }
 
-
     public void setInstructions(String input){
         int start = input.indexOf("]");
 
@@ -49,8 +47,6 @@ public class Recipe{
     public void loadInstructions(String input) {
         this.instructions = input;
     }
-
-
 
     public String getInstructions(){
         return this.instructions;

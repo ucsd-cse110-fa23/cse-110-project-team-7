@@ -20,15 +20,10 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
-    private Button doneButton;
-    
-
-    private boolean markedDone;
 
     RecipeApp() {
         this.setPrefSize(500, 20); // sets size of recipe
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-        markedDone = false;
 
         index = new Label();
         index.setText(""); // create index label
@@ -56,34 +51,6 @@ class RecipeApp extends HBox {
         return this.recipeName;
     }
 
-    public Button getDoneButton() {
-        return this.doneButton;
-    }
-
-    public boolean isMarkedDone() {
-        return this.markedDone;
-    }
-
-    public void toggleDone() {
-        
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            if(markedDone == false){
-                this.getChildren().get(i).setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;"); // remove border of recipe
-                this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;"); // change color of recipe to green
-                recipeName.setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");
-                markedDone = true;
-            }
-            else{
-                this.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
-                recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
-                markedDone = false;
-            }
-           
-
-        }
-
-        
-    }
 }
 
 class RecipeList extends VBox {

@@ -1,5 +1,3 @@
-
-
 public class DeleteRecipe{
 
     public static void deleteTargetRecipe(RecipeList recipeList, Recipe recipe){

@@ -71,7 +71,6 @@ public class DetailView extends BorderPane{
                 //details.getInstructions().setText(instructions);
             }
             else {  
-                 
                 try {
                     saveRecipe.saveToCSV(recipeList, response);
                     

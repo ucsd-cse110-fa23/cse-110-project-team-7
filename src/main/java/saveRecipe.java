@@ -233,7 +233,6 @@ public class saveRecipe {
             // recipeButton.setStyle(defaultButtonStyle);
             // this.getChildren().addAll
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
