@@ -35,12 +35,22 @@ public class Recipe{
         
     }
 
+    public void setRecipeTitle(String input) {
+        this.title = input;
+    }
+
 
     public void setInstructions(String input){
         int start = input.indexOf("]");
 
         this.instructions = input.substring(start + 1, input.length());
     }
+
+    public void loadInstructions(String input) {
+        this.instructions = input;
+    }
+
+
 
     public String getInstructions(){
         return this.instructions;

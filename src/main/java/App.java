@@ -9,8 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
@@ -90,15 +88,67 @@ class RecipeApp extends HBox {
 
 class RecipeList extends VBox {
 
-    RecipeList() {
+    private ArrayList<Recipe> recipes;
+    private Stage currStage;
+    private App currApp;
+    
+    RecipeList(Stage currStage, App currApp) {
+        recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
+        this.currStage = currStage;
+        this.currApp = currApp;
+        //recipes.add(recipe);
+    }
+    
+    public void addRecipe(Recipe recipe){
+        recipes.add(recipe);
     }
 
+    public ArrayList<Recipe> getRecipeList(){
+        return recipes;
+    }
+    
+    private Stage getStage(){
+        return this.currStage;
+    }
+
+    private App getApp(){
+        return this.currApp;
+    }
+    
+    public void saveRecipe(){
+        this.getChildren().clear();
+
+        for(Recipe recipe : recipes) {
+            Button recipeButton = new Button(recipe.getTitle());
+            recipeButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
+            recipeButton.setPrefSize(500, 50);
+
+            recipeButton.setOnAction(e->{
+                
+                
+                try{
+                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(),this);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    this.getStage().setTitle("Detail View");
+                    this.getStage().setScene(scene);
+                    this.getStage().setResizable(false);
+                    this.getStage().show();
+
+                }catch(Exception except){
+                    System.err.println("recipeButtonSetOnActionError");
+                    except.printStackTrace();
+                }
+            });
+            
+            this.getChildren().add(recipeButton);
+        }    
+    }
 }
 
-class Footer extends HBox {
+ class Footer extends HBox {
 
     private Button addButton;
     // private Button clearButton;
@@ -121,7 +171,7 @@ class Footer extends HBox {
 
        
     }
-
+        
     public Button getAddButton() {
         return addButton;
     }
@@ -150,14 +200,56 @@ class AppFrame extends BorderPane{
 
     private Button addButton;
 
-    AppFrame()
+    AppFrame(Stage primaryStage, App currApp)
     {
         // Initialise the header Object
         header = new Header();
 
-        // Create a tasklist Object to hold the tasks
-        recipeList = new RecipeList();
+        // Create a tasklist Object to hold the recipes
+        recipeList = new RecipeList(primaryStage, currApp);
+        Recipe recipe = new Recipe();
+        boolean seenIngredients = false;
+        boolean seenInstructions = false;
+        int counter = 0;
+        try {
+            BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
+            String text = input.readLine();
+            // while input is not at end of file
+            while (text != null) {
+                if(text.startsWith("Title: ")){
+                    if(counter != 0){
+                        recipeList.addRecipe(recipe);
+                        seenInstructions = false;
+                        recipe = new Recipe();
+                    }
+                    recipe.setRecipeTitle(text.substring(7, text.indexOf(",")));
+                    counter++;
+                }
+                if(text.startsWith("Ingredients:")){   
+                    seenIngredients = true;
+                }
+                if(text.startsWith("Instructions:")){
+                    seenIngredients = false;
+                    seenInstructions = true;
+                }
+                if(seenIngredients){
+                    recipe.setIngredients(recipe.getIngredients() + "\n" + text);
+                }
+                if(seenInstructions){
+                    recipe.loadInstructions(recipe.getInstructions() + "\n" + text);
+                }
+               text = input.readLine();
+            }
+
+            input.close(); 
+            recipeList.addRecipe(recipe);
+            recipeList.saveRecipe();
         
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Initialise the Footer Object
         footer = new Footer();
 
@@ -179,22 +271,27 @@ class AppFrame extends BorderPane{
        
 
         // Call Event Listeners for the Buttons
-        addListeners();
+        addListeners(primaryStage, currApp, recipeList);
     }
 
-    public void addListeners()
+    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList)
     {
 
         // Add button functionality
         addButton.setOnAction(e -> {
-            Stage secondaryStage = new Stage();
             try {
-                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(secondaryStage);
+                /* 
+                StackPane layout1 = new StackPane(addButton);
+                Scene scene1 = new Scene(layout1, 300, 200);
+                this.setScene(scene1);
+                */ 
+                
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
-                secondaryStage.setTitle("Create Recipe");
-                secondaryStage.setScene(secondScene);
-                secondaryStage.setResizable(false);
-                secondaryStage.show();
+                primaryStage.setTitle("Create Recipe");
+                primaryStage.setScene(secondScene);
+                primaryStage.setResizable(false);
+                primaryStage.show();
 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -207,21 +304,26 @@ class AppFrame extends BorderPane{
 }
 
 public class App extends Application {
-
+    private Scene recipeListScene;
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        AppFrame root = new AppFrame();
+        AppFrame root = new AppFrame(primaryStage, this);
+        recipeListScene = new Scene(root, 500, 600);
 
         // Set the title of the app
         primaryStage.setTitle("Recipe List");
         // Create scene of mentioned size with the border pane
-        primaryStage.setScene(new Scene(root, 500, 600));
+        primaryStage.setScene(recipeListScene);
         // Make window non-resizable
         primaryStage.setResizable(false);
         // Show the app
         primaryStage.show();
+    }
+
+    public Scene getRecipeListScene() {
+        return this.recipeListScene;
     }
 
     public static void main(String[] args) {
