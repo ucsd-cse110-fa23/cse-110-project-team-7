@@ -20,15 +20,10 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
-    private Button doneButton;
-    
-
-    private boolean markedDone;
 
     RecipeApp() {
         this.setPrefSize(500, 20); // sets size of recipe
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-        markedDone = false;
 
         index = new Label();
         index.setText(""); // create index label
@@ -56,45 +51,21 @@ class RecipeApp extends HBox {
         return this.recipeName;
     }
 
-    public Button getDoneButton() {
-        return this.doneButton;
-    }
-
-    public boolean isMarkedDone() {
-        return this.markedDone;
-    }
-
-    public void toggleDone() {
-        
-        for (int i = 0; i < this.getChildren().size(); i++) {
-            if(markedDone == false){
-                this.getChildren().get(i).setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;"); // remove border of recipe
-                this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;"); // change color of recipe to green
-                recipeName.setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");
-                markedDone = true;
-            }
-            else{
-                this.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
-                recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
-                markedDone = false;
-            }
-           
-
-        }
-
-        
-    }
 }
 
 class RecipeList extends VBox {
 
     private ArrayList<Recipe> recipes;
+    private Stage currStage;
+    private App currApp;
     
-    RecipeList() {
+    RecipeList(Stage currStage, App currApp) {
         recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
+        this.currStage = currStage;
+        this.currApp = currApp;
         //recipes.add(recipe);
     }
     
@@ -106,6 +77,14 @@ class RecipeList extends VBox {
         return recipes;
     }
     
+    private Stage getStage(){
+        return this.currStage;
+    }
+
+    private App getApp(){
+        return this.currApp;
+    }
+    
     public void saveRecipe(){
         this.getChildren().clear();
 
@@ -114,10 +93,22 @@ class RecipeList extends VBox {
             recipeButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
             recipeButton.setPrefSize(500, 50);
 
-            // recipeButton.setOnAction(e -> {
-            //     recipe.get
+            recipeButton.setOnAction(e->{
+                
+                
+                try{
+                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(),this);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    this.getStage().setTitle("Detail View");
+                    this.getStage().setScene(scene);
+                    this.getStage().setResizable(false);
+                    this.getStage().show();
 
-            // });
+                }catch(Exception except){
+                    System.err.println("recipeButtonSetOnActionError");
+                    except.printStackTrace();
+                }
+            });
             
             this.getChildren().add(recipeButton);
         }    
@@ -182,8 +173,50 @@ class AppFrame extends BorderPane{
         header = new Header();
 
         // Create a tasklist Object to hold the recipes
-        recipeList = new RecipeList();
+        recipeList = new RecipeList(primaryStage, currApp);
+        Recipe recipe = new Recipe();
+        boolean seenIngredients = false;
+        boolean seenInstructions = false;
+        int counter = 0;
+        try {
+            BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
+            String text = input.readLine();
+            // while input is not at end of file
+            while (text != null) {
+                if(text.startsWith("Title: ")){
+                    if(counter != 0){
+                        recipeList.addRecipe(recipe);
+                        seenInstructions = false;
+                        recipe = new Recipe();
+                    }
+                    recipe.setRecipeTitle(text.substring(7, text.indexOf(",")));
+                    counter++;
+                }
+                if(text.startsWith("Ingredients:")){   
+                    seenIngredients = true;
+                }
+                if(text.startsWith("Instructions:")){
+                    seenIngredients = false;
+                    seenInstructions = true;
+                }
+                if(seenIngredients){
+                    recipe.setIngredients(recipe.getIngredients() + "\n" + text);
+                }
+                if(seenInstructions){
+                    recipe.loadInstructions(recipe.getInstructions() + "\n" + text);
+                }
+               text = input.readLine();
+            }
+
+            input.close(); 
+            recipeList.addRecipe(recipe);
+            recipeList.saveRecipe();
         
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Initialise the Footer Object
         footer = new Footer();
 

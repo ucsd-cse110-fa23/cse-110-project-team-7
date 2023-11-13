@@ -45,7 +45,7 @@ public class DetailView extends BorderPane{
         saveButton = footer2.getSaveButton();
         
 
-    // Add button functionality
+        // Add button functionality
         editButton.setOnAction(e -> {
             details.setEditable(true);
             inEditMode = true;
@@ -60,10 +60,17 @@ public class DetailView extends BorderPane{
                 details.setEditable(false);
                 inEditMode = false; 
                 instructions = details.getInstructions().getText();
+                response.loadInstructions(instructions);
+                try {
+                    saveRecipe.saveToCSV(recipeList);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                //response.setInstructions(response.getTitle() + instructions);
                 //details.getInstructions().setText(instructions);
             }
             else {  
-                 
                 try {
                     saveRecipe.saveToCSV(recipeList, response);
                     
@@ -74,7 +81,6 @@ public class DetailView extends BorderPane{
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                
                 
             }
         });
@@ -90,6 +96,13 @@ public class DetailView extends BorderPane{
                 currStage.setScene(currApp.getRecipeListScene());
             }
         });        
+
+        deleteButton.setOnAction(e->{
+            
+            DeleteRecipe.deleteTargetRecipe(recipeList, response);
+            
+        });
+
 
         
 
