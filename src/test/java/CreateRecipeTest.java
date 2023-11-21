@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 public class CreateRecipeTest {
 
@@ -46,5 +47,17 @@ public class CreateRecipeTest {
             // Handle the exception (e.g., print an error message)
             e.printStackTrace();
         }
+    }
+
+    @Test 
+    public void testSetTitle(){
+        String input = "[Curried Egg Sandwich:]" + "\n" +"Ingredients: 2 eggs " + "\n" + "Instructions: " + "\n" + "Steps";
+        Recipe recipe = new Recipe(); 
+        recipe.setTitle(input);
+        recipe.setInstructions(input); 
+        String instructions = "\nIngredients: 2 eggs " + "\n" + "Instructions: " + "\n" + "Steps";
+        assertEquals("Curried Egg Sandwich:", recipe.getTitle());
+        assertEquals(instructions, recipe.getInstructions());
+
     }
 }

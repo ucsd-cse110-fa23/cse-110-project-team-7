@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class DetailView extends BorderPane{
     private Header2 header2;
@@ -22,12 +23,11 @@ public class DetailView extends BorderPane{
     private Button backButton;
     private Button editButton;
     private Button deleteButton;
-    public Button saveButton;
+    private Button saveButton;
     private boolean inEditMode = false; 
     String instructions;
-    public saveRecipe saveRecipe = new saveRecipe();
 
-    DetailView(Stage currStage, Recipe response, App currApp) throws Exception{
+    DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList) throws Exception{
         header2 = new Header2(response.getTitle());
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
@@ -49,29 +49,51 @@ public class DetailView extends BorderPane{
             details.setEditable(true);
             inEditMode = true;
             instructions = details.getInstructions().getText();
+
+
         });
 
         saveButton.setOnAction(e ->{
             // if in edit mode 
-            
             if(inEditMode){
                 details.setEditable(false);
                 inEditMode = false; 
                 instructions = details.getInstructions().getText();
-                response.setInstructions(response.getTitle() + instructions);
+                response.loadInstructions(instructions);
+                try {
+                    ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                    recipeList.setRecipeList(newRecipe);
+                    // recipeList.saveRecipe();
+
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                //response.setInstructions(response.getTitle() + instructions);
+                //details.getInstructions().setText(instructions);
             }
-            //save to csv file
-            response.saveToFile(response);
-            // save to database
-            try {
-                saveRecipe.saveToDB();
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+            else {  
+                try {
+
+                    //if(!recipeList.getRecipeList().contains(response)){
+        
+                        ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                        recipeList.setRecipeList(newRecipe);
+                        saveRecipe.saveToCSV(recipeList.getRecipeList());
+                        
+                        //recipeList.addReci()
+                        recipeList.saveRecipe();
+
+                    //}
+
+                    
+
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                
             }
-            //list.addRecipe();
-            currApp.setRecipeList();
-            currStage.setScene(currApp.getRecipeListScene());
         });
 
         // if in edit mode, revert changes
@@ -82,14 +104,18 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                /*
-                 * Takes the app back to the previous Scene (or maybe even take it back to the first Scene)
-                 */
-                //App goBack = new App();
-                //currStage.setScene(goBack.getRecipeListScene());
                 currStage.setScene(currApp.getRecipeListScene());
             }
         });        
+
+        deleteButton.setOnAction(e->{
+
+            ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
+            recipeList.setRecipeList(newList);
+            recipeList.saveRecipe();
+
+        });
+
 
         
 
@@ -100,12 +126,13 @@ public class DetailView extends BorderPane{
 
 class Header2 extends HBox{
     private Button backButton;
+    private Text titleText;
     Header2(String title) {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
-        Text titleText = new Text(title); // Text of the Header
+        titleText = new Text(title); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
         backButton = new Button("Back"); 
@@ -118,8 +145,10 @@ class Header2 extends HBox{
     public Button getBackButton(){
         return backButton;
     }
+    public Text getTitleText() {
+        return titleText;
+    }
 }
-
 class Footer2 extends HBox {
     private Button editButton;
     private Button saveButton;
@@ -185,4 +214,6 @@ class Details extends VBox {
     public void setEditable(boolean editable) {
         instructions.setEditable(editable);
     }
+
+    
 }

@@ -66,7 +66,6 @@ public class ChatGPTTest {
             getCookingInstruction(new Recipe());
         });
 
-        // You can add more specific assertions on the exception if needed
         assertTrue(exception.getMessage().contains("Fake API exception"));
     
     }

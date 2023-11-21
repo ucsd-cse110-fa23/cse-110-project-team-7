@@ -20,15 +20,10 @@ class RecipeApp extends HBox {
 
     private Label index;
     private TextField recipeName;
-    private Button doneButton;
-    
-
-    private boolean markedDone;
 
     RecipeApp() {
         this.setPrefSize(500, 20); // sets size of recipe
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-        markedDone = false;
 
         index = new Label();
         index.setText(""); // create index label
@@ -42,20 +37,6 @@ class RecipeApp extends HBox {
         recipeName.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         index.setTextAlignment(TextAlignment.LEFT); // set alignment of text field
         recipeName.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
-
-        String csvFile = "./recipeName.csv"; // Replace with the actual file path
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line = br.readLine(); // Read the first line
-            if (line != null) {
-                // Use comma as separator
-                String[] fields = line.split(",");
-                recipeName.setText(String.join(" ", fields));
-                //this.getChildren().add(recipe);
-            }
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
         this.getChildren().add(recipeName); // add textlabel to recipe
 
 
@@ -69,19 +50,76 @@ class RecipeApp extends HBox {
     public TextField getRecipeName() {
         return this.recipeName;
     }
+
 }
 
 class RecipeList extends VBox {
-    //private RecipeApp recipe;
-    RecipeList() {
+
+    private ArrayList<Recipe> recipes;
+    private Stage currStage;
+    private App currApp;
+    
+    RecipeList(Stage currStage, App currApp) {
+        recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
+        this.currStage = currStage;
+        this.currApp = currApp;
+        //recipes.add(recipe);
+    }
+    
+    public void addRecipe(Recipe recipe){
+        recipes.add(0, recipe);
     }
 
+    public ArrayList<Recipe> getRecipeList(){
+        return recipes;
+    }
+
+    public void setRecipeList(ArrayList<Recipe> newList){
+        this.recipes = newList;
+    }
+    
+    private Stage getStage(){
+        return this.currStage;
+    }
+
+    private App getApp(){
+        return this.currApp;
+    }
+    
+    public void saveRecipe(){
+        this.getChildren().clear();
+
+        for(Recipe recipe : recipes) {
+            Button recipeButton = new Button(recipe.getTitle());
+            recipeButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
+            recipeButton.setPrefSize(500, 50);
+
+            recipeButton.setOnAction(e->{
+                
+                
+                try{
+                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(),this);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    this.getStage().setTitle("Detail View");
+                    this.getStage().setScene(scene);
+                    this.getStage().setResizable(false);
+                    this.getStage().show();
+
+                }catch(Exception except){
+                    System.err.println("recipeButtonSetOnActionError");
+                    except.printStackTrace();
+                }
+            });
+            
+            this.getChildren().add(recipeButton);
+        }    
+    }
 }
 
-class Footer extends HBox {
+ class Footer extends HBox {
 
     private Button addButton;
     // private Button clearButton;
@@ -104,7 +142,7 @@ class Footer extends HBox {
 
        
     }
-
+        
     public Button getAddButton() {
         return addButton;
     }
@@ -132,18 +170,57 @@ class AppFrame extends BorderPane{
     private RecipeList recipeList;
 
     private Button addButton;
-    public RecipeList getList(){
-        return this.recipeList;
-    }
+
     AppFrame(Stage primaryStage, App currApp)
     {
-        //SomeOtherClass someOtherClass = new SomeOtherClass(this);
         // Initialise the header Object
         header = new Header();
 
-        // Create a tasklist Object to hold the tasks
-        recipeList = new RecipeList();
+        // Create a tasklist Object to hold the recipes
+        recipeList = new RecipeList(primaryStage, currApp);
+        Recipe recipe = new Recipe();
+        boolean seenIngredients = false;
+        boolean seenInstructions = false;
+        int counter = 0;
+        try {
+            BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
+            String text = input.readLine();
+            // while input is not at end of file
+            while (text != null) {
+                if(text.startsWith("Title: ")){
+                    if(counter != 0){
+                        recipeList.addRecipe(recipe);
+                        seenInstructions = false;
+                        recipe = new Recipe();
+                    }
+                    recipe.setTitle(text);
+                    counter++;
+                }
+                if(text.startsWith("Ingredients:")){   
+                    seenIngredients = true;
+                }
+                if(text.startsWith("Instructions:")){
+                    seenIngredients = false;
+                    seenInstructions = true;
+                }
+                if(seenIngredients){
+                    recipe.setIngredients(recipe.getIngredients() + "\n" + text);
+                }
+                if(seenInstructions){
+                    recipe.loadInstructions(recipe.getInstructions() + "\n" + text);
+                }
+               text = input.readLine();
+            }
+
+            input.close(); 
+            recipeList.addRecipe(recipe);
+            recipeList.saveRecipe();
         
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // Initialise the Footer Object
         footer = new Footer();
 
@@ -165,28 +242,27 @@ class AppFrame extends BorderPane{
        
 
         // Call Event Listeners for the Buttons
-        addListeners(primaryStage, currApp);
+        addListeners(primaryStage, currApp, recipeList);
     }
 
-    public void addListeners(Stage primaryStage, App currApp)
+    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList)
     {
 
         // Add button functionality
         addButton.setOnAction(e -> {
-            //Stage secondaryStage = new Stage();
             try {
-                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp);
+                /* 
+                StackPane layout1 = new StackPane(addButton);
+                Scene scene1 = new Scene(layout1, 300, 200);
+                this.setScene(scene1);
+                */ 
+                
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
                 primaryStage.setTitle("Create Recipe");
                 primaryStage.setScene(secondScene);
                 primaryStage.setResizable(false);
                 primaryStage.show();
-                //recipeList.getChildren().add(new RecipeApp());
-                //Button saveButton = detailView.saveButton;
-                // secondaryStage.setOnHidden(saveEvent->{
-                //     this.recipeList.getChildren().add(new RecipeApp());
-                // });
-                // System.out.println("最后2");
 
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -200,13 +276,11 @@ class AppFrame extends BorderPane{
 
 public class App extends Application {
     private Scene recipeListScene;
-    public AppFrame root;
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        root = new AppFrame(primaryStage, this);
-        
+        AppFrame root = new AppFrame(primaryStage, this);
         recipeListScene = new Scene(root, 500, 600);
 
         // Set the title of the app
@@ -218,10 +292,7 @@ public class App extends Application {
         // Show the app
         primaryStage.show();
     }
-    public void setRecipeList(){
-        this.root.getList().getChildren().add(new RecipeApp());
-        
-    }
+
     public Scene getRecipeListScene() {
         return this.recipeListScene;
     }

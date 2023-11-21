@@ -64,7 +64,6 @@ public class WhisperTest {
             fakeWhisper2.display();
         });
 
-        // You can add more specific assertions on the exception if needed
         assertTrue(exception.getMessage().contains("Fake transcription result exception"));
     
     }

@@ -9,6 +9,12 @@ public class Recipe{
     public String title;
     public String instructions; 
 
+    public Recipe(){
+        this.title = "";
+        this.mealType = ""; 
+        this.ingredients = "";
+        this.instructions = "";
+    }
 
     public String getMealType(){
         return this.mealType;
@@ -31,12 +37,17 @@ public class Recipe{
         this.ingredients = input;
     }
 
+    public void loadInstructions(String input) {
+        this.instructions = input;
+    }
+
     public void setTitle(String input){
         int start = input.indexOf("[");
         int end = input.indexOf("]");
         this.title = input.substring(start + 1, end).trim();
         
     }
+    
 
     public void setInstructions(String input){
         int start = input.indexOf("]");
@@ -58,26 +69,5 @@ public class Recipe{
 
     }
 
-    public Recipe(){
-        this.mealType = ""; 
-        this.ingredients = "";
-        this.instructions = "";
-    }
-    public void saveToFile(Recipe recipe){
-        try{
-            FileWriter fw = new FileWriter("./recipeName.csv", false);
-            Writer writer = new BufferedWriter(fw);
-            writer.write(recipe.getTitle()+ ";" + '\n');
-            System.out.println("Save___" + recipe.getTitle());
-            writer.write(recipe.getInstructions() + ";" + '\n');
-            System.out.println("Save___" + recipe.getInstructions());
-            writer.flush();
-            writer.close();
-            fw.close();
-        }
-        catch(Exception exception){
-            System.out.println("Not save to file");
-        }
-        //System.out.println(123);
-    }
+    
 }
