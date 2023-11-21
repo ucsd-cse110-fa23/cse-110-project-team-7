@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
@@ -14,7 +15,6 @@ import javafx.scene.text.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
-
 
 class RecipeApp extends HBox {
 
@@ -70,11 +70,15 @@ class RecipeList extends VBox {
     }
     
     public void addRecipe(Recipe recipe){
-        recipes.add(recipe);
+        recipes.add(0, recipe);
     }
 
     public ArrayList<Recipe> getRecipeList(){
         return recipes;
+    }
+
+    public void setRecipeList(ArrayList<Recipe> newList){
+        this.recipes = newList;
     }
     
     private Stage getStage(){
@@ -189,7 +193,7 @@ class AppFrame extends BorderPane{
                         seenInstructions = false;
                         recipe = new Recipe();
                     }
-                    recipe.setRecipeTitle(text.substring(7, text.indexOf(",")));
+                    recipe.setTitle(text);
                     counter++;
                 }
                 if(text.startsWith("Ingredients:")){   
