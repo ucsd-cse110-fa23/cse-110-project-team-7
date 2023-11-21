@@ -1,10 +1,16 @@
-
 public class Recipe{ 
 
     public String mealType; 
     public String ingredients;
     public String title;
     public String instructions; 
+
+    public Recipe(){
+        this.title = "";
+        this.mealType = ""; 
+        this.ingredients = "";
+        this.instructions = "";
+    }
 
     public String getMealType(){
         return this.mealType;
@@ -27,25 +33,21 @@ public class Recipe{
         this.ingredients = input;
     }
 
+    public void loadInstructions(String input) {
+        this.instructions = input;
+    }
+
     public void setTitle(String input){
         int start = input.indexOf("[");
         int end = input.indexOf("]");
         this.title = input.substring(start + 1, end).trim();
         
     }
-
-    public void setRecipeTitle(String input) {
-        this.title = input;
-    }
+    
 
     public void setInstructions(String input){
         int start = input.indexOf("]");
-
         this.instructions = input.substring(start + 1, input.length());
-    }
-
-    public void loadInstructions(String input) {
-        this.instructions = input;
     }
 
     public String getInstructions(){
@@ -63,11 +65,5 @@ public class Recipe{
 
     }
 
-
-    public Recipe(){
-        this.mealType = ""; 
-        this.ingredients = "";
-        this.instructions = "";
-        this.title = "";
-    }
+    
 }

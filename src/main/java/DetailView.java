@@ -1,7 +1,5 @@
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
@@ -15,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class DetailView extends BorderPane{
     private Header2 header2;
@@ -62,7 +61,10 @@ public class DetailView extends BorderPane{
                 instructions = details.getInstructions().getText();
                 response.loadInstructions(instructions);
                 try {
-                    saveRecipe.saveToCSV(recipeList);
+                    ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                    recipeList.setRecipeList(newRecipe);
+                    // recipeList.saveRecipe();
+
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -72,10 +74,19 @@ public class DetailView extends BorderPane{
             }
             else {  
                 try {
-                    saveRecipe.saveToCSV(recipeList, response);
+
+                    //if(!recipeList.getRecipeList().contains(response)){
+        
+                        ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                        recipeList.setRecipeList(newRecipe);
+                        saveRecipe.saveToCSV(recipeList.getRecipeList());
+                        
+                        //recipeList.addReci()
+                        recipeList.saveRecipe();
+
+                    //}
+
                     
-                    //recipeList.add()
-                    //recipeList.saveRecipe();
 
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
@@ -98,9 +109,11 @@ public class DetailView extends BorderPane{
         });        
 
         deleteButton.setOnAction(e->{
-            
-            DeleteRecipe.deleteTargetRecipe(recipeList, response);
-            
+
+            ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
+            recipeList.setRecipeList(newList);
+            recipeList.saveRecipe();
+
         });
 
 
@@ -201,4 +214,6 @@ class Details extends VBox {
     public void setEditable(boolean editable) {
         instructions.setEditable(editable);
     }
+
+    
 }
