@@ -105,7 +105,7 @@ class RecipeList extends VBox {
                     Scene scene = new Scene(detailFrame, 500, 600);
                     this.getStage().setTitle("Detail View");
                     this.getStage().setScene(scene);
-                    this.getStage().setResizable(false);
+                    this.getStage().setResizable(true);
                     this.getStage().show();
 
                 }catch(Exception except){
@@ -261,7 +261,7 @@ class AppFrame extends BorderPane{
                 Scene secondScene = new Scene(detailFrame, 500, 600);
                 primaryStage.setTitle("Create Recipe");
                 primaryStage.setScene(secondScene);
-                primaryStage.setResizable(false);
+                primaryStage.setResizable(true);
                 primaryStage.show();
 
             } catch (Exception e1) {
@@ -287,8 +287,8 @@ public class App extends Application {
         primaryStage.setTitle("Recipe List");
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(recipeListScene);
-        // Make window non-resizable
-        primaryStage.setResizable(false);
+        // Make window resizable
+        primaryStage.setResizable(true);
         // Show the app
         primaryStage.show();
     }

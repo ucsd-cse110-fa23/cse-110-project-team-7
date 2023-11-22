@@ -26,14 +26,16 @@ public class DetailView extends BorderPane{
     private Button saveButton;
     private boolean inEditMode = false; 
     String instructions;
+    String ingredients; 
 
     DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList) throws Exception{
         String title = response.getTitle();
         header2 = new Header2(title);
         footer2 = new Footer2();
-        details = new Details(response.getInstructions());
+        ingredients = response.getIngredients();
+        String ingredientsAndInstructions = "Inputted Ingredients: " + ingredients + "\n" + response.getInstructions();
+        details = new Details(ingredientsAndInstructions);
         instructions = details.getInstructions().getText();
-
         
         this.setTop(header2);
         this.setBottom(footer2);
@@ -43,6 +45,8 @@ public class DetailView extends BorderPane{
         editButton = footer2.getEditButton();
         deleteButton = footer2.getDeleteButton();
         saveButton = footer2.getSaveButton();
+
+        currStage.setResizable(true);
         
 
         // Add button functionality
@@ -50,6 +54,7 @@ public class DetailView extends BorderPane{
             details.setEditable(true);
             inEditMode = true;
             instructions = details.getInstructions().getText();
+            
 
 
         });
@@ -209,7 +214,9 @@ class Details extends VBox {
         instructions.setEditable(false);
         this.getChildren().add(instructions); // add text area to the VBox
     }
+
     public TextInputControl getInstructions() {
+
         return instructions;
     }
     public void setEditable(boolean editable) {

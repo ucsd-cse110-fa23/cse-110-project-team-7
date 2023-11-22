@@ -196,7 +196,7 @@ class CreateRecipeAppFrame extends FlowPane {
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");
                     currStage.setScene(scene);
-                    currStage.setResizable(false);
+                    currStage.setResizable(true);
                     currStage.show();
                 }
                 else{
