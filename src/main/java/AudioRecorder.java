@@ -99,7 +99,7 @@ class CreateRecipeAppFrame extends FlowPane {
     CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList) throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
-        
+        currStage.setResizable(true);
         // Set properties for the flowpane
         this.setPrefSize(370, 120);
         this.setPadding(new Insets(5, 0, 5, 5));
