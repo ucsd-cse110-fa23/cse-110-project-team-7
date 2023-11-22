@@ -74,7 +74,7 @@ public class SaveRecipeTest {
     }
 
     @Test
-    public void testSavingExistingRecipe(){
+    public void testSavingMultipleRecipeSort(){
         try{
 
             recipeList=saveRecipe.saveARecipe(recipeList, recipe);

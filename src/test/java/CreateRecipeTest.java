@@ -53,12 +53,13 @@ public class CreateRecipeTest {
 
     @Test 
     public void testSetTitle(){
-        String input = "[Curried Egg Sandwich:]" + "\n" +"Ingredients: 2 eggs " + "\n" + "Instructions: " + "\n" + "Steps";
+        String input = "[Curried Egg Sandwich]" + "\n" +"Ingredients: 2 eggs " + "\n" + "Instructions: " + "\n" + "Steps";
         Recipe recipe = new Recipe(); 
-        recipe.setTitle(input);
         recipe.setInstructions(input); 
+        recipe.setMealType("breakfast");
+        recipe.setTitle(input);
         String instructions = "\nIngredients: 2 eggs " + "\n" + "Instructions: " + "\n" + "Steps";
-        assertEquals("Curried Egg Sandwich:", recipe.getTitle());
+        assertEquals("Curried Egg Sandwich - Breakfast", recipe.getTitle());
         assertEquals(instructions, recipe.getInstructions());
 
     }
