@@ -26,7 +26,8 @@ public class Recipe{
     }
 
     public void setMealType(String input){
-        this.mealType = input;
+        String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length());
+        this.mealType = tmp.replaceAll("[^a-zA-Z]+$", "");
     }
 
     public void setIngredients(String input){
@@ -40,7 +41,7 @@ public class Recipe{
     public void setTitle(String input){
         int start = input.indexOf("[");
         int end = input.indexOf("]");
-        this.title = input.substring(start + 1, end).trim();
+        this.title = input.substring(start + 1, end).trim() + " - " + this.getMealType();
         
     }
     

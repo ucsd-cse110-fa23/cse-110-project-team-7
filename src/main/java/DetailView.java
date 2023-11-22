@@ -28,7 +28,8 @@ public class DetailView extends BorderPane{
     String instructions;
 
     DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList) throws Exception{
-        header2 = new Header2(response.getTitle());
+        String title = response.getTitle();
+        header2 = new Header2(title);
         footer2 = new Footer2();
         details = new Details(response.getInstructions());
         instructions = details.getInstructions().getText();
