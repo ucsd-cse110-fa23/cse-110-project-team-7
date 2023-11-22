@@ -33,6 +33,7 @@ public class ChatGPTTest {
 
     private IChatGPT fakeChatGPT;
     private IChatGPT fakeChatGPT2;
+    private boolean real = false;
 
     @BeforeEach
     public void setup() {
@@ -42,7 +43,7 @@ public class ChatGPTTest {
     }
 
     public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
-        if(recipe.getMealType() == "lunch"){
+        if(real){
             return fakeChatGPT.getCookingInstruction(recipe);
         }
         return fakeChatGPT2.getCookingInstruction(recipe);
@@ -52,10 +53,10 @@ public class ChatGPTTest {
     public void testGetCookingInstructionSuccess() throws Exception {
         // Call the method as if it were the real API
         Recipe recipe = new Recipe();
-        recipe.setMealType("lunch");
+        real = true;
 
         String response = getCookingInstruction(recipe);
-
+        //assertEquals(recipe.getMealType(), "Lunch");
         // Assert the response
         assertEquals(response, "Fake API: This is a fake cooking instruction for testing.");
     }
