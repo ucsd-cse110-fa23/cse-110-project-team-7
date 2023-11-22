@@ -56,10 +56,8 @@ public class CreateAccount extends BorderPane {
         loginButton.setOnAction(e -> {
             
             ListView login = new ListView(currStage, currApp);
-            Scene scene = new Scene(login,500,600);
-            currStage.setScene(scene);
-            currStage.setResizable(true);
-            currStage.show();
+            currStage.setScene(login.getRecipeListScene());
+            
 
            
         });

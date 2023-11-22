@@ -168,7 +168,6 @@ public class ListView extends BorderPane{
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
-
     private Button addButton;
 
     ListView(Stage primaryStage, App currApp)
@@ -240,7 +239,8 @@ public class ListView extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
-       
+        recipeListScene = new Scene(this, 500, 600);
+
 
         // Call Event Listeners for the Buttons
         addListeners(primaryStage, currApp, recipeList);

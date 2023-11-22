@@ -1,4 +1,5 @@
 import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -110,8 +111,10 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                ListView listview = new ListView(currStage, currApp);
-                currStage.setScene(listview.getRecipeListScene());
+                Scene recipeListScene = new ListView(currStage, currApp).getRecipeListScene();
+
+                currStage.setScene(recipeListScene);
+                
             }
         });        
 
@@ -122,6 +125,9 @@ public class DetailView extends BorderPane{
             recipeList.saveRecipe();
 
         });
+
+
+        
 
         
     }
