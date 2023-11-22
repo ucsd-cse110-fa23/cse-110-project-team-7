@@ -110,7 +110,8 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                currStage.setScene(currApp.getRecipeListScene());
+                ListView listview = new ListView(currStage, currApp);
+                currStage.setScene(listview.getRecipeListScene());
             }
         });        
 
@@ -121,9 +122,6 @@ public class DetailView extends BorderPane{
             recipeList.saveRecipe();
 
         });
-
-
-        
 
         
     }
