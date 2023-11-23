@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="saveAccountTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-11-23T00:46:51" hostname="Amandas-MBP.attlocal.net" time="2.778">
+  <properties/>
+  <testcase name="testLoginNoAccount()" classname="saveAccountTest" time="1.424"/>
+  <testcase name="testLoginAccount()" classname="saveAccountTest" time="0.554"/>
+  <testcase name="testGenerateExistingAccount()" classname="saveAccountTest" time="0.471"/>
+  <testcase name="testGenerateNewAccount()" classname="saveAccountTest" time="0.325"/>
+  <system-out><![CDATA[Account doesn't exist
+Account already exists!
+]]></system-out>
+  <system-err><![CDATA[Nov 22, 2023 4:46:51 PM com.mongodb.internal.diagnostics.logging.Loggers shouldUseSLF4J
+WARNING: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+]]></system-err>
+</testsuite>

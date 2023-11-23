@@ -11,7 +11,7 @@ import static com.mongodb.client.model.Filters.*;
 
 public class saveAccount {
 
-    String uri = "mongodb+srv://admin:cXgKxmLpdvsylEUR@cluster0.zth582l.mongodb.net/?retryWrites=true&w=majority";
+    String uri = "mongodb://ajkristanto:motorola590420@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
     MongoClient mongoClient;
     MongoDatabase accountDb;
     MongoCollection<Document> accountsCollection;
@@ -39,14 +39,19 @@ public class saveAccount {
         return true;
     }
 
-    public boolean loginAccount(String userName, String password){
+    public int loginAccount(String userName, String password){
 
         if(!accountExist(userName)){
             System.out.println("Account doesn't exist");
-            return false;
+            return -1;
         }
         Bson filter = Filters.and(eq("_id", userName), eq("password", password));
-        return accountsCollection.find(filter).first() != null;
+        if(accountsCollection.find(filter).first() != null){
+            return 1;
+        }
+        System.out.println("Incorrect password");
+
+        return 0;
         
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ChatGPTTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-22T01:22:17" hostname="Amandas-MacBook-Pro.local" time="0.025">
+<testsuite name="ChatGPTTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T00:46:50" hostname="Amandas-MBP.attlocal.net" time="0.038">
   <properties/>
-  <testcase name="testGetCookingInstructionSuccess()" classname="ChatGPTTest" time="0.02"/>
+  <testcase name="testGetCookingInstructionSuccess()" classname="ChatGPTTest" time="0.033"/>
   <testcase name="testGetCookingInstructionException()" classname="ChatGPTTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

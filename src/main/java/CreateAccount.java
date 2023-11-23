@@ -20,6 +20,7 @@ import java.util.Collections;
 public class CreateAccount extends BorderPane {
     private Header3 header3;
     private AccountLogIn accountLogIn;
+    private Scene createAccountScene;
 
     private Button loginButton;
     private Button signUpButton;
@@ -31,8 +32,10 @@ public class CreateAccount extends BorderPane {
 
     private Label errorUsernameLabel; 
     private Label errorPasswordLabel;
+    private VBox errorContainer;  // Container for error labels
 
-    String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
+
+    String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; -fx-font-size: 14";
 
     CreateAccount(Stage currStage, App currApp) throws Exception {
         header3 = new Header3("Sign Up/Log in");
@@ -43,22 +46,47 @@ public class CreateAccount extends BorderPane {
         signUpButton = accountLogIn.getSignUpButton();
         autoLogin = accountLogIn.getAutoLogin();
 
-        errorUsernameLabel = new Label("Change Username");
+        errorContainer = new VBox();
+        errorContainer.setSpacing(5);
+        this.setBottom(errorContainer);
+
+        errorUsernameLabel = new Label("Invalid Username");
         errorUsernameLabel.setStyle(defaultLabelStyle);
 
-        errorPasswordLabel = new Label("Invalid Information");
+        errorPasswordLabel = new Label("Invalid Password");
         errorPasswordLabel.setStyle(defaultLabelStyle);
+        errorPasswordLabel.setVisible(false);
+        errorUsernameLabel.setVisible(false);
 
         currStage.setResizable(true);
         this.setCenter(accountLogIn);
 
+
         // Add button functionality
         loginButton.setOnAction(e -> {
-            
-            ListView login = new ListView(currStage, currApp);
-            currStage.setScene(login.getRecipeListScene());
-            
+            saveAccount sAccount = new saveAccount();
+            int result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
 
+            if(result == -1){
+                errorContainer.getChildren().add(errorUsernameLabel);
+                errorUsernameLabel.setVisible(true);  
+                errorPasswordLabel.setVisible(false);
+
+
+            }
+            else if(result == 0){
+                errorContainer.getChildren().add(errorPasswordLabel);
+                errorUsernameLabel.setVisible(false); 
+                errorPasswordLabel.setVisible(true);
+
+            }
+            else{
+                ListView login = new ListView(currStage, currApp);
+                currStage.setScene(login.getRecipeListScene());
+                errorUsernameLabel.setVisible(false);  
+                errorPasswordLabel.setVisible(false);
+
+            }
            
         });
 
@@ -68,7 +96,14 @@ public class CreateAccount extends BorderPane {
             saveAccount sAccount = new saveAccount();
             boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
             if(!saved){
-                this.getChildren().add(errorUsernameLabel);
+                errorContainer.getChildren().add(errorUsernameLabel);
+                errorUsernameLabel.setVisible(true);  // explicitly set visibility
+                errorPasswordLabel.setVisible(false);
+
+            }
+            else{
+                ListView login = new ListView(currStage, currApp);
+                currStage.setScene(login.getRecipeListScene());            
             }
 
         });
@@ -186,5 +221,6 @@ class Username extends HBox{
             return autoLogin;
         }
     }
+
 
 }

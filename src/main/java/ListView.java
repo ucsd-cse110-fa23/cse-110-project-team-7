@@ -152,15 +152,27 @@ class RecipeList extends VBox {
 
 class Header extends HBox {
 
+    private Button logOutButton;
+
     Header() {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #FFFFFF;");
 
         Text titleText = new Text("Recipe List"); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
         this.setAlignment(Pos.CENTER); // Align the text to the Center
+        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
+
+        logOutButton = new Button("Log Out");
+        logOutButton.setStyle(defaultButtonStyle); // styling the button
+        this.getChildren().addAll(logOutButton,titleText);
+
+
     }
+
+    public Button getLogOutButton() {
+        return logOutButton;
+    } 
 }
 
 public class ListView extends BorderPane{
@@ -169,6 +181,7 @@ public class ListView extends BorderPane{
     private Footer footer;
     private RecipeList recipeList;
     private Button addButton;
+    private Button logOutButton;
 
     ListView(Stage primaryStage, App currApp)
     {
@@ -239,6 +252,7 @@ public class ListView extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
+        logOutButton = header.getLogOutButton();
         recipeListScene = new Scene(this, 500, 600);
 
 
@@ -266,6 +280,29 @@ public class ListView extends BorderPane{
                 primaryStage.show();
 
             } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
+
+        });
+        logOutButton.setOnAction(e->{
+            try{
+
+                CreateAccount createAccount = new CreateAccount(primaryStage, currApp);
+                Scene scene = new Scene(createAccount, 500,600);
+                primaryStage.setTitle("PantryPal");
+                // Create scene of mentioned size with the border pane
+                primaryStage.setScene(scene);
+                // Make window resizable
+                primaryStage.setResizable(true);
+                // Show the app
+                primaryStage.show();
+
+                //primaryStage.setScene(scene.getCreateAccountScene());
+
+            }
+            catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
