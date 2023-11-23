@@ -19,10 +19,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-
-      - name: Set up MongoDB connection string
-        run: echo "MONGODB_URI=${{ mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majoritysecrets.MONGODB_URI }}" >> $GITHUB_ENV
-
+      - name: Start MongoDB
+            uses: MongoCamp/mongodb-github-action@1.0.0
+            with:
+              mongodb-version: ${{ matrix.mongodb-version }}
+              mongodb-username: ajkristanto
+              mongodb-password: 1g9rhJSw6pKCwJwj
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 

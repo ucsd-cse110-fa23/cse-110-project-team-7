@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ChatGPTTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:25:39" hostname="Amandas-MBP.attlocal.net" time="0.008">
+<testsuite name="ChatGPTTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:28:01" hostname="Amandas-MBP.attlocal.net" time="0.04">
   <properties/>
-  <testcase name="testGetCookingInstructionSuccess()" classname="ChatGPTTest" time="0.004"/>
+  <testcase name="testGetCookingInstructionSuccess()" classname="ChatGPTTest" time="0.034"/>
   <testcase name="testGetCookingInstructionException()" classname="ChatGPTTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

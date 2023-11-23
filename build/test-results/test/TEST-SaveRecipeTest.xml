@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="SaveRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:25:39" hostname="Amandas-MBP.attlocal.net" time="0.007">
+<testsuite name="SaveRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:28:01" hostname="Amandas-MBP.attlocal.net" time="0.007">
   <properties/>
-  <testcase name="testSavingMultipleRecipeSort()" classname="SaveRecipeTest" time="0.002"/>
+  <testcase name="testSavingMultipleRecipeSort()" classname="SaveRecipeTest" time="0.001"/>
   <testcase name="testSaveCSV()" classname="SaveRecipeTest" time="0.002"/>
   <testcase name="testSavingCorrect()" classname="SaveRecipeTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
