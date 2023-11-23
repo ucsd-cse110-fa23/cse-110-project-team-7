@@ -20,7 +20,6 @@ import java.util.Collections;
 public class CreateAccount extends BorderPane {
     private Header3 header3;
     private AccountLogIn accountLogIn;
-    private Scene createAccountScene;
 
     private Button loginButton;
     private Button signUpButton;

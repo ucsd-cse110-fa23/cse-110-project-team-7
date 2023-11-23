@@ -128,8 +128,6 @@ public class DetailView extends BorderPane{
 
 
         
-
-        
     }
 
 }

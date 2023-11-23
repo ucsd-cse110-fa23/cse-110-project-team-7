@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="DeleteRecipeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T00:46:51" hostname="Amandas-MBP.attlocal.net" time="0.025">
+<testsuite name="DeleteRecipeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T00:55:07" hostname="Amandas-MBP.attlocal.net" time="0.012">
   <properties/>
-  <testcase name="testDeleteEmpty()" classname="DeleteRecipeTest" time="0.016"/>
+  <testcase name="testDeleteEmpty()" classname="DeleteRecipeTest" time="0.003"/>
   <testcase name="testDeleteCorrect()" classname="DeleteRecipeTest" time="0.008"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
