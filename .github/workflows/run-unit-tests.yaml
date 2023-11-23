@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+      - name: Set up MongoDB connection string
+        run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> $GITHUB_ENV
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 

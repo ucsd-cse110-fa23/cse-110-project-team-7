@@ -12,8 +12,15 @@ public class saveAccountTest {
 
     @BeforeAll
     public static void setUp() {
-        saveAccount = new saveAccount();
-    }
+        try {
+            System.out.println("Connecting to MongoDB...");
+            saveAccount = new saveAccount();
+            System.out.println("MongoDB connection established successfully.");
+        } catch (Exception e) {
+            fail("Failed to set up MongoDB connection: " + e.getMessage());
+        }
+}
+
 
     @Test
     public void testGenerateNewAccount() {

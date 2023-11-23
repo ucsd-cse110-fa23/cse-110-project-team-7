@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="SaveRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-23T00:55:07" hostname="Amandas-MBP.attlocal.net" time="0.018">
+<testsuite name="SaveRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:20:54" hostname="Amandas-MBP.attlocal.net" time="0.006">
   <properties/>
   <testcase name="testSavingMultipleRecipeSort()" classname="SaveRecipeTest" time="0.001"/>
-  <testcase name="testSaveCSV()" classname="SaveRecipeTest" time="0.001"/>
-  <testcase name="testSavingCorrect()" classname="SaveRecipeTest" time="0.002"/>
+  <testcase name="testSaveCSV()" classname="SaveRecipeTest" time="0.003"/>
+  <testcase name="testSavingCorrect()" classname="SaveRecipeTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
