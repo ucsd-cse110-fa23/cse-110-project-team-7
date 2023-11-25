@@ -11,7 +11,7 @@ import static com.mongodb.client.model.Filters.*;
 
 public class saveAccount {
 
-    String uri = "mongodb+srv://admin:cXgKxmLpdvsylEUR@cluster0.zth582l.mongodb.net/?retryWrites=true&w=majority";
+    String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
     MongoClient mongoClient;
     MongoDatabase accountDb;
     MongoCollection<Document> accountsCollection;

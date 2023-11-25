@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import org.bson.Document;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 public class saveRecipe {
    public static ArrayList<Recipe> saveARecipe(ArrayList<Recipe> recipeList, Recipe recipe) throws IOException {
         if(!recipeList.contains(recipe)){
@@ -21,70 +28,11 @@ public class saveRecipe {
    }
 
    public static void saveToCSV(ArrayList<Recipe> recipeList) throws IOException {
-
-
-       // Replace the placeholder with your MongoDB deployment's connection string
-       // String uri = "Your uri";
-       
-       /* From Mini-Project code
-        * try {
-            FileWriter writeContact = new FileWriter("contacts.csv", false);
-            writeContact.write("Contact Name, " + "Phone Number, " + "Address\n");
-            for (int i = 0; i < this.getChildren().size(); i++) {
-                if (this.getChildren().get(i) instanceof Contact) {
-                    Contact contact = (Contact) this.getChildren().get(i);
-                    //getTaskName().getText() gives the task name
-                    writeContact.write(contact.getContactName().getText() + ", ");
-                    writeContact.write(contact.getContactPhoneNo().getText() + ", ");
-                    writeContact.write(contact.getContactAddress().getText() + "\n");
-                }
-            }
-            writeContact.close();
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        */
-        /* From lab 1 code
-         *  try {
-            FileWriter writeTask = new FileWriter("tasks.txt", false);
-            for (int i = 0; i < this.getChildren().size(); i++) {
-                if (this.getChildren().get(i) instanceof Task) {
-                    Task task = (Task) this.getChildren().get(i);
-                    //getTaskName().getText() gives the task name
-                    writeTask.write(task.getTaskName().getText() + "\n");
-                }
-            }
-            writeTask.close();
-        }
-         */
-
-
-                // FileWriter outWriter = new FileWriter("save.csv");
-
-                // for(int i = 0 ; i < clist.size(); i++){
-                 
-                //     String name = clist.get(i).getName();
-                //     String email = clist.get(i).getEmail();
-                //     String number = clist.get(i).getPhoneNumber();
-    
-                //     outWriter.append(name);
-                //     outWriter.append(',');
-                //     outWriter.append(email);
-                //     outWriter.append(',');
-                //     outWriter.append(number);
-                //     outWriter.append('\n');
-    
-                // }
-
-                // outWriter.close();
            
         try {
 
             FileWriter writeRecipe = new FileWriter("recipes.csv");
-            
-            //BufferedReader br = new BufferedReader(new FileWriter("recipeName.csv", false));
-            
+                    
             
             for(Recipe rec : recipeList) {
             
@@ -119,4 +67,39 @@ public class saveRecipe {
         }
    
    }
+
+   public static void saveCSVtoDatabase(String name) throws FileNotFoundException, IOException{
+    String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+
+            
+            MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
+            MongoCollection<Document> recipesCollection = recipeDB.getCollection("recipe");
+
+            // Reads file 
+            try (BufferedReader br = new BufferedReader(new FileReader("/Users/ajk/Desktop/lab6/recipes.csv"))) {
+                String line;
+                boolean isFirstLine = true; 
+                while ((line = br.readLine()) != null) {
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
+                    String[] values = line.split(";");
+                    if (values.length == 3) {
+                        String recipeName = values[0];
+                        String description = values[1];
+                        String hours= values[2];
+
+                        // inserts recipe
+                        Document recipeDocument = new Document("recipe_name", recipeName)
+                                .append("description", description)
+                                .append("hours", hours);
+
+                        recipesCollection.insertOne(recipeDocument);
+                    }
+                }
+            }
+   }
+}
 }

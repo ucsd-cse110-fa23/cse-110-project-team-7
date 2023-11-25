@@ -86,7 +86,8 @@ public class DetailView extends BorderPane{
                         ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                         recipeList.setRecipeList(newRecipe);
                         saveRecipe.saveToCSV(recipeList.getRecipeList());
-                        
+                        saveRecipe.saveCSVtoDatabase("recipes.csv");
+
                         //recipeList.addReci()
                         recipeList.saveRecipe();
 
@@ -119,6 +120,7 @@ public class DetailView extends BorderPane{
 
             ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
             recipeList.setRecipeList(newList);
+            
             recipeList.saveRecipe();
 
         });
