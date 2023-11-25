@@ -85,8 +85,8 @@ public class DetailView extends BorderPane{
         
                         ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                         recipeList.setRecipeList(newRecipe);
-                        saveRecipe.saveToCSV(recipeList.getRecipeList());
-                        saveRecipe.saveCSVtoDatabase("recipes.csv");
+                        saveRecipe.saveToCSV(newRecipe);
+                        saveRecipe.saveListToDatabase(newRecipe);
 
                         //recipeList.addReci()
                         recipeList.saveRecipe();

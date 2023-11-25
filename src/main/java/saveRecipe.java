@@ -17,89 +17,50 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class saveRecipe {
-   public static ArrayList<Recipe> saveARecipe(ArrayList<Recipe> recipeList, Recipe recipe) throws IOException {
-        if(!recipeList.contains(recipe)){
+    public static ArrayList<Recipe> saveARecipe(ArrayList<Recipe> recipeList, Recipe recipe) throws IOException {
+        if (!recipeList.contains(recipe)) {
             recipeList.add(0, recipe);
-
         }
         return recipeList;
-        
-   
-   }
+    }
 
-   public static void saveToCSV(ArrayList<Recipe> recipeList) throws IOException {
-           
+    public static void saveToCSV(ArrayList<Recipe> recipeList) throws IOException {
         try {
-
             FileWriter writeRecipe = new FileWriter("recipes.csv");
-                    
-            
-            for(Recipe rec : recipeList) {
-            
+
+            for (Recipe rec : recipeList) {
                 String title = rec.getTitle();
                 String ingredients = rec.getIngredients();
                 String instructions = rec.getInstructions();
-                
+
                 writeRecipe.append("Title: " + title);
-                writeRecipe.append(',');
+                writeRecipe.append(';');
                 writeRecipe.append("Ingredients: " + ingredients);
-                writeRecipe.append(',');
+                writeRecipe.append(';');
                 writeRecipe.append("Instructions: " + instructions);
                 writeRecipe.append('\n');
             }
-            // String line ="";
-            // String instructions = "";
-            // // Read the rest of the file
-            // while ((line = br.readLine()) != null) {
-            //     instructions += line + "\n"; // Concatenate the line to instructions
-            // }
-            
+
             writeRecipe.close();
-
-            // RecipeList recipeList = new RecipeList();
-            // private Button recipeButton;
-            // recipeButton = new Button(title);
-            // recipeButton.setStyle(defaultButtonStyle);
-            // this.getChildren().addAll
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-   
-   }
+    }
 
-   public static void saveCSVtoDatabase(String name) throws FileNotFoundException, IOException{
-    String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
+    public static void saveListToDatabase(ArrayList<Recipe> recipeList) {
+        String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
+
         try (MongoClient mongoClient = MongoClients.create(uri)) {
-
-            
             MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
-            MongoCollection<Document> recipesCollection = recipeDB.getCollection("recipe");
+            MongoCollection<Document> recipesCollection = recipeDB.getCollection("recipes");
 
-            // Reads file 
-            try (BufferedReader br = new BufferedReader(new FileReader("/Users/ajk/Desktop/lab6/recipes.csv"))) {
-                String line;
-                boolean isFirstLine = true; 
-                while ((line = br.readLine()) != null) {
-                    if (isFirstLine) {
-                        isFirstLine = false;
-                        continue;
-                    }
-                    String[] values = line.split(";");
-                    if (values.length == 3) {
-                        String recipeName = values[0];
-                        String description = values[1];
-                        String hours= values[2];
+            for (Recipe recipe : recipeList) {
+                Document recipeDocument = new Document("Title", recipe.getTitle())
+                        .append("Ingredients", recipe.getIngredients())
+                        .append("Instructions", recipe.getInstructions());
 
-                        // inserts recipe
-                        Document recipeDocument = new Document("recipe_name", recipeName)
-                                .append("description", description)
-                                .append("hours", hours);
-
-                        recipesCollection.insertOne(recipeDocument);
-                    }
-                }
+                recipesCollection.insertOne(recipeDocument);
             }
-   }
-}
+        }
+    }
 }

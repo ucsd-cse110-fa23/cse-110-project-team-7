@@ -8,7 +8,7 @@ public class DeleteRecipe{
         // Update CSV file too somehow to remove list
         try{
             saveRecipe.saveToCSV(recipeList);
-            saveRecipe.saveCSVtoDatabase("recipes.csv");
+            saveRecipe.saveListToDatabase(recipeList);
         }catch(Exception e){
             System.err.println("Delete and Save failed");
             e.printStackTrace();
