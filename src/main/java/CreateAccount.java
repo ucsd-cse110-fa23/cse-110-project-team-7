@@ -63,6 +63,7 @@ public class CreateAccount extends BorderPane {
 
         // Add button functionality
         loginButton.setOnAction(e -> {
+            errorContainer.getChildren().clear();
             saveAccount sAccount = new saveAccount();
             int result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
 
@@ -91,6 +92,7 @@ public class CreateAccount extends BorderPane {
 
         // Add button functionality
         signUpButton.setOnAction(e -> {
+            errorContainer.getChildren().clear();
             //use saveAccount class to save user's new account to database    
             saveAccount sAccount = new saveAccount();
             boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());

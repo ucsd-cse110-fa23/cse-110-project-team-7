@@ -186,7 +186,7 @@ public class ListView extends BorderPane{
             BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
             String text = input.readLine();
             // while input is not at end of file
-            while (text != null) {
+            while (text != null ) {
                 if(text.startsWith("Title: ")){
                     if(counter != 0){
                         recipeList.addRecipe(recipe);

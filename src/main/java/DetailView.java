@@ -1,5 +1,4 @@
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -70,7 +69,7 @@ public class DetailView extends BorderPane{
                 try {
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                     recipeList.setRecipeList(newRecipe);
-                    // recipeList.saveRecipe();
+                    recipeList.saveRecipe();
 
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
@@ -87,7 +86,6 @@ public class DetailView extends BorderPane{
                         ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                         recipeList.setRecipeList(newRecipe);
                         saveRecipe.saveToCSV(recipeList.getRecipeList());
-                        
                         //recipeList.addReci()
                         recipeList.saveRecipe();
 
@@ -111,10 +109,8 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                Scene recipeListScene = new ListView(currStage, currApp).getRecipeListScene();
-
-                currStage.setScene(recipeListScene);
-                
+                ListView listview = new ListView(currStage, currApp);
+                currStage.setScene(listview.getRecipeListScene());
             }
         });        
 
@@ -122,10 +118,10 @@ public class DetailView extends BorderPane{
 
             ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
             recipeList.setRecipeList(newList);
+            
             recipeList.saveRecipe();
 
         });
-
 
         
     }
