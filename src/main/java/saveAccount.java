@@ -26,6 +26,11 @@ public class saveAccount {
         }
     }
 
+    public saveAccount(MongoDatabase accountDb, MongoCollection<Document> accountsCollection) {
+        this.accountDb = accountDb;
+        this.accountsCollection = accountsCollection;
+    }
+
     public boolean generateNewAccount(String userName, String password) {
         if (accountExist(userName)) {
             System.out.println("Account already exists!");
@@ -39,25 +44,31 @@ public class saveAccount {
         return true;
     }
 
-    public int loginAccount(String userName, String password){
-
-        if(!accountExist(userName)){
+    public int loginAccount(String userName, String password) {
+        if (!accountExist(userName)) {
             System.out.println("Account doesn't exist");
             return -1;
         }
-        Bson filter = Filters.and(eq("_id", userName), eq("password", password));
-        if(accountsCollection.find(filter).first() != null){
-            return 1;
+    
+        Bson filter = and(eq("_id", userName), eq("password", password));
+        Document result = accountsCollection.find(filter).first();
+    
+        if (result != null) {
+            return 1; // Successfully logged in
+        } else {
+            System.out.println("Incorrect username or password");
+            return 0; // Incorrect username or password
         }
-        System.out.println("Incorrect password");
-
-        return 0;
-        
     }
+    
+    
+
 
     // Check if the account exists
     public boolean accountExist(String userName) {
         Bson filter = eq("_id", userName);
-        return accountsCollection.find(filter).first() != null; 
+        Document result = accountsCollection.find(filter, Document.class).first();
+        return result != null;
     }
+
 }
