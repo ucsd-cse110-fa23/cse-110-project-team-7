@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="DeleteRecipeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-23T01:28:01" hostname="Amandas-MBP.attlocal.net" time="0.013">
+<testsuite name="DeleteRecipeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-27T07:30:12" hostname="Amandas-MacBook-Pro.local" time="0.004">
   <properties/>
-  <testcase name="testDeleteEmpty()" classname="DeleteRecipeTest" time="0.009"/>
+  <testcase name="testDeleteEmpty()" classname="DeleteRecipeTest" time="0.002"/>
   <testcase name="testDeleteCorrect()" classname="DeleteRecipeTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

@@ -115,17 +115,17 @@ public class saveAccountTest {
         String storedPassword = "storedPassword";
         String enteredPassword = "incorrectPassword";
 
-        when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
-
-        when(mockFindIterable.first()).thenReturn(new Document("_id", userName).append("password", storedPassword));
-        boolean r = saveAccount.accountExist(userName);
-
-        assertTrue(r);
+        when(mockCursor.hasNext()).thenReturn(true);
+        when(mockCursor.next()).thenReturn(new Document("_id", userName).append("password", storedPassword));
 
         boolean result = saveAccount.loginAccount(userName, enteredPassword);
 
-        assertFalse(result);
+        assertFalse(result); 
+
     }
+
+
+
 
     @Test
     public void testLoginNoAccount() {
