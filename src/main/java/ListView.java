@@ -152,14 +152,23 @@ class RecipeList extends VBox {
 
 class Header extends HBox {
 
+    private Button logOutButton;
+
     Header() {
         this.setPrefSize(500, 60); // Size of the header
-        this.setStyle("-fx-background-color: #FFFFFF;");
+        this.setStyle("-fx-background-color: #FFFFFF;"); // set a default style for buttons - background color, font size, italics
+        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
+        logOutButton = new Button("Log Out"); // text displayed on add button
+        logOutButton.setStyle(defaultButtonStyle); // styling the button
+        
         Text titleText = new Text("Recipe List"); // Text of the Header
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.getChildren().add(titleText);
+        this.getChildren().addAll(logOutButton, titleText);
         this.setAlignment(Pos.CENTER); // Align the text to the Center
+    }
+    public Button getLogOutButton(){
+        return logOutButton;
     }
 }
 
@@ -169,6 +178,7 @@ public class ListView extends BorderPane{
     private Footer footer;
     private RecipeList recipeList;
     private Button addButton;
+    private Button logOutButton;
 
     ListView(Stage primaryStage, App currApp)
     {
@@ -239,6 +249,7 @@ public class ListView extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
+        logOutButton = header.getLogOutButton();
         recipeListScene = new Scene(this, 500, 600);
 
 
@@ -270,6 +281,20 @@ public class ListView extends BorderPane{
                 e1.printStackTrace();
             }
             
+
+        });
+        logOutButton.setOnAction(e->{
+            try{
+                CreateAccount createAccount = new CreateAccount(primaryStage, currApp);
+                Scene accountScene = new Scene(createAccount, 500,600);
+                primaryStage.setScene(accountScene);
+                primaryStage.setResizable(true);
+                primaryStage.show();
+
+            }catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
         });
     }

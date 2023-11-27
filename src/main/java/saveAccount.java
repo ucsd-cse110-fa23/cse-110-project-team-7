@@ -44,20 +44,23 @@ public class saveAccount {
         return true;
     }
 
-    public int loginAccount(String userName, String password) {
+    public boolean loginAccount(String userName, String password) {
+        System.out.println("Entering loginAccount method");
+        System.out.println("UserName: " + userName);
         if (!accountExist(userName)) {
             System.out.println("Account doesn't exist");
-            return -1;
+            
+            return false;
         }
     
         Bson filter = and(eq("_id", userName), eq("password", password));
         Document result = accountsCollection.find(filter).first();
     
         if (result != null) {
-            return 1; // Successfully logged in
+            return true; // Successfully logged in
         } else {
             System.out.println("Incorrect username or password");
-            return 0; // Incorrect username or password
+            return false; // Incorrect username or password
         }
     }
     
@@ -68,6 +71,7 @@ public class saveAccount {
     public boolean accountExist(String userName) {
         Bson filter = eq("_id", userName);
         Document result = accountsCollection.find(filter, Document.class).first();
+        
         return result != null;
     }
 

@@ -29,8 +29,7 @@ public class CreateAccount extends BorderPane {
     private Username username; 
     private Password password;
 
-    private Label errorUsernameLabel; 
-    private Label errorPasswordLabel;
+    private Label errorLabel; 
     private VBox errorContainer;  // Container for error labels
 
 
@@ -49,13 +48,9 @@ public class CreateAccount extends BorderPane {
         errorContainer.setSpacing(5);
         this.setBottom(errorContainer);
 
-        errorUsernameLabel = new Label("Invalid Username");
-        errorUsernameLabel.setStyle(defaultLabelStyle);
-
-        errorPasswordLabel = new Label("Invalid Password");
-        errorPasswordLabel.setStyle(defaultLabelStyle);
-        errorPasswordLabel.setVisible(false);
-        errorUsernameLabel.setVisible(false);
+        errorLabel = new Label("Invalid Username/Password");
+        errorLabel.setStyle(defaultLabelStyle);
+        errorLabel.setVisible(false);
 
         currStage.setResizable(true);
         this.setCenter(accountLogIn);
@@ -65,26 +60,18 @@ public class CreateAccount extends BorderPane {
         loginButton.setOnAction(e -> {
             errorContainer.getChildren().clear();
             saveAccount sAccount = new saveAccount();
-            int result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
+            boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
 
-            if(result == -1){
-                errorContainer.getChildren().add(errorUsernameLabel);
-                errorUsernameLabel.setVisible(true);  
-                errorPasswordLabel.setVisible(false);
+            if(result == false){
+                errorContainer.getChildren().add(errorLabel);
+                errorLabel.setVisible(true);  
 
-
-            }
-            else if(result == 0){
-                errorContainer.getChildren().add(errorPasswordLabel);
-                errorUsernameLabel.setVisible(false); 
-                errorPasswordLabel.setVisible(true);
 
             }
             else{
                 ListView login = new ListView(currStage, currApp);
                 currStage.setScene(login.getRecipeListScene());
-                errorUsernameLabel.setVisible(false);  
-                errorPasswordLabel.setVisible(false);
+                errorLabel.setVisible(false);  
 
             }
            
@@ -97,9 +84,8 @@ public class CreateAccount extends BorderPane {
             saveAccount sAccount = new saveAccount();
             boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
             if(!saved){
-                errorContainer.getChildren().add(errorUsernameLabel);
-                errorUsernameLabel.setVisible(true);  // explicitly set visibility
-                errorPasswordLabel.setVisible(false);
+                errorContainer.getChildren().add(errorLabel);
+                errorLabel.setVisible(true);  
 
             }
             else{
