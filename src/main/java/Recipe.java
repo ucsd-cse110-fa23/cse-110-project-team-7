@@ -12,6 +12,12 @@ public class Recipe{
         this.instructions = "";
     }
 
+    public Recipe(String title, String ingredients, String instructions){
+        this.title = title;
+        this.ingredients = ingredients; 
+        this.instructions = instructions;
+    }
+
     public String getMealType(){
         return this.mealType;
     }
