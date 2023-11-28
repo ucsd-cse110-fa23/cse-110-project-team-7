@@ -1,5 +1,6 @@
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -56,49 +57,60 @@ public class CreateAccount extends BorderPane {
         this.setCenter(accountLogIn);
 
 
-        // Add button functionality
-        loginButton.setOnAction(e -> {
-            errorContainer.getChildren().clear();
-            saveAccount sAccount = new saveAccount();
-            boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
+    // Add button functionality
+loginButton.setOnAction(e -> {
+    errorContainer.getChildren().clear();
+    saveAccount sAccount = new saveAccount();
+    boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
 
-            if(result == false){
-                errorContainer.getChildren().add(errorLabel);
-                errorLabel.setVisible(true);  
+    if (result) {
+        sAccount.setUsername(username.getUsernameField().getText());
+        ArrayList<Recipe> userRecipes = sAccount.readDatabase(username.getUsernameField().getText());
+        RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
+        recipeList.setRecipeList(userRecipes);
+
+        Scene currentScene = currStage.getScene();
+        if (currentScene != null) {
+
+            ListView loginListView = new ListView(currStage, currApp, recipeList, sAccount);
+
+            // Set the new scene with the new ListView
+            currStage.setScene(loginListView.getRecipeListScene());
+        } 
+        errorLabel.setVisible(false);
+    } else {
+        errorContainer.getChildren().add(errorLabel);
+        errorLabel.setVisible(true);
+    }
+});
 
 
-            }
-            else{
-                RecipeList recipeList = new RecipeList(currStage, currApp);
-                ListView login = new ListView(currStage, currApp, recipeList);
-                currStage.setScene(login.getRecipeListScene());
-                errorLabel.setVisible(false);  
 
-            }
-           
-        });
+    // Add button functionality
+    signUpButton.setOnAction(e -> {
+        errorContainer.getChildren().clear();
+        saveAccount sAccount = new saveAccount();
+        boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
+        if (!saved) {
+            errorContainer.getChildren().add(errorLabel);
+            errorLabel.setVisible(true);
+        } else {
+            sAccount.setUsername(username.getUsernameField().getText());
+            RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
 
-        // Add button functionality
-        signUpButton.setOnAction(e -> {
-            errorContainer.getChildren().clear();
-            //use saveAccount class to save user's new account to database    
-            saveAccount sAccount = new saveAccount();
-            boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
-            if(!saved){
-                errorContainer.getChildren().add(errorLabel);
-                errorLabel.setVisible(true);  
+            Scene currentScene = currStage.getScene();
+            if (currentScene != null) {
 
-            }
-            else{
-                RecipeList recipeList = new RecipeList(currStage, currApp);
-                ListView login = new ListView(currStage, currApp, recipeList);
-                currStage.setScene(login.getRecipeListScene());            
-            }
+                ListView signInListView = new ListView(currStage, currApp, recipeList, sAccount);
 
-        });
+                // Set the new scene with the new ListView
+                currStage.setScene(signInListView.getRecipeListScene());
+            }   
+        }
+    });
 
-        // Add button functionality
-        autoLogin.setOnAction(e -> {
+    // Add button functionality
+    autoLogin.setOnAction(e -> {
             
         });
 

@@ -65,16 +65,17 @@ class RecipeList extends VBox {
     private ArrayList<Recipe> recipes;
     private Stage currStage;
     private App currApp;
+    private saveAccount saveAccount;
 
 
-    RecipeList(Stage currStage, App currApp) {
+    RecipeList(Stage currStage, App currApp, saveAccount saveAccount) {
         recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.currStage = currStage;
         this.currApp = currApp;
-        // recipes.add(recipe);
+        this.saveAccount = saveAccount;
     }
 
 
@@ -105,7 +106,7 @@ class RecipeList extends VBox {
             recipeButton.setOnAction(e -> {
 
                 try {
-                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(), this);
+                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(), this, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     this.getStage().setTitle("Detail View");
                     this.getStage().setScene(scene);
@@ -192,7 +193,7 @@ public class ListView extends BorderPane {
     private Button logOutButton;
     private ComboBox<String> sortBox;
 
-    ListView(Stage primaryStage, App currApp, RecipeList recipes) {
+    ListView(Stage primaryStage, App currApp, RecipeList recipes, saveAccount saveAccount) {
         // Initialise the header Object
         header = new Header();
 
@@ -221,16 +222,16 @@ public class ListView extends BorderPane {
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
         logOutButton = header.getLogOutButton();
-        recipeListScene = new Scene(this, 500, 600);
 
         sortBox = footer.getSortBox();
+        recipeList.saveRecipe();
         recipeListScene = new Scene(this, 500, 600);
 
         // Call Event Listeners for the Buttons
-        addListeners(primaryStage, currApp, recipeList);
+        addListeners(primaryStage, currApp, recipeList, saveAccount);
     }
 
-    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList) {
+    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList, saveAccount saveAccount) {
 
         ArrayList<Recipe> defaultList1 = recipeList.getRecipeList();
 
@@ -244,7 +245,7 @@ public class ListView extends BorderPane {
                  * this.setScene(scene1);
                  */
 
-                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList);
+                CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList, saveAccount);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
                 primaryStage.setTitle("Create Recipe");
                 primaryStage.setScene(secondScene);

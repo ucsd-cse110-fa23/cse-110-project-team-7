@@ -2,12 +2,14 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import static com.mongodb.client.model.Updates.pull;
+
 import static com.mongodb.client.model.Filters.*;
+import java.util.*;
 
 public class saveAccount {
 
@@ -15,12 +17,14 @@ public class saveAccount {
     MongoClient mongoClient;
     MongoDatabase accountDb;
     MongoCollection<Document> accountsCollection;
+    String username;
 
     public saveAccount() {
         try {
             mongoClient = MongoClients.create(uri);
             accountDb = mongoClient.getDatabase("account_db");
             accountsCollection = accountDb.getCollection("accounts");
+            this.username = "";
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -37,8 +41,10 @@ public class saveAccount {
             return false;
         }
 
+
         Document newUser = new Document("_id", userName)
-                .append("password", password);
+                .append("password", password)
+                .append("recipes", new ArrayList<>());;
 
         accountsCollection.insertOne(newUser);
         return true;
@@ -63,9 +69,6 @@ public class saveAccount {
             return false; // Incorrect username or password
         }
     }
-    
-    
-
 
     // Check if the account exists
     public boolean accountExist(String userName) {
@@ -73,5 +76,89 @@ public class saveAccount {
         
         return accountsCollection.find(filter, Document.class).first() != null;
     }
+
+    
+
+    public void saveRecipesForUser(String userName, ArrayList<Recipe> recipeList) {
+        if (userName.equals("")) {
+            System.out.println("Error: Empty username");
+            return;
+        }
+    
+        Bson filter = eq("_id", userName);
+        Document user = accountsCollection.find(filter).first();
+    
+        if (user != null) {
+            List<Document> existingRecipes = (List<Document>) user.get("recipes", List.class);
+    
+            // Clear the existing recipes
+            existingRecipes.clear();
+    
+            // Add the new recipes
+            for (Recipe recipe : recipeList) {
+                Document recipeDocument = new Document("Title", recipe.getTitle())
+                        .append("Ingredients", recipe.getIngredients())
+                        .append("Instructions", recipe.getInstructions());
+    
+                existingRecipes.add(recipeDocument);
+            }
+    
+            accountsCollection.replaceOne(filter, user);
+        } else {
+            System.out.println("User not found: " + userName);
+        }
+    }
+
+    public void deleteRecipeFromDatabase(String username, Recipe recipe) {
+        Bson filter = eq("_id", username);
+        Bson update = pull("recipes", new Document("Title", recipe.getTitle())
+                                            .append("Ingredients", recipe.getIngredients())
+                                            .append("Instructions", recipe.getInstructions()));
+    
+        accountsCollection.updateOne(filter, update);
+    }
+    
+    
+
+    public String getUsername(){
+        return this.username;
+    }
+
+    public void setUsername(String user){
+        this.username = user;
+    }
+
+    public ArrayList<Recipe> readDatabase(String username) {
+        ArrayList<Recipe> result = new ArrayList<>();
+    
+        try {
+            Bson filter = eq("_id", username);
+    
+            Document user = accountsCollection.find(filter).first();
+    
+            if (user != null) {
+                List<Document> recipes = user.getList("recipes", Document.class);
+    
+                if (recipes != null) {
+                    for (Document recipeDoc : recipes) {
+                        String title = recipeDoc.getString("Title");
+                        String ingredients = recipeDoc.getString("Ingredients");
+                        String instructions = recipeDoc.getString("Instructions");
+    
+                        Recipe recipe = new Recipe(title, ingredients, instructions);
+                        result.add(recipe);
+                    }
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        return result;
+    }
+    
+    
 
 }

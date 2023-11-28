@@ -96,7 +96,7 @@ class CreateRecipeAppFrame extends FlowPane {
     String defaultButtonStyle = "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
-    CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList) throws Exception {
+    CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList, saveAccount saveAccount) throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
         currStage.setResizable(true);
@@ -133,10 +133,10 @@ class CreateRecipeAppFrame extends FlowPane {
         audioFormat = getAudioFormat();
 
         // Add the listeners to the buttons
-        addListeners(currStage, currApp, recipeList);
+        addListeners(currStage, currApp, recipeList, saveAccount);
     }
 
-    public void addListeners(Stage currStage, App currApp, RecipeList recipeList) {
+    public void addListeners(Stage currStage, App currApp, RecipeList recipeList, saveAccount saveAccount) {
        
         // Start Button
         startButton.setOnAction(e -> {
@@ -192,7 +192,7 @@ class CreateRecipeAppFrame extends FlowPane {
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
-                    DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList);
+                    DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");
                     currStage.setScene(scene);

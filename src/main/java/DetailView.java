@@ -28,7 +28,7 @@ public class DetailView extends BorderPane{
     String instructions;
     String ingredients; 
 
-    DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList) throws Exception{
+    DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList, saveAccount saveAccount) throws Exception{
         String title = response.getTitle();
         header2 = new Header2(title);
         footer2 = new Footer2();
@@ -68,8 +68,10 @@ public class DetailView extends BorderPane{
                 response.loadInstructions(instructions);
                 try {
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
-                    saveRecipe.saveListToDatabase(newRecipe);
+                    //saveRecipe.saveListToDatabase(newRecipe);
                     recipeList.setRecipeList(newRecipe);
+                    saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
+
                     recipeList.saveRecipe();
 
                 } catch (IOException e1) {
@@ -86,8 +88,10 @@ public class DetailView extends BorderPane{
         
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                     recipeList.setRecipeList(newRecipe);
-                    saveRecipe.saveToCSV(recipeList.getRecipeList());
-                    saveRecipe.saveListToDatabase(recipeList.getRecipeList());
+                    //saveRecipe.saveToCSV(recipeList.getRecipeList());
+                    //saveRecipe.saveListToDatabase(recipeList.getRecipeList());
+                    saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
+
                         //recipeList.addReci()
                     recipeList.saveRecipe();
 
@@ -111,7 +115,7 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                ListView listview = new ListView(currStage, currApp, recipeList);
+                ListView listview = new ListView(currStage, currApp, recipeList, saveAccount);
                 currStage.setScene(listview.getRecipeListScene());
             }
         });        
@@ -120,7 +124,7 @@ public class DetailView extends BorderPane{
 
             ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
             recipeList.setRecipeList(newList);
-            
+            saveAccount.deleteRecipeFromDatabase(saveAccount.getUsername(), response);
             recipeList.saveRecipe();
 
         });
