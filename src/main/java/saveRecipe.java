@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
+import org.bson.Document;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 public class saveRecipe {
    public static ArrayList<Recipe> saveARecipe(ArrayList<Recipe> recipeList, Recipe recipe) throws IOException {
         if(!recipeList.contains(recipe)){
             recipeList.add(0, recipe);
-
         }
         return recipeList;
         
@@ -23,62 +26,7 @@ public class saveRecipe {
    public static void saveToCSV(ArrayList<Recipe> recipeList) throws IOException {
 
 
-       // Replace the placeholder with your MongoDB deployment's connection string
-       // String uri = "Your uri";
        
-       /* From Mini-Project code
-        * try {
-            FileWriter writeContact = new FileWriter("contacts.csv", false);
-            writeContact.write("Contact Name, " + "Phone Number, " + "Address\n");
-            for (int i = 0; i < this.getChildren().size(); i++) {
-                if (this.getChildren().get(i) instanceof Contact) {
-                    Contact contact = (Contact) this.getChildren().get(i);
-                    //getTaskName().getText() gives the task name
-                    writeContact.write(contact.getContactName().getText() + ", ");
-                    writeContact.write(contact.getContactPhoneNo().getText() + ", ");
-                    writeContact.write(contact.getContactAddress().getText() + "\n");
-                }
-            }
-            writeContact.close();
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        */
-        /* From lab 1 code
-         *  try {
-            FileWriter writeTask = new FileWriter("tasks.txt", false);
-            for (int i = 0; i < this.getChildren().size(); i++) {
-                if (this.getChildren().get(i) instanceof Task) {
-                    Task task = (Task) this.getChildren().get(i);
-                    //getTaskName().getText() gives the task name
-                    writeTask.write(task.getTaskName().getText() + "\n");
-                }
-            }
-            writeTask.close();
-        }
-         */
-
-
-                // FileWriter outWriter = new FileWriter("save.csv");
-
-                // for(int i = 0 ; i < clist.size(); i++){
-                 
-                //     String name = clist.get(i).getName();
-                //     String email = clist.get(i).getEmail();
-                //     String number = clist.get(i).getPhoneNumber();
-    
-                //     outWriter.append(name);
-                //     outWriter.append(',');
-                //     outWriter.append(email);
-                //     outWriter.append(',');
-                //     outWriter.append(number);
-                //     outWriter.append('\n');
-    
-                // }
-
-                // outWriter.close();
-           
         try {
 
             FileWriter writeRecipe = new FileWriter("recipes.csv");
@@ -119,4 +67,21 @@ public class saveRecipe {
         }
    
    }
+
+    public static void saveListToDatabase(ArrayList<Recipe> recipeList) {
+        String uri = "mongodb+srv://admin:cXgKxmLpdvsylEUR@cluster0.zth582l.mongodb.net/?retryWrites=true&w=majority";
+
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
+            MongoCollection<Document> recipesCollection = recipeDB.getCollection("recipes");
+
+            for (Recipe recipe : recipeList) {
+                Document recipeDocument = new Document("Title", recipe.getTitle())
+                        .append("Ingredients", recipe.getIngredients())
+                        .append("Instructions", recipe.getInstructions());
+
+                recipesCollection.insertOne(recipeDocument);
+            }
+        }
+    }
 }

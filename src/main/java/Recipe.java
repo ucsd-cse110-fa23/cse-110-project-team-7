@@ -39,9 +39,16 @@ public class Recipe{
     }
 
     public void setTitle(String input){
-        int start = input.indexOf("[");
-        int end = input.indexOf("]");
-        this.title = input.substring(start + 1, end).trim() + " - " + this.getMealType();
+        if(input.contains("[")){
+            int start = input.indexOf("[");
+            int end = input.indexOf("]");
+            this.title = input.substring(start + 1, end).trim() + " - " + this.getMealType();
+        }
+        else{
+            this.title = input.substring(7, input.indexOf(","));
+
+        }
+        
         
     }
     

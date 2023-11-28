@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -6,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
@@ -16,6 +18,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.event.SwingPropertyChangeSupport;
+
 class RecipeApp extends HBox {
 
     private Label index;
@@ -23,7 +27,8 @@ class RecipeApp extends HBox {
 
     RecipeApp() {
         this.setPrefSize(500, 20); // sets size of recipe
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+                                                                                                     // color of recipe
 
         index = new Label();
         index.setText(""); // create index label
@@ -39,7 +44,6 @@ class RecipeApp extends HBox {
         recipeName.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(recipeName); // add textlabel to recipe
 
-
     }
 
     public void setRecipeIndex(int num) {
@@ -53,12 +57,16 @@ class RecipeApp extends HBox {
 
 }
 
+
+
+
 class RecipeList extends VBox {
 
     private ArrayList<Recipe> recipes;
     private Stage currStage;
     private App currApp;
-    
+
+
     RecipeList(Stage currStage, App currApp) {
         recipes = new ArrayList<Recipe>();
         this.setSpacing(5); // sets spacing between tasks
@@ -66,87 +74,90 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.currStage = currStage;
         this.currApp = currApp;
-        //recipes.add(recipe);
-    }
-    
-    public void addRecipe(Recipe recipe){
-        recipes.add(0, recipe);
+        // recipes.add(recipe);
     }
 
-    public ArrayList<Recipe> getRecipeList(){
+
+    public ArrayList<Recipe> getRecipeList() {
         return recipes;
     }
 
-    public void setRecipeList(ArrayList<Recipe> newList){
+    public void setRecipeList(ArrayList<Recipe> newList) {
         this.recipes = newList;
     }
-    
-    private Stage getStage(){
+
+    private Stage getStage() {
         return this.currStage;
     }
 
-    private App getApp(){
+    private App getApp() {
         return this.currApp;
     }
-    
-    public void saveRecipe(){
+
+    public void saveRecipe() {
         this.getChildren().clear();
 
-        for(Recipe recipe : recipes) {
+        for (Recipe recipe : recipes) {
             Button recipeButton = new Button(recipe.getTitle());
             recipeButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
             recipeButton.setPrefSize(500, 50);
 
-            recipeButton.setOnAction(e->{
-                
-                
-                try{
-                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(),this);
+            recipeButton.setOnAction(e -> {
+
+                try {
+                    DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(), this);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     this.getStage().setTitle("Detail View");
                     this.getStage().setScene(scene);
                     this.getStage().setResizable(true);
                     this.getStage().show();
 
-                }catch(Exception except){
+                } catch (Exception except) {
                     System.err.println("recipeButtonSetOnActionError");
                     except.printStackTrace();
                 }
             });
-            
+
             this.getChildren().add(recipeButton);
-        }    
+        }
     }
 }
 
- class Footer extends HBox {
+class Footer extends HBox {
 
     private Button addButton;
-    // private Button clearButton;
-    // private Button loadButton;
-    // private Button saveButton;
-    // private Button sortButton;
+    private ComboBox<String> sortBox;
+
     Footer() {
         this.setPrefSize(500, 60);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setSpacing(15);
 
+        ObservableList<String> options = FXCollections.observableArrayList(
+                "Sort alphabetically (A-Z)",
+                "Sort alphabetically (Z-A)",
+                "Oldest to Newest",
+                "Newest to Oldest");
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
         addButton = new Button("Create Recipe"); // text displayed on add button
         addButton.setStyle(defaultButtonStyle); // styling the button
-        
+
         this.getChildren().addAll(addButton); // adding buttons to footer
         this.setAlignment(Pos.CENTER); // aligning the buttons to center
+        sortBox = new ComboBox<>(options);
+        this.getChildren().addAll(sortBox); 
 
-       
     }
-        
+
     public Button getAddButton() {
         return addButton;
     }
 
+    public ComboBox<String> getSortBox() {
+        return sortBox;
+    }
 
 }
 
@@ -163,64 +174,26 @@ class Header extends HBox {
     }
 }
 
-public class ListView extends BorderPane{
+public class ListView extends BorderPane {
     private Scene recipeListScene;
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
-
+    
     private Button addButton;
+    private ComboBox<String> sortBox;
 
-    ListView(Stage primaryStage, App currApp)
-    {
+    ListView(Stage primaryStage, App currApp, RecipeList recipes) {
         // Initialise the header Object
         header = new Header();
 
         // Create a tasklist Object to hold the recipes
-        recipeList = new RecipeList(primaryStage, currApp);
+        //recipeList = new RecipeList(primaryStage, currApp);
+        this.recipeList = recipes;
 
-        Recipe recipe = new Recipe();
-        boolean seenIngredients = false;
-        boolean seenInstructions = false;
-        int counter = 0;
-        try {
-            BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
-            String text = input.readLine();
-            // while input is not at end of file
-            while (text != null) {
-                if(text.startsWith("Title: ")){
-                    if(counter != 0){
-                        recipeList.addRecipe(recipe);
-                        seenInstructions = false;
-                        recipe = new Recipe();
-                    }
-                    recipe.setTitle(text);
-                    counter++;
-                }
-                if(text.startsWith("Ingredients:")){   
-                    seenIngredients = true;
-                }
-                if(text.startsWith("Instructions:")){
-                    seenIngredients = false;
-                    seenInstructions = true;
-                }
-                if(seenIngredients){
-                    recipe.setIngredients(recipe.getIngredients() + "\n" + text);
-                }
-                if(seenInstructions){
-                    recipe.loadInstructions(recipe.getInstructions() + "\n" + text);
-                }
-               text = input.readLine();
-            }
-
-            input.close(); 
-            recipeList.addRecipe(recipe);
-            recipeList.saveRecipe();
-        
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // ArrayList<Recipe> list = ReadRecipes.readRecipes();
+        //recipeList.setRecipeList(recipes);
+        //recipeList.saveRecipe();
 
         // Initialise the Footer Object
         footer = new Footer();
@@ -228,8 +201,6 @@ public class ListView extends BorderPane{
         ScrollPane scroll = new ScrollPane(recipeList);
         scroll.setFitToWidth(true);
         scroll.setFitToHeight(true);
-
-
 
         // Add header to the top of the BorderPane
         this.setTop(header);
@@ -240,24 +211,27 @@ public class ListView extends BorderPane{
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
-       
+        sortBox = footer.getSortBox();
+        recipeListScene = new Scene(this, 500, 600);
 
         // Call Event Listeners for the Buttons
         addListeners(primaryStage, currApp, recipeList);
     }
 
-    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList)
-    {
+    public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList) {
+
+        ArrayList<Recipe> defaultList1 = recipeList.getRecipeList();
+
 
         // Add button functionality
         addButton.setOnAction(e -> {
             try {
-                /* 
-                StackPane layout1 = new StackPane(addButton);
-                Scene scene1 = new Scene(layout1, 300, 200);
-                this.setScene(scene1);
-                */ 
-                
+                /*
+                 * StackPane layout1 = new StackPane(addButton);
+                 * Scene scene1 = new Scene(layout1, 300, 200);
+                 * this.setScene(scene1);
+                 */
+
                 CreateRecipeAppFrame detailFrame = new CreateRecipeAppFrame(primaryStage, currApp, recipeList);
                 Scene secondScene = new Scene(detailFrame, 500, 600);
                 primaryStage.setTitle("Create Recipe");
@@ -269,10 +243,48 @@ public class ListView extends BorderPane{
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            
 
         });
+        
+        sortBox.setOnAction(e->{
+            ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
+            
+            switch(sortBox.getValue().toString()){
+                case "Sort alphabetically (A-Z)":
+                    //recipeList.setRecipeList(defaultList);
+                    recipeList.setRecipeList(Sort.alphabeticalAZSort(defaultList));
+                    recipeList.saveRecipe();
+                    //recipeList.setRecipeList(defaultList);
+                    break;
+                case "Sort alphabetically (Z-A)":
+                    //recipeList.setRecipeList(defaultList);
+                    recipeList.setRecipeList(Sort.alphabeticalZASort(defaultList));
+                    recipeList.saveRecipe();
+                    //recipeList.setRecipeList(defaultList);
+                    break;
+                case "Oldest to Newest":
+                    // recipeList.setRecipeList(defaultList);
+                    recipeList.setRecipeList(Sort.oldestToNewestSort(defaultList));
+                    recipeList.saveRecipe();
+
+                    for(Recipe rec : recipeList.getRecipeList()) {
+                        System.out.println("Recipe Name: " + rec.getTitle());
+                    }
+                   // recipeList.setRecipeList(defaultList);
+                    break;
+                case "Newest to Oldest":
+                    
+                    for(Recipe rec : recipeList.getRecipeList()) {
+                        System.out.println("Recipe Name: " + rec.getTitle());
+                    }
+                    break;
+            }
+            
+            recipeList.setRecipeList(defaultList);
+        });
+
     }
+
     public Scene getRecipeListScene() {
         return this.recipeListScene;
     }

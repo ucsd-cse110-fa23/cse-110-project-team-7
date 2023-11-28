@@ -68,6 +68,7 @@ public class DetailView extends BorderPane{
                 response.loadInstructions(instructions);
                 try {
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                    saveRecipe.saveListToDatabase(newRecipe);
                     recipeList.setRecipeList(newRecipe);
                     // recipeList.saveRecipe();
 
@@ -83,12 +84,12 @@ public class DetailView extends BorderPane{
 
                     //if(!recipeList.getRecipeList().contains(response)){
         
-                        ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
-                        recipeList.setRecipeList(newRecipe);
-                        saveRecipe.saveToCSV(recipeList.getRecipeList());
-                        
+                    ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                    recipeList.setRecipeList(newRecipe);
+                    saveRecipe.saveToCSV(recipeList.getRecipeList());
+                    saveRecipe.saveListToDatabase(recipeList.getRecipeList());
                         //recipeList.addReci()
-                        recipeList.saveRecipe();
+                    recipeList.saveRecipe();
 
                     //}
 
@@ -110,7 +111,7 @@ public class DetailView extends BorderPane{
                 inEditMode = false; 
             }
             else {
-                ListView listview = new ListView(currStage, currApp);
+                ListView listview = new ListView(currStage, currApp, recipeList);
                 currStage.setScene(listview.getRecipeListScene());
             }
         });        
