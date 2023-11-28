@@ -12,6 +12,12 @@ public class Recipe{
         this.instructions = "";
     }
 
+    public Recipe(String title, String ingredients, String instructions){
+        this.title = title;
+        this.ingredients = ingredients; 
+        this.instructions = instructions;
+    }
+
     public String getMealType(){
         return this.mealType;
     }
@@ -26,7 +32,7 @@ public class Recipe{
     }
 
     public void setMealType(String input){
-        String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length());
+        String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
         this.mealType = tmp.replaceAll("[^a-zA-Z]+$", "");
     }
 

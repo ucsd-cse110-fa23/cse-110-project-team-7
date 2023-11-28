@@ -41,7 +41,7 @@ public class SortTest {
     }
 
     @Test
-    public void alphabeticalAZSortTest(){
+    public void alphabeticalAZSortUsingSaveARecipeTest(){
         try{
 
             recipeList=saveRecipe.saveARecipe(recipeList, recipe);
@@ -73,7 +73,7 @@ public class SortTest {
     }
 
      @Test
-    public void alphabeticalZASortTest(){
+    public void alphabeticalZASortUsingSaveARecipeTest(){
         try{
 
             recipeList=saveRecipe.saveARecipe(recipeList, recipe);
@@ -102,7 +102,7 @@ public class SortTest {
     }
 
     @Test
-    public void oldestToNewestSortTest(){
+    public void oldestToNewestSortUsingSaveARecipeTest(){
         try{
 
             recipeList=saveRecipe.saveARecipe(recipeList, recipe);

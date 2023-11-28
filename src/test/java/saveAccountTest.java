@@ -3,9 +3,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.ArgumentCaptor;
+import static com.mongodb.client.model.Updates.*;
+import static com.mongodb.client.model.Updates.pull;
+
 import org.mockito.ArgumentMatchers;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -23,10 +26,10 @@ import com.mongodb.client.model.Filters;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
+import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
-
+import java.util.*;
 public class saveAccountTest {
 
     @Mock
@@ -52,7 +55,9 @@ public class saveAccountTest {
         when(mockCollection.find(any(Bson.class), ArgumentMatchers.<Class<Document>>any())).thenReturn(mockFindIterable);
 
         saveAccount = new saveAccount(mockDatabase, mockCollection);
-    }
+   }
+
+
 
     @Test
     public void testGenerateNewAccount() {
@@ -125,8 +130,6 @@ public class saveAccountTest {
     }
 
 
-
-
     @Test
     public void testLoginNoAccount() {
         String userName = "nonExistingUser";
@@ -139,5 +142,79 @@ public class saveAccountTest {
 
         assertFalse(result);
     }
+
+    @Test
+    public void saveRecipesForUserTest() {
+        String userName = "testUser";
+        ArrayList<Recipe> recipeList = new ArrayList<>(Arrays.asList(
+                new Recipe("Recipe1", "Ingredients1", "Instructions1"),
+                new Recipe("Recipe2", "Ingredients2", "Instructions2")
+        ));
+
+        when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
+        when(mockFindIterable.first()).thenReturn(Mockito.mock(Document.class));
+
+        saveAccount.saveRecipesForUser(userName, recipeList);
+
+        verify(mockCollection, times(1)).find(any(Bson.class));
+        verify(mockCollection, times(1)).replaceOne(any(Bson.class), any());
+    }
+
+
+    @Test
+    public void deleteRecipeFromDatabaseTest() {
+        String username = "testUser";
+        Recipe recipeToDelete = new Recipe("Test Recipe", "Test", "Test");
+
+        when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(null);
+        saveAccount.deleteRecipeFromDatabase(username, recipeToDelete);
+
+        ArgumentCaptor<Bson> filterCaptor = ArgumentCaptor.forClass(Bson.class);
+        ArgumentCaptor<Bson> updateCaptor = ArgumentCaptor.forClass(Bson.class);
+
+        verify(mockCollection, times(1)).updateOne(filterCaptor.capture(), updateCaptor.capture());
+
+        Bson actualFilter = filterCaptor.getValue();
+        Bson actualUpdate = updateCaptor.getValue();
+
+        assertEquals(eq("_id", username), actualFilter); 
+        assertEquals(pull("recipes", new Document("Title", "Test Recipe")
+                                        .append("Ingredients", "Test")
+                                        .append("Instructions", "Test")), actualUpdate);
+    }
+
+
+    @Test 
+    public void readDatabaseTest(){
+         // Arrange
+        String username = "testUser";
+        List<Document> mockRecipes = Arrays.asList(
+                 new Document("Title", "Recipe1").append("Ingredients", "Ingredients1").append("Instructions", "Instructions1"),
+                 new Document("Title", "Recipe2").append("Ingredients", "Ingredients2").append("Instructions", "Instructions2")
+        );
+        Document mockUser = new Document("_id", username).append("recipes", mockRecipes);
+ 
+        when(mockCollection.find(eq("_id", username))).thenReturn(Mockito.mock(FindIterable.class));
+        when(mockCollection.find(eq("_id", username)).first()).thenReturn(mockUser);
+ 
+        // Act
+        ArrayList<Recipe> result = saveAccount.readDatabase(username);
+ 
+        // Assert
+        assertEquals(2, result.size());
+ 
+        Recipe recipe1 = result.get(0);
+        assertEquals("Recipe1", recipe1.getTitle());
+        assertEquals("Ingredients1", recipe1.getIngredients());
+        assertEquals("Instructions1", recipe1.getInstructions());
+ 
+        Recipe recipe2 = result.get(1);
+        assertEquals("Recipe2", recipe2.getTitle());
+        assertEquals("Ingredients2", recipe2.getIngredients());
+        assertEquals("Instructions2", recipe2.getInstructions());
+     
+
+    }
+
 
 }

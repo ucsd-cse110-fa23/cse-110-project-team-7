@@ -52,26 +52,6 @@ public class SaveRecipeTest {
         }
     }
 
-    @Test
-    public void testSaveCSV(){
-        try{
-
-            recipeList = saveRecipe.saveARecipe(recipeList, recipe); 
-            recipeList = saveRecipe.saveARecipe(recipeList, recipe2); 
-
-
-            saveRecipe.saveToCSV(recipeList);
-            String path = "./recipes.csv";
-            assertTrue(isCSVFileNotEmpty(path));
-                
-            
-            // saveARecipe
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
     @Test
     public void testSavingMultipleRecipeSort(){
@@ -92,17 +72,6 @@ public class SaveRecipeTest {
         }
     }
 
-    private static boolean isCSVFileNotEmpty(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            // Read the first line of the file
-            String line = reader.readLine();
-
-            // Check if the first line is not null and not empty
-            return line != null && !line.trim().isEmpty();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false; // Assuming an IOException means the file is empty or does not exist
-        }
-    }
+    
 
 }

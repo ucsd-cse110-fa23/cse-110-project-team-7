@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="SaveRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-27T07:30:12" hostname="Amandas-MacBook-Pro.local" time="0.005">
+<testsuite name="SaveRecipeTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-11-28T07:15:44" hostname="Amandas-MBP.attlocal.net" time="0.005">
   <properties/>
-  <testcase name="testSavingMultipleRecipeSort()" classname="SaveRecipeTest" time="0.0"/>
-  <testcase name="testSaveCSV()" classname="SaveRecipeTest" time="0.002"/>
-  <testcase name="testSavingCorrect()" classname="SaveRecipeTest" time="0.0"/>
+  <testcase name="testSavingMultipleRecipeSort()" classname="SaveRecipeTest" time="0.002"/>
+  <testcase name="testSavingCorrect()" classname="SaveRecipeTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

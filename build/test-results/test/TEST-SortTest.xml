@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SortTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-28T07:15:44" hostname="Amandas-MBP.attlocal.net" time="0.006">
+  <properties/>
+  <testcase name="alphabeticalAZSortUsingSaveARecipeTest()" classname="SortTest" time="0.001"/>
+  <testcase name="alphabeticalZASortUsingSaveARecipeTest()" classname="SortTest" time="0.001"/>
+  <testcase name="oldestToNewestSortUsingSaveARecipeTest()" classname="SortTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
