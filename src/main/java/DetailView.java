@@ -6,6 +6,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
@@ -23,15 +24,17 @@ public class DetailView extends BorderPane{
     private Button saveButton;
     private boolean inEditMode = false; 
     String instructions;
-    String ingredients; 
+    String ingredients = ""; 
 
     DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList, saveAccount saveAccount) throws Exception{
         String title = response.getTitle();
         header2 = new Header2(title);
         footer2 = new Footer2();
-        ingredients = response.getIngredients();
-        String ingredientsAndInstructions = "Inputted Ingredients: " + ingredients + "\n" + response.getInstructions();
-        details = new Details(ingredientsAndInstructions);
+        if(!response.getInstructions().contains("Inputted Ingredients: ")){
+            ingredients = "Inputted Ingredients: " + response.getIngredients() + "\n";
+        }
+        response.setInstructions(ingredients + response.getInstructions());
+        details = new Details(response.getInstructions());
         instructions = details.getInstructions().getText();
         
         this.setTop(header2);

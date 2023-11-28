@@ -142,7 +142,7 @@ class Password extends HBox{
         
         prompt = new Label();
         prompt.setText("Password: "); // create password prompt
-        prompt.setPrefSize(60, 20); // set size of Index label
+        prompt.setPrefSize(80, 20); // set size of Index label
         prompt.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the task
         this.getChildren().add(prompt); // add index label to task
 
@@ -205,9 +205,13 @@ class Username extends HBox{
             loginButton = new Button("Log In");
             signUpButton = new Button("Sign Up");
             autoLogin = new CheckBox("Auto Login");
-            //autoLoginButton = new Button("Automatic Log in");
 
-            this.getChildren().addAll(loginButton, signUpButton, autoLogin);
+            HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER);
+            hBox.setSpacing(5);
+
+            hBox.getChildren().addAll(loginButton, signUpButton, autoLogin);
+            this.getChildren().addAll(hBox);
         }
 
         public Button getLoginButton() {
