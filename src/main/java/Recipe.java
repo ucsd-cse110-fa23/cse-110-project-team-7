@@ -32,7 +32,7 @@ public class Recipe{
     }
 
     public void setMealType(String input){
-        String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length());
+        String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
         this.mealType = tmp.replaceAll("[^a-zA-Z]+$", "");
     }
 
