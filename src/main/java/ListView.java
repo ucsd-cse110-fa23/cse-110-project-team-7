@@ -122,6 +122,7 @@ class Footer extends HBox {
 
     private Button addButton;
     private ComboBox<String> sortBox;
+    private ComboBox<String> filterBox;
 
     Footer() {
         this.setPrefSize(500, 60);
@@ -133,6 +134,12 @@ class Footer extends HBox {
                 "Sort alphabetically (Z-A)",
                 "Oldest to Newest",
                 "Newest to Oldest");
+
+        ObservableList<String> filter = FXCollections.observableArrayList(
+                "Breakfast",
+                "Lunch",
+                "Dinner",
+                "All");
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
 
@@ -142,7 +149,8 @@ class Footer extends HBox {
         this.getChildren().addAll(addButton); // adding buttons to footer
         this.setAlignment(Pos.CENTER); // aligning the buttons to center
         sortBox = new ComboBox<>(options);
-        this.getChildren().addAll(sortBox); 
+        filterBox = new ComboBox<>(filter);
+        this.getChildren().addAll(sortBox, filterBox); 
 
     }
 
@@ -152,6 +160,10 @@ class Footer extends HBox {
 
     public ComboBox<String> getSortBox() {
         return sortBox;
+    }
+
+    public ComboBox<String> getFilterBox() {
+        return filterBox;
     }
 
 }
@@ -186,6 +198,7 @@ public class ListView extends BorderPane {
     private Button addButton;
     private Button logOutButton;
     private ComboBox<String> sortBox;
+    private ComboBox<String> filterBox;
 
     ListView(Stage primaryStage, App currApp, RecipeList recipes, saveAccount saveAccount) {
         // Initialise the header Object
@@ -216,10 +229,12 @@ public class ListView extends BorderPane {
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
         logOutButton = header.getLogOutButton();
-
         sortBox = footer.getSortBox();
         recipeList.saveRecipe();
+        filterBox = footer.getFilterBox();
         recipeListScene = new Scene(this, 500, 600);
+        
+        //recipeListScene = new Scene(this, 500, 600);
 
         // Call Event Listeners for the Buttons
         addListeners(primaryStage, currApp, recipeList, saveAccount);
@@ -228,7 +243,6 @@ public class ListView extends BorderPane {
     public void addListeners(Stage primaryStage, App currApp, RecipeList recipeList, saveAccount saveAccount) {
 
         ArrayList<Recipe> defaultList1 = recipeList.getRecipeList();
-
 
         // Add button functionality
         addButton.setOnAction(e -> {
@@ -268,6 +282,7 @@ public class ListView extends BorderPane {
         });
         
         sortBox.setOnAction(e->{
+            System.out.println("Sort Box was clicked");
             ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
             
             switch(sortBox.getValue().toString()){
@@ -298,6 +313,32 @@ public class ListView extends BorderPane {
                     for(Recipe rec : recipeList.getRecipeList()) {
                         System.out.println("Recipe Name: " + rec.getTitle());
                     }
+                    break;
+            }
+            
+            recipeList.setRecipeList(defaultList);
+        });
+
+        filterBox.setOnAction(e->{
+            System.out.println("Filter Box was clicked");
+            ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
+            
+            switch(filterBox.getValue().toString()){
+                case "Breakfast":
+                    recipeList.setRecipeList(Filter.filterRecipes(defaultList, "Breakfast"));
+                    recipeList.saveRecipe();
+                    break;
+                case "Lunch":
+                    recipeList.setRecipeList(Filter.filterRecipes(defaultList, "Lunch"));
+                    recipeList.saveRecipe();
+                    break;
+                case "Dinner":
+                    recipeList.setRecipeList(Filter.filterRecipes(defaultList, "Dinner"));
+                    recipeList.saveRecipe();
+                    break;
+                case "All":
+                    recipeList.setRecipeList(Filter.filterRecipes(defaultList, "All"));
+                    recipeList.saveRecipe();
                     break;
             }
             
