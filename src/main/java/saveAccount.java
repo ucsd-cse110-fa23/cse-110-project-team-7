@@ -36,8 +36,8 @@ public class saveAccount {
     }
 
     public boolean generateNewAccount(String userName, String password) {
-        if (accountExist(userName)) {
-            System.out.println("Account already exists!");
+        if (accountExist(userName) || userName.equals("")) {
+            System.out.println("Enter a valid username");
             return false;
         }
 
@@ -91,10 +91,13 @@ public class saveAccount {
         if (user != null) {
             List<Document> existingRecipes = (List<Document>) user.get("recipes", List.class);
     
-            // Clear the existing recipes
-            existingRecipes.clear();
+            if (existingRecipes == null) {
+                existingRecipes = new ArrayList<>();
+                user.put("recipes", existingRecipes);
+            } else {
+                existingRecipes.clear();
+            }
     
-            // Add the new recipes
             for (Recipe recipe : recipeList) {
                 Document recipeDocument = new Document("Title", recipe.getTitle())
                         .append("Ingredients", recipe.getIngredients())
@@ -108,6 +111,7 @@ public class saveAccount {
             System.out.println("User not found: " + userName);
         }
     }
+    
 
     public void deleteRecipeFromDatabase(String username, Recipe recipe) {
         Bson filter = eq("_id", username);
