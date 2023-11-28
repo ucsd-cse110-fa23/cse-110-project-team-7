@@ -51,9 +51,9 @@ public class Recipe{
         
         
     }
-    
 
     public void setInstructions(String input){
+        
         int start = input.indexOf("]");
         this.instructions = input.substring(start + 1, input.length());
     }

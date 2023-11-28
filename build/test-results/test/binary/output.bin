@@ -1,0 +1,10 @@
+Entering loginAccount method
+UserName: nonExistingUser
+Account doesn't exist
+Entering loginAccount method
+UserName: testLoginUser
+Account already exists!
+Account already exists!
+Entering loginAccount method
+UserName: testLoginUser
+Account doesn't exist

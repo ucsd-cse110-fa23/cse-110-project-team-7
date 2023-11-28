@@ -30,9 +30,7 @@ public class saveRecipe {
         try {
 
             FileWriter writeRecipe = new FileWriter("recipes.csv");
-            
-            //BufferedReader br = new BufferedReader(new FileWriter("recipeName.csv", false));
-            
+                        
             
             for(Recipe rec : recipeList) {
             
@@ -47,20 +45,9 @@ public class saveRecipe {
                 writeRecipe.append("Instructions: " + instructions);
                 writeRecipe.append('\n');
             }
-            // String line ="";
-            // String instructions = "";
-            // // Read the rest of the file
-            // while ((line = br.readLine()) != null) {
-            //     instructions += line + "\n"; // Concatenate the line to instructions
-            // }
+            
             
             writeRecipe.close();
-
-            // RecipeList recipeList = new RecipeList();
-            // private Button recipeButton;
-            // recipeButton = new Button(title);
-            // recipeButton.setStyle(defaultButtonStyle);
-            // this.getChildren().addAll
 
         } catch (Exception e) {
             e.printStackTrace();

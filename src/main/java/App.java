@@ -19,6 +19,7 @@ import java.util.Collections;
 
 public class App extends Application {
     private Scene createAccountScene;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -26,7 +27,6 @@ public class App extends Application {
         createAccountScene = new Scene(account, 500, 600);
 
 
-        // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
 
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
@@ -41,4 +41,5 @@ public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

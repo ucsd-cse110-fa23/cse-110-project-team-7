@@ -11,7 +11,7 @@ import static com.mongodb.client.model.Filters.*;
 
 public class saveAccount {
 
-    String uri = "mongodb+srv://admin:cXgKxmLpdvsylEUR@cluster0.zth582l.mongodb.net/?retryWrites=true&w=majority";
+    String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
     MongoClient mongoClient;
     MongoDatabase accountDb;
     MongoCollection<Document> accountsCollection;
@@ -24,6 +24,11 @@ public class saveAccount {
         } catch (Exception e1) {
             e1.printStackTrace();
         }
+    }
+
+    public saveAccount(MongoDatabase accountDb, MongoCollection<Document> accountsCollection) {
+        this.accountDb = accountDb;
+        this.accountsCollection = accountsCollection;
     }
 
     public boolean generateNewAccount(String userName, String password) {
@@ -39,20 +44,34 @@ public class saveAccount {
         return true;
     }
 
-    public boolean loginAccount(String userName, String password){
-
-        if(!accountExist(userName)){
+    public boolean loginAccount(String userName, String password) {
+        System.out.println("Entering loginAccount method");
+        System.out.println("UserName: " + userName);
+        if (!accountExist(userName)) {
             System.out.println("Account doesn't exist");
+            
             return false;
         }
-        Bson filter = Filters.and(eq("_id", userName), eq("password", password));
-        return accountsCollection.find(filter).first() != null;
-        
+    
+        Bson filter = and(eq("_id", userName), eq("password", password));
+        Document result = accountsCollection.find(filter).first();
+    
+        if (result != null) {
+            return true; // Successfully logged in
+        } else {
+            System.out.println("Incorrect username or password");
+            return false; // Incorrect username or password
+        }
     }
+    
+    
+
 
     // Check if the account exists
     public boolean accountExist(String userName) {
         Bson filter = eq("_id", userName);
-        return accountsCollection.find(filter).first() != null; 
+        
+        return accountsCollection.find(filter, Document.class).first() != null;
     }
+
 }

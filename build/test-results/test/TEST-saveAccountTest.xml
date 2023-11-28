@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="saveAccountTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-11-27T07:30:12" hostname="Amandas-MacBook-Pro.local" time="1.099">
+  <properties/>
+  <testcase name="testLoginNoAccount()" classname="saveAccountTest" time="1.064"/>
+  <testcase name="testLoginAccount()" classname="saveAccountTest" time="0.015"/>
+  <testcase name="testGenerateExistingAccount()" classname="saveAccountTest" time="0.004"/>
+  <testcase name="testLoginIncorrectPassword()" classname="saveAccountTest" time="0.003"/>
+  <testcase name="testGenerateNewAccount()" classname="saveAccountTest" time="0.006"/>
+  <system-out><![CDATA[Entering loginAccount method
+UserName: nonExistingUser
+Account doesn't exist
+Entering loginAccount method
+UserName: testLoginUser
+Account already exists!
+Account already exists!
+Entering loginAccount method
+UserName: testLoginUser
+Account doesn't exist
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

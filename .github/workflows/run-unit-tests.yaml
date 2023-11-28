@@ -20,6 +20,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
@@ -32,6 +33,7 @@ jobs:
       # build everything (includes running unit tests)
       - name: Execute Gradle build
         run: ./gradlew build
+        
 
       # report the results
       - name: Publish Test Report

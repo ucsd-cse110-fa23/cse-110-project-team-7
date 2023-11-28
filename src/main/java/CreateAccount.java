@@ -29,10 +29,11 @@ public class CreateAccount extends BorderPane {
     private Username username; 
     private Password password;
 
-    private Label errorUsernameLabel; 
-    private Label errorPasswordLabel;
+    private Label errorLabel; 
+    private VBox errorContainer;  // Container for error labels
 
-    String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
+
+    String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; -fx-font-size: 14";
 
     CreateAccount(Stage currStage, App currApp) throws Exception {
         header3 = new Header3("Sign Up/Log in");
@@ -43,32 +44,55 @@ public class CreateAccount extends BorderPane {
         signUpButton = accountLogIn.getSignUpButton();
         autoLogin = accountLogIn.getAutoLogin();
 
-        errorUsernameLabel = new Label("Change Username");
-        errorUsernameLabel.setStyle(defaultLabelStyle);
+        errorContainer = new VBox();
+        errorContainer.setSpacing(5);
+        this.setBottom(errorContainer);
 
-        errorPasswordLabel = new Label("Invalid Information");
-        errorPasswordLabel.setStyle(defaultLabelStyle);
+        errorLabel = new Label("Invalid Username/Password");
+        errorLabel.setStyle(defaultLabelStyle);
+        errorLabel.setVisible(false);
 
         currStage.setResizable(true);
         this.setCenter(accountLogIn);
 
+
         // Add button functionality
         loginButton.setOnAction(e -> {
-            
-            RecipeList recipeList = new RecipeList(currStage, currApp);
-            ListView login = new ListView(currStage, currApp, recipeList);
-            currStage.setScene(login.getRecipeListScene());
+            errorContainer.getChildren().clear();
+            saveAccount sAccount = new saveAccount();
+            boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
 
+            if(result == false){
+                errorContainer.getChildren().add(errorLabel);
+                errorLabel.setVisible(true);  
+
+
+            }
+            else{
+                RecipeList recipeList = new RecipeList(currStage, currApp);
+                ListView login = new ListView(currStage, currApp, recipeList);
+                currStage.setScene(login.getRecipeListScene());
+                errorLabel.setVisible(false);  
+
+            }
            
         });
 
         // Add button functionality
         signUpButton.setOnAction(e -> {
+            errorContainer.getChildren().clear();
             //use saveAccount class to save user's new account to database    
             saveAccount sAccount = new saveAccount();
             boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
             if(!saved){
-                this.getChildren().add(errorUsernameLabel);
+                errorContainer.getChildren().add(errorLabel);
+                errorLabel.setVisible(true);  
+
+            }
+            else{
+                RecipeList recipeList = new RecipeList(currStage, currApp);
+                ListView login = new ListView(currStage, currApp, recipeList);
+                currStage.setScene(login.getRecipeListScene());            
             }
 
         });
@@ -186,5 +210,6 @@ class Username extends HBox{
             return autoLogin;
         }
     }
+
 
 }

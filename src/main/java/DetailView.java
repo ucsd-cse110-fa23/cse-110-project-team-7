@@ -70,7 +70,7 @@ public class DetailView extends BorderPane{
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                     saveRecipe.saveListToDatabase(newRecipe);
                     recipeList.setRecipeList(newRecipe);
-                    // recipeList.saveRecipe();
+                    recipeList.saveRecipe();
 
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
@@ -120,6 +120,7 @@ public class DetailView extends BorderPane{
 
             ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
             recipeList.setRecipeList(newList);
+            
             recipeList.saveRecipe();
 
         });
