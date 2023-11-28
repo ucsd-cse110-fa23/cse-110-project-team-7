@@ -70,9 +70,8 @@ public class saveAccount {
     // Check if the account exists
     public boolean accountExist(String userName) {
         Bson filter = eq("_id", userName);
-        Document result = accountsCollection.find(filter, Document.class).first();
         
-        return result != null;
+        return accountsCollection.find(filter, Document.class).first() != null;
     }
 
 }

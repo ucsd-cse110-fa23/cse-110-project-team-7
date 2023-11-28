@@ -69,7 +69,8 @@ public class CreateAccount extends BorderPane {
 
             }
             else{
-                ListView login = new ListView(currStage, currApp);
+                RecipeList recipeList = new RecipeList(currStage, currApp);
+                ListView login = new ListView(currStage, currApp, recipeList);
                 currStage.setScene(login.getRecipeListScene());
                 errorLabel.setVisible(false);  
 
@@ -89,7 +90,8 @@ public class CreateAccount extends BorderPane {
 
             }
             else{
-                ListView login = new ListView(currStage, currApp);
+                RecipeList recipeList = new RecipeList(currStage, currApp);
+                ListView login = new ListView(currStage, currApp, recipeList);
                 currStage.setScene(login.getRecipeListScene());            
             }
 
