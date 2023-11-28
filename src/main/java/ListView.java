@@ -188,65 +188,17 @@ public class ListView extends BorderPane {
     private Header header;
     private Footer footer;
     private RecipeList recipeList;
-<<<<<<< HEAD
     private Button addButton;
     private Button logOutButton;
-=======
-    
-    private Button addButton;
     private ComboBox<String> sortBox;
->>>>>>> 3aa3fc1be5170c2a6c276d45472624dd0e489805
 
     ListView(Stage primaryStage, App currApp, RecipeList recipes) {
         // Initialise the header Object
         header = new Header();
 
         // Create a tasklist Object to hold the recipes
-<<<<<<< HEAD
-        recipeList = new RecipeList(primaryStage, currApp);
 
-        Recipe recipe = new Recipe();
-        boolean seenIngredients = false;
-        boolean seenInstructions = false;
-        int counter = 0;
-        try {
-            BufferedReader input = new BufferedReader(new FileReader("recipes.csv"));
-            String text = input.readLine();
-            // while input is not at end of file
-            while (text != null ) {
-                if(text.startsWith("Title: ")){
-                    if(counter != 0){
-                        recipeList.addRecipe(recipe);
-                        seenInstructions = false;
-                        recipe = new Recipe();
-                    }
-                    recipe.setTitle(text);
-                    counter++;
-                }
-                if(text.startsWith("Ingredients:")){   
-                    seenIngredients = true;
-                }
-                if(text.startsWith("Instructions:")){
-                    seenIngredients = false;
-                    seenInstructions = true;
-                }
-                if(seenIngredients){
-                    recipe.setIngredients(recipe.getIngredients() + "\n" + text);
-                }
-                if(seenInstructions){
-                    recipe.loadInstructions(recipe.getInstructions() + "\n" + text);
-                }
-               text = input.readLine();
-            }
-
-            input.close(); 
-            recipeList.addRecipe(recipe);
-            recipeList.saveRecipe();
-        
-=======
-        //recipeList = new RecipeList(primaryStage, currApp);
         this.recipeList = recipes;
->>>>>>> 3aa3fc1be5170c2a6c276d45472624dd0e489805
 
         // ArrayList<Recipe> list = ReadRecipes.readRecipes();
         //recipeList.setRecipeList(recipes);
@@ -268,14 +220,11 @@ public class ListView extends BorderPane {
 
         // Initialise Button Variables through the getters in Footer
         addButton = footer.getAddButton();
-<<<<<<< HEAD
         logOutButton = header.getLogOutButton();
         recipeListScene = new Scene(this, 500, 600);
 
-=======
         sortBox = footer.getSortBox();
         recipeListScene = new Scene(this, 500, 600);
->>>>>>> 3aa3fc1be5170c2a6c276d45472624dd0e489805
 
         // Call Event Listeners for the Buttons
         addListeners(primaryStage, currApp, recipeList);
@@ -308,7 +257,6 @@ public class ListView extends BorderPane {
             }
 
         });
-<<<<<<< HEAD
         logOutButton.setOnAction(e->{
             try{
                 CreateAccount createAccount = new CreateAccount(primaryStage, currApp);
@@ -323,7 +271,6 @@ public class ListView extends BorderPane {
             }
 
         });
-=======
         
         sortBox.setOnAction(e->{
             ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
@@ -362,7 +309,6 @@ public class ListView extends BorderPane {
             recipeList.setRecipeList(defaultList);
         });
 
->>>>>>> 3aa3fc1be5170c2a6c276d45472624dd0e489805
     }
 
     public Scene getRecipeListScene() {
