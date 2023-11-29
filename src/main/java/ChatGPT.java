@@ -76,8 +76,5 @@ public class ChatGPT implements IChatGPT{
         System.out.println(generatedText);
         return generatedText;
     }
-    // public static void main(String[] args) throws Exception {
-    //     getCookingInstruction();
-    // }
 
 }

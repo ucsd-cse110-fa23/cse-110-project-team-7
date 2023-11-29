@@ -11,15 +11,17 @@ import java.nio.file.Paths;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// Import statements...
+interface IDallE{
+    String createImage(String prompt) throws IOException, InterruptedException, URISyntaxException;
 
-public class DallE {
+}
+public class DallE implements IDallE{
 
     private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
     private static final String API_KEY = "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";
     private static final String MODEL = "dall-e-2";
 
-    public static String createImage(String prompt) throws IOException, InterruptedException, URISyntaxException {
+    public String createImage(String prompt) throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
         int n = 1;
 

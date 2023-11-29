@@ -180,7 +180,9 @@ public class saveAccountTest {
         assertEquals(eq("_id", username), actualFilter); 
         assertEquals(pull("recipes", new Document("Title", "Test Recipe")
                                         .append("Ingredients", "Test")
-                                        .append("Instructions", "Test")), actualUpdate);
+                                        .append("Instructions", "Test")
+                                        .append("Image", "Test")
+                                        .append("Meal Type", "Test")), actualUpdate);
     }
 
 

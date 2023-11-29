@@ -187,13 +187,14 @@ class CreateRecipeAppFrame extends FlowPane {
         // create Button later
         createButton.setOnAction(e -> {
             ChatGPT chatGPT = new ChatGPT(); 
+            DallE dallE = new DallE();
             try {
                 if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
                     String prompt = recipe.getTitle().replaceAll("\\s", "");
-                    String url = DallE.createImage(prompt);
+                    String url = dallE.createImage(prompt);
                     System.out.println(url);
                     recipe.setImageUrl(url);
                     System.out.println(recipe.getImageUrl());
