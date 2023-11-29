@@ -101,7 +101,9 @@ public class saveAccount {
             for (Recipe recipe : recipeList) {
                 Document recipeDocument = new Document("Title", recipe.getTitle())
                         .append("Ingredients", recipe.getIngredients())
-                        .append("Instructions", recipe.getInstructions());
+                        .append("Instructions", recipe.getInstructions())
+                        .append("Image", recipe.getImageUrl())
+                        .append("Meal Type", recipe.getMealType());
     
                 existingRecipes.add(recipeDocument);
             }
@@ -117,7 +119,9 @@ public class saveAccount {
         Bson filter = eq("_id", username);
         Bson update = pull("recipes", new Document("Title", recipe.getTitle())
                                             .append("Ingredients", recipe.getIngredients())
-                                            .append("Instructions", recipe.getInstructions()));
+                                            .append("Instructions", recipe.getInstructions())
+                                            .append("Image", recipe.getImageUrl())
+                                            .append("Meal Type", recipe.getMealType()));
     
         accountsCollection.updateOne(filter, update);
     }
@@ -148,8 +152,10 @@ public class saveAccount {
                         String title = recipeDoc.getString("Title");
                         String ingredients = recipeDoc.getString("Ingredients");
                         String instructions = recipeDoc.getString("Instructions");
+                        String image = recipeDoc.getString("Image");
+                        String mealType = recipeDoc.getString("Meal Type");
     
-                        Recipe recipe = new Recipe(title, ingredients, instructions);
+                        Recipe recipe = new Recipe(title, ingredients, instructions, image, mealType);
                         result.add(recipe);
                     }
                 }

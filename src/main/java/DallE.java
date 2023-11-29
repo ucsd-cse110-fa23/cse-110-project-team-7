@@ -19,7 +19,7 @@ public class DallE {
     private static final String API_KEY = "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";
     private static final String MODEL = "dall-e-2";
 
-    public static void createImage(String prompt) throws IOException, InterruptedException, URISyntaxException {
+    public static String createImage(String prompt) throws IOException, InterruptedException, URISyntaxException {
         // Set request parameters
         int n = 1;
 
@@ -29,7 +29,7 @@ public class DallE {
         requestBody.put("prompt", prompt);
         requestBody.put("n", n);
         requestBody.put("size", "256x256");
-
+        String generatedImageURL = "";
         // Create the HTTP client
         HttpClient client = HttpClient.newHttpClient();
 
@@ -59,13 +59,11 @@ public class DallE {
             JSONObject dataObject = responseJson.getJSONArray("data").optJSONObject(0);
 
             if (dataObject != null && dataObject.has("url")) {
-                String generatedImageURL = dataObject.getString("url");
+                generatedImageURL = dataObject.getString("url");
                 System.out.println("DALL-E Response:");
                 System.out.println(generatedImageURL);
 
-                try (InputStream in = new URI(generatedImageURL).toURL().openStream()) {
-                    Files.copy(in, Paths.get("recipeImage" + prompt + ".jpg"));
-                }
+                return generatedImageURL;
 
             } else {
                 System.out.println("Error: Unable to find 'url' in the response.");
@@ -73,6 +71,7 @@ public class DallE {
         } else {
             System.out.println("Error: Unable to find 'data' array in the response.");
         }
+        return generatedImageURL;
         
     }
 }

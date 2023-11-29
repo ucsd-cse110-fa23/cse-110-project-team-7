@@ -193,7 +193,10 @@ class CreateRecipeAppFrame extends FlowPane {
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
                     String prompt = recipe.getTitle().replaceAll("\\s", "");
-                    DallE.createImage(prompt);
+                    String url = DallE.createImage(prompt);
+                    System.out.println(url);
+                    recipe.setImageUrl(url);
+                    System.out.println(recipe.getImageUrl());
                     DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");

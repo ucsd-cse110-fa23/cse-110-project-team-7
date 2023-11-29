@@ -37,7 +37,7 @@ public class DetailView extends BorderPane{
         }
         response.setInstructions(ingredients + response.getInstructions());
 
-        details = new Details(response.getInstructions(), response.getTitle());
+        details = new Details(response.getInstructions(), response.getImageUrl());
         instructions = details.getInstructions().getText();
         
         this.setTop(header2);
@@ -199,21 +199,14 @@ class Details extends VBox {
     private TextArea instructions;
     private ImageView imageView;
 
-    Details(String response, String title) {
+    Details(String response, String url) {
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setAlignment(Pos.CENTER); // Center the content vertically and horizontally
 
-        // Add ImageView
-        String prompt = title.replaceAll("\\s", "");
-        String url = "recipeImage" + prompt + ".jpg";
-        System.out.println(url);
-        File imageFile = new File(url);
-
-        Image image = new Image(imageFile.toURI().toString());
-
-
+        
+        Image image = new Image(url);
         imageView = new ImageView(image); // Specify the path to your image
         imageView.setFitWidth(150); // Set the width of the image
         imageView.setFitHeight(150); // Set the height of the image

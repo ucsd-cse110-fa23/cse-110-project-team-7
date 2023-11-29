@@ -147,8 +147,8 @@ public class saveAccountTest {
     public void saveRecipesForUserTest() {
         String userName = "testUser";
         ArrayList<Recipe> recipeList = new ArrayList<>(Arrays.asList(
-                new Recipe("Recipe1", "Ingredients1", "Instructions1"),
-                new Recipe("Recipe2", "Ingredients2", "Instructions2")
+                new Recipe("Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1"),
+                new Recipe("Recipe2", "Ingredients2", "Instructions2", "Image2", "Meal Type 2")
         ));
 
         when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
@@ -164,7 +164,7 @@ public class saveAccountTest {
     @Test
     public void deleteRecipeFromDatabaseTest() {
         String username = "testUser";
-        Recipe recipeToDelete = new Recipe("Test Recipe", "Test", "Test");
+        Recipe recipeToDelete = new Recipe("Test Recipe", "Test", "Test", "Test", "Test");
 
         when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(null);
         saveAccount.deleteRecipeFromDatabase(username, recipeToDelete);

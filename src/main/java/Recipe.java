@@ -4,6 +4,7 @@ public class Recipe{
     public String ingredients;
     public String title;
     public String instructions; 
+    public String imageUrl; 
 
     public Recipe(){
         this.title = "";
@@ -12,10 +13,12 @@ public class Recipe{
         this.instructions = "";
     }
 
-    public Recipe(String title, String ingredients, String instructions){
+    public Recipe(String title, String ingredients, String instructions, String image, String mealType){
         this.title = title;
         this.ingredients = ingredients; 
         this.instructions = instructions;
+        this.imageUrl = image;
+        this.mealType = mealType;
     }
 
     public String getMealType(){
@@ -30,6 +33,16 @@ public class Recipe{
     public String getIngredients(){
         return this.ingredients;
     }
+
+    public void setImageUrl(String url){
+        this.imageUrl = url;
+    }
+
+    public String getImageUrl(){
+        return this.imageUrl;
+    }
+
+
 
     public void setMealType(String input){
         String tmp = input.substring(0, 1).toUpperCase() + input.substring(1, input.length()).toLowerCase();
