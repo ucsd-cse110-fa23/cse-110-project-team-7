@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -58,31 +59,42 @@ public class CreateAccount extends BorderPane {
 
 
     // Add button functionality
-loginButton.setOnAction(e -> {
-    errorContainer.getChildren().clear();
-    saveAccount sAccount = new saveAccount();
-    boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
-
-    if (result) {
-        sAccount.setUsername(username.getUsernameField().getText());
-        ArrayList<Recipe> userRecipes = sAccount.readDatabase(username.getUsernameField().getText());
-        RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
-        recipeList.setRecipeList(userRecipes);
-
-        Scene currentScene = currStage.getScene();
-        if (currentScene != null) {
-
-            ListView loginListView = new ListView(currStage, currApp, recipeList, sAccount);
-
-            // Set the new scene with the new ListView
-            currStage.setScene(loginListView.getRecipeListScene());
-        } 
-        errorLabel.setVisible(false);
-    } else {
-        errorContainer.getChildren().add(errorLabel);
-        errorLabel.setVisible(true);
-    }
-});
+    loginButton.setOnAction(e -> {
+        errorContainer.getChildren().clear();
+        saveAccount sAccount = new saveAccount();
+        boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
+        DallE dallE = new DallE();
+    
+        if (result) {
+            sAccount.setUsername(username.getUsernameField().getText());
+            ArrayList<Recipe> userRecipes = sAccount.readDatabase(username.getUsernameField().getText());
+            RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
+    
+            if (!userRecipes.isEmpty()) {
+                for (Recipe r : userRecipes) {
+                    try {
+                        String url = dallE.createImage(r.getTitle());
+                        r.setImageUrl(url);
+                    } catch (IOException | InterruptedException | URISyntaxException ex) {
+                        ex.printStackTrace(); 
+                    }
+                }
+            }
+    
+            recipeList.setRecipeList(userRecipes);
+    
+            Scene currentScene = currStage.getScene();
+            if (currentScene != null) {
+                ListView loginListView = new ListView(currStage, currApp, recipeList, sAccount);
+                currStage.setScene(loginListView.getRecipeListScene());
+            }
+            errorLabel.setVisible(false);
+        } else {
+            errorContainer.getChildren().add(errorLabel);
+            errorLabel.setVisible(true);
+        }
+    });
+    
 
 
 
