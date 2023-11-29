@@ -2,6 +2,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -34,7 +36,8 @@ public class DetailView extends BorderPane{
             ingredients = "Inputted Ingredients: " + response.getIngredients() + "\n";
         }
         response.setInstructions(ingredients + response.getInstructions());
-        details = new Details(response.getInstructions());
+
+        details = new Details(response.getInstructions(), response.getTitle());
         instructions = details.getInstructions().getText();
         
         this.setTop(header2);
@@ -68,7 +71,6 @@ public class DetailView extends BorderPane{
                 response.loadInstructions(instructions);
                 try {
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
-                    //saveRecipe.saveListToDatabase(newRecipe);
                     recipeList.setRecipeList(newRecipe);
                     saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
 
@@ -78,25 +80,15 @@ public class DetailView extends BorderPane{
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-                //response.setInstructions(response.getTitle() + instructions);
-                //details.getInstructions().setText(instructions);
             }
             else {  
                 try {
 
-                    //if(!recipeList.getRecipeList().contains(response)){
         
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                     recipeList.setRecipeList(newRecipe);
-                    //saveRecipe.saveToCSV(recipeList.getRecipeList());
-                    //saveRecipe.saveListToDatabase(recipeList.getRecipeList());
                     saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
-
-                        //recipeList.addReci()
                     recipeList.saveRecipe();
-
-                    //}
-
                     
 
                 } catch (IOException e1) {
@@ -205,18 +197,36 @@ class Footer2 extends HBox {
 
 class Details extends VBox {
     private TextArea instructions;
+    private ImageView imageView;
 
-    Details(String response) {
+    Details(String response, String title) {
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #FFFFFF;");
+        this.setAlignment(Pos.CENTER); // Center the content vertically and horizontally
+
+        // Add ImageView
+        String prompt = title.replaceAll("\\s", "");
+        String url = "recipeImage" + prompt + ".jpg";
+        System.out.println(url);
+        File imageFile = new File(url);
+
+        Image image = new Image(imageFile.toURI().toString());
+
+
+        imageView = new ImageView(image); // Specify the path to your image
+        imageView.setFitWidth(150); // Set the width of the image
+        imageView.setFitHeight(150); // Set the height of the image
+        imageView.setPreserveRatio(true); // Maintain the aspect ratio
+
+
         instructions = new TextArea(response); // Use TextArea for multi-line text
         instructions.setPrefSize(500, 560); // set size of text area
         instructions.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color
         instructions.setWrapText(true); // Enable text wrapping for multi-line content
         instructions.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text area
         instructions.setEditable(false);
-        this.getChildren().add(instructions); // add text area to the VBox
+        this.getChildren().addAll(imageView, instructions); // add text area to the VBox
     }
 
     public TextInputControl getInstructions() {

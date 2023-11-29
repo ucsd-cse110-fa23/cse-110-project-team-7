@@ -192,6 +192,8 @@ class CreateRecipeAppFrame extends FlowPane {
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
+                    String prompt = recipe.getTitle().replaceAll("\\s", "");
+                    DallE.createImage(prompt);
                     DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");
