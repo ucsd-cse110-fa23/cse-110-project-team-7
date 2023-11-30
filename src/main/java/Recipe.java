@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Recipe{ 
 
     public String mealType; 
@@ -5,12 +7,14 @@ public class Recipe{
     public String title;
     public String instructions; 
     public String imageUrl; 
+    public boolean saved;
 
     public Recipe(){
         this.title = "";
         this.mealType = ""; 
         this.ingredients = "";
         this.instructions = "";
+        this.saved = false;
     }
 
     public Recipe(String title, String ingredients, String instructions, String image, String mealType){
@@ -19,10 +23,19 @@ public class Recipe{
         this.instructions = instructions;
         this.imageUrl = image;
         this.mealType = mealType;
+        this.saved = false;
     }
 
     public String getMealType(){
         return this.mealType;
+    }
+
+    public boolean getSaved(){
+        return this.saved;
+    }
+
+    public void setSaved(boolean s){
+        this.saved = s;
     }
 
     public String getTitle(){
@@ -90,6 +103,15 @@ public class Recipe{
             }
         return false; 
 
+    }
+
+    public boolean recipeExists(ArrayList<Recipe> arr){
+        for(Recipe r : arr){
+            if(r.getTitle().equals(this.getTitle())){
+                return true;
+            }
+        }
+        return false;
     }
 
     

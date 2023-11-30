@@ -1,5 +1,7 @@
 import javafx.stage.Stage;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
@@ -13,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class DetailView extends BorderPane{
@@ -24,14 +27,17 @@ public class DetailView extends BorderPane{
     private Button editButton;
     private Button deleteButton;
     private Button saveButton;
+    private Button refreshButton;
+
     private boolean inEditMode = false; 
     String instructions;
     String ingredients = ""; 
+    String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
     DetailView(Stage currStage, Recipe response, App currApp, RecipeList recipeList, saveAccount saveAccount) throws Exception{
         String title = response.getTitle();
         header2 = new Header2(title);
-        footer2 = new Footer2();
+        footer2 = new Footer2(recipeList, response);
         if(!response.getInstructions().contains("Inputted Ingredients: ")){
             ingredients = "Inputted Ingredients: " + response.getIngredients() + "\n";
         }
@@ -48,6 +54,9 @@ public class DetailView extends BorderPane{
         editButton = footer2.getEditButton();
         deleteButton = footer2.getDeleteButton();
         saveButton = footer2.getSaveButton();
+        refreshButton = footer2.getRefreshButton();
+
+        
 
         currStage.setResizable(true);
         
@@ -87,6 +96,8 @@ public class DetailView extends BorderPane{
         
                     ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
                     recipeList.setRecipeList(newRecipe);
+                    response.setSaved(true); 
+
                     saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
                     recipeList.saveRecipe();
                     
@@ -118,6 +129,30 @@ public class DetailView extends BorderPane{
             recipeList.setRecipeList(newList);
             saveAccount.deleteRecipeFromDatabase(saveAccount.getUsername(), response);
             recipeList.saveRecipe();
+
+        });
+
+        refreshButton.setOnAction(e->{
+            ChatGPT chatGPT = new ChatGPT();
+            DallE dallE = new DallE(); 
+                try {
+                    String newRecipe = chatGPT.getCookingInstruction(response);
+                    response.setTitle(newRecipe);
+                    response.setInstructions(newRecipe);
+                    String url = dallE.createImage(response.getTitle());
+                    response.setImageUrl(url);
+                    DetailView detailFrame = new DetailView(currStage, response, currApp, recipeList, saveAccount);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    currStage.setTitle("Detail View");
+                    currStage.setScene(scene);
+                    currStage.setResizable(true);
+                    currStage.show();
+                } catch ( Exception e1) {
+                    e1.printStackTrace();
+                    
+                }
+            
+            
 
         });
 
@@ -156,8 +191,10 @@ class Footer2 extends HBox {
     private Button saveButton;
     private Button deleteButton;
     private Button cancelButton; 
+    private Button refreshButton; 
 
-    Footer2() {
+
+    Footer2(RecipeList recipeList, Recipe r) {
         this.setPrefSize(500, 60);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setSpacing(15);
@@ -177,8 +214,17 @@ class Footer2 extends HBox {
         cancelButton = new Button("Cancel");
         cancelButton.setStyle(defaultButtonStyle);
 
+        refreshButton = new Button("Refresh");
+        refreshButton.setStyle(defaultButtonStyle);
 
-        this.getChildren().addAll(editButton, saveButton, deleteButton); // adding buttons to footer
+        
+
+        if(r.recipeExists(recipeList.getRecipeList())){
+            refreshButton.setVisible(false);
+        }
+
+
+        this.getChildren().addAll(editButton, saveButton, deleteButton, refreshButton); // adding buttons to footer
     }
 
     public Button getEditButton(){
@@ -191,6 +237,9 @@ class Footer2 extends HBox {
 
     public Button getDeleteButton(){
         return deleteButton;
+    }
+    public Button getRefreshButton(){
+        return refreshButton;
     }
 
 }
@@ -225,6 +274,9 @@ class Details extends VBox {
     public TextInputControl getInstructions() {
 
         return instructions;
+    }
+    public ImageView getImageView() {
+        return imageView;
     }
     public void setEditable(boolean editable) {
         instructions.setEditable(editable);
