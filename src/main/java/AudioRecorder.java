@@ -193,8 +193,7 @@ class CreateRecipeAppFrame extends FlowPane {
                     String response = chatGPT.getCookingInstruction(recipe);
                     recipe.setTitle(response);
                     recipe.setInstructions(response);
-                    String prompt = recipe.getTitle().replaceAll("\\s", "");
-                    String url = dallE.createImage(prompt);
+                    String url = dallE.createImage(recipe.getTitle());
                     System.out.println(url);
                     recipe.setImageUrl(url);
                     System.out.println(recipe.getImageUrl());

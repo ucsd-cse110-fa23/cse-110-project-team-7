@@ -72,6 +72,26 @@ public class SaveRecipeTest {
         }
     }
 
+    @Test
+    public void testRecipeExistsAndSaveRecipe(){
+        try{
+            recipeList=saveRecipe.saveARecipe(recipeList, recipe);
+            assertEquals(recipeList.get(0), recipe);
+            boolean result = recipe.recipeExists(recipeList);
+            assertTrue(result);
+
+            assertFalse(recipe2.recipeExists(recipeList));
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+
+
+    }
+
     
 
 }

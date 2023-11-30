@@ -304,19 +304,19 @@ public class ListView extends BorderPane {
                     recipeList.setRecipeList(Sort.oldestToNewestSort(defaultList));
                     recipeList.saveRecipe();
 
-                    for(Recipe rec : recipeList.getRecipeList()) {
-                        System.out.println("Recipe Name: " + rec.getTitle());
-                    }
+                    // for(Recipe rec : recipeList.getRecipeList()) {
+                    //     System.out.println("Recipe Name: " + rec.getTitle());
+                    // }
                    // recipeList.setRecipeList(defaultList);
                     break;
                 case "Newest to Oldest":
                     
-                    for(Recipe rec : recipeList.getRecipeList()) {
-                        System.out.println("Recipe Name: " + rec.getTitle());
-                    }
+                    // for(Recipe rec : recipeList.getRecipeList()) {
+                    //     System.out.println("Recipe Name: " + rec.getTitle());
+                    // }
                     break;
             }
-            
+            recipeList.saveRecipe();
             recipeList.setRecipeList(defaultList);
         });
 
