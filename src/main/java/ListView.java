@@ -100,6 +100,7 @@ class RecipeList extends VBox {
             recipeButton.setOnAction(e -> {
 
                 try {
+    
                     DetailView detailFrame = new DetailView(this.getStage(), recipe, this.getApp(), this, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     this.getStage().setTitle("Detail View");

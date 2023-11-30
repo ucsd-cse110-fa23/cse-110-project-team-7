@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="CreateRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-28T07:15:44" hostname="Amandas-MBP.attlocal.net" time="0.074">
+<testsuite name="CreateRecipeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-11-29T20:16:25" hostname="Amandas-MacBook-Pro.local" time="0.023">
   <properties/>
-  <testcase name="testValidMealType()" classname="CreateRecipeTest" time="0.004"/>
-  <testcase name="testInvalidMealType()" classname="CreateRecipeTest" time="0.001"/>
-  <testcase name="testSetTitle()" classname="CreateRecipeTest" time="0.063"/>
+  <testcase name="testValidMealType()" classname="CreateRecipeTest" time="0.006"/>
+  <testcase name="testInvalidMealType()" classname="CreateRecipeTest" time="0.002"/>
+  <testcase name="testSetTitle()" classname="CreateRecipeTest" time="0.009"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
