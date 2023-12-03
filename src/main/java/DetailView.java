@@ -133,6 +133,7 @@ public class DetailView extends BorderPane{
         });
 
         refreshButton.setOnAction(e->{
+            /* 
             ChatGPT chatGPT = new ChatGPT();
             DallE dallE = new DallE(); 
                 try {
@@ -151,7 +152,7 @@ public class DetailView extends BorderPane{
                     e1.printStackTrace();
                     
                 }
-            
+            */
             
 
         });

@@ -154,46 +154,61 @@ class CreateRecipeAppFrame extends FlowPane {
         stopButton.setOnAction(e -> {
             stopRecording();
             try {
-                Whisper whisper = new Whisper();
-                String result = whisper.display();
+                PerformRequest request = new PerformRequest();
+                String result = request.performRequest("GET", null, null, "Whisper");
                 if(currentTarget.equals("meal type")){
                     if(recipe.checkMealType(result)){
                         mType.getTypeField().setText(result.toLowerCase());
                         currentTarget = "";
                         recipe.setMealType(result);
-                        
                         mealSelected = false;
                     }
                     else{
                         mType.getTypeField().setText("reinput meal type");
                         currentTarget = "";
                     }
-
-
                 }
                 if(currentTarget.equals("ingredient list")){
                     ingredient.getTypeField().setText(result.toLowerCase());
                     recipe.setIngredients(result);
+                    System.out.println("RECIPE INGREDIENT IN STOP: " + recipe.getIngredients());
+
                     currentTarget = "";
                 }
                 
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-            
-
         });
 
         // create Button later
         createButton.setOnAction(e -> {
-            ChatGPT chatGPT = new ChatGPT(); 
-            DallE dallE = new DallE();
             try {
+                System.out.println("RECIPE INGREDIENT: " + recipe.getIngredients());
                 if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
-                    String response = chatGPT.getCookingInstruction(recipe);
+                    PerformRequest request = new PerformRequest();
+                    System.out.println("RECIPE INGREDIENTS #22222222222: " + recipe.getIngredients());
+                    String ingredients = recipe.getIngredients();
+                    if(recipe.getIngredients().contains(" ")){
+                        ingredients = recipe.getIngredients().replaceAll(" ", "%20");
+                    }
+                    String response = request.performRequest("GET", 
+                    null, 
+                    null,
+                    ingredients + "&" + recipe.getMealType() + "_" + "Create");
+                    System.out.println("RESPONSE: " + response);
                     recipe.setTitle(response);
+                    
+                    System.out.println("TITLE: "+ recipe.getTitle());
                     recipe.setInstructions(response);
-                    String url = dallE.createImage(recipe.getTitle());
+                    String title = recipe.getTitle();
+                    if(title.contains(" ")){
+                        title = recipe.getIngredients().replaceAll(" ", "%20");
+                    }
+                    String url = request.performRequest("GET", 
+                    null, 
+                    null, 
+                    title + "." + "DallE");
                     System.out.println(url);
                     recipe.setImageUrl(url);
                     System.out.println(recipe.getImageUrl());

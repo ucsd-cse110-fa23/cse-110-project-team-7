@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Recipe{ 
+public class Recipe{
 
     public String mealType; 
     public String ingredients;

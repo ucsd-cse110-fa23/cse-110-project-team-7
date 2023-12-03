@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 interface IChatGPT{
-    String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException;
+    String getCookingInstruction(String ingredients, String mealType) throws IOException, InterruptedException, URISyntaxException;
 
 }
 public class ChatGPT implements IChatGPT{
@@ -18,22 +18,13 @@ public class ChatGPT implements IChatGPT{
     private static final String MODEL = "text-davinci-003";
 
     
-    public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
-        // Set request parameters
-        Recipe currentRecipe = recipe;
+    public String getCookingInstruction(String ingredients, String mealType) throws IOException, InterruptedException, URISyntaxException {
+        
 
-        String ingredientInHand = currentRecipe.getIngredients();
-        String mealType = currentRecipe.getMealType();
-
-
-        String prompt = "I have following ingredients : "+ingredientInHand+" and I would like to get a budget friendly and easy to make recipe for my "+ mealType+" with a list of step by step instructions. Please put title in square brackets.";
+        String prompt = "I have following ingredients : "+ingredients+" and I would like to get a budget friendly and easy to make recipe for my "+ mealType+" with a list of step by step instructions. Please put title in square brackets.";
 
         
         int maxTokens = 400;
-        //System.out.println(prompt);
-
-        //System.out.println(prompt);
-
         // Create a request body which you will pass into request object
         JSONObject requestBody = new JSONObject();
         requestBody.put("model", MODEL);

@@ -16,6 +16,7 @@ public class Server {
     // create a map to store data
     Map<String, String> data = new HashMap<>();
     saveAccount accountManager = new saveAccount(); // Initialize saveAccount instance
+    DallE dallE = new DallE();
     // create a server
     HttpServer server = HttpServer.create(
         new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT),

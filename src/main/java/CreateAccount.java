@@ -66,27 +66,20 @@ public class CreateAccount extends BorderPane {
                                 null,
                                 username.getUsernameField().getText() + "." + password.getPasswordField().getText()
                              );
-        /*
+        
+        
         errorContainer.getChildren().clear();
         saveAccount sAccount = new saveAccount();
-        boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
-        DallE dallE = new DallE();
     
-        if (result) {
-            sAccount.setUsername(username.getUsernameField().getText());
-            ArrayList<Recipe> userRecipes = sAccount.readDatabase(username.getUsernameField().getText());
+        if (response.equals("Login Successful")) {
+
+            ArrayList<Recipe> userRecipes = request.performRecipeRequest("GET", 
+                                        null, 
+                                        null, 
+                                        username.getUsernameField().getText() + ".Recipe"
+                                        );
+                                        
             RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
-    
-            if (!userRecipes.isEmpty()) {
-                for (Recipe r : userRecipes) {
-                    try {
-                        String url = dallE.createImage(r.getTitle());
-                        r.setImageUrl(url);
-                    } catch (IOException | InterruptedException | URISyntaxException ex) {
-                        ex.printStackTrace(); 
-                    }
-                }
-            }
     
             recipeList.setRecipeList(userRecipes);
     
@@ -100,7 +93,6 @@ public class CreateAccount extends BorderPane {
             errorContainer.getChildren().add(errorLabel);
             errorLabel.setVisible(true);
         }
-        */
         System.out.println(response);
     });
     
