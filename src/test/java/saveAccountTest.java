@@ -22,6 +22,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
@@ -189,10 +190,11 @@ public class saveAccountTest {
     @Test
     public void deleteRecipeFromDatabaseTest() {
         String username = "testUser";
-        // Recipe recipeToDelete = new Recipe("Test Recipe", "Test", "Test", "Test", "Test");
+        String recipeTitleToDelete = "Test Recipe";
 
-        when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(null);
-        saveAccount.deleteRecipeFromDatabase(username, "Test Recipe");
+        when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(Mockito.mock(UpdateResult.class));
+
+        saveAccount.deleteRecipeFromDatabase(username, recipeTitleToDelete);
 
         ArgumentCaptor<Bson> filterCaptor = ArgumentCaptor.forClass(Bson.class);
         ArgumentCaptor<Bson> updateCaptor = ArgumentCaptor.forClass(Bson.class);
@@ -202,8 +204,12 @@ public class saveAccountTest {
         Bson actualFilter = filterCaptor.getValue();
         Bson actualUpdate = updateCaptor.getValue();
 
-        assertEquals(eq("_id", username), actualFilter); 
-        assertEquals(pull("recipes", new Document("Title", "Test Recipe")), actualUpdate);
+        assertEquals(eq("_id", username), actualFilter);
+
+        // Construct the expected pull update
+        Bson expectedUpdate = pull("recipes", eq("Title", recipeTitleToDelete));
+        
+        assertEquals(expectedUpdate, actualUpdate);
     }
 
 
