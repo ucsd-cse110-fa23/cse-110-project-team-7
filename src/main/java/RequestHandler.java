@@ -150,7 +150,7 @@ public class RequestHandler implements HttpHandler {
         ingredients = query.substring(query.indexOf("=") + 1, query.indexOf("&"));
         System.out.println(ingredients);
         if(ingredients.contains("%20")){
-            ingredients.replaceAll("%20", " ");
+            ingredients = ingredients.replaceAll("%20", " ");
 
         }
         mealType = query.substring(query.indexOf("&") + 1, query.indexOf("_"));
@@ -177,7 +177,7 @@ public class RequestHandler implements HttpHandler {
         
         title = query.substring(query.indexOf("=") + 1, query.indexOf("."));
         if(title.contains("%20")){
-            title.replaceAll("%20", " ");
+            title = title.replaceAll("%20", " ");
 
         }
         return dallE.createImage(title);
@@ -214,42 +214,68 @@ public class RequestHandler implements HttpHandler {
         }
     }
     
-
     private String handlePut(HttpExchange httpExchange) throws IOException {
+        /*
+         * Make this method save recipes to MongoDB Database
+         */
+
+
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
-        String putData = scanner.nextLine();
-        String[] parts = putData.split(",");
-        if (parts.length == 2) {
+        
+        StringBuilder putData = new StringBuilder();
+        String inputLine;
+        while (scanner.hasNextLine()) {
+            inputLine = scanner.nextLine();
+            putData.append(inputLine);
+        }
+        inputLine = putData.toString();
+
+        scanner.close();
+
+        System.out.println("putData: " + inputLine);
+        String[] parts = inputLine.split("~");
+
+        if (parts.length == 6) {
             String username = parts[0].trim();
-            String password = parts[1].trim();
+            String title = parts[1].trim();
+            String ingredients = parts[2].trim();
+            String instructions = parts[3].trim();
+            String imageUrl = parts[4].trim();
+            String mealType = parts[5].trim();
 
             // Perform login logic with MongoDB
-            boolean loginResult = accountManager.loginAccount(username, password);
+            boolean result = accountManager.saveRecipeForUser(username, title, ingredients, instructions, imageUrl, mealType);
 
             // Send response back to the client
-            return loginResult ? "Login Successful" : "Login Failed";
+            return result ? "Added recipe successfully" : "Failed adding recipe";
         } else {
             return "Invalid Request Data";
         }
     }
 
     private String handleDelete(HttpExchange httpExchange) throws IOException {
-        String response = "Invalid DELETE request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
-        if (query != null) {
-            String language = query.substring(query.indexOf("=") + 1);
-            String year = data.get(language); // Retrieve data from hashmap
-            if (year != null) {
-                data.remove(language);
-                response = "Deleted entry {" + language + ", " + year + "}";
-                System.out.println("Deleted entry {" + language + ", " + year + "}");
-            } else {
-                response = "No data found for " + language;
-            }
+        String username; 
+        String title;
+    // You can add specific handling for login-related GET requests if needed
+    if (query != null) {
+        // Extract username and password
+        username = query.substring(query.indexOf("=") + 1, query.indexOf("_"));
+        title = query.substring(query.indexOf("_") + 1);
+        if(title.contains("%20")){
+            title = title.replaceAll("%20", " ");
         }
-        return response;
+        System.out.println("Title after: " + title);
+        // Perform login logic with MongoDB or other authentication mechanism
+        boolean loginResult = accountManager.deleteRecipeFromDatabase(username, title);
+        
+        // Send response back to the client
+        return loginResult ? "Delete Successful" : "Delete Failed";
+    } else {
+        return "Invalid Request Data";
+    }
     }
 
 }

@@ -92,6 +92,47 @@ public class PerformRequest {
     }
 }
 
+    public String performRecipeSaving(String method, String username, String title, String ingredients, String instructions, String mealType, String image, String query) {
+        try {
+            String urlString = "http://localhost:8100/";
+            if (query != null) {
+                urlString += "?=" + query;
+            }
+            URL url = new URI(urlString).toURL();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod(method);
+            conn.setDoOutput(true);
+
+            if (method.equals("POST") || method.equals("PUT")) {
+                OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+                System.out.println("USERNAME IN PERFORM REQUEST: " + username);
+                out.write(username + "~" + title + "~" + ingredients + "~" + instructions + "~" + image + "~" + mealType);
+                out.flush();
+                out.close();
+            }
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            //String response = "";
+            
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String finalResponse = response.toString();
+
+            // while ((inputLine = in.readLine()) != null) {
+            //     response += inputLine;
+            // }
+            in.close();
+            System.out.println("Perform request response: " + response);
+            return finalResponse;
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "Error: " + ex.getMessage();
+        }
+    }
 private ArrayList<Recipe> parseRecipeResponse(String jsonResponse) {
     System.out.println("Received JSON response: " + jsonResponse);
 

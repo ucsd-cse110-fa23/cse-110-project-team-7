@@ -79,6 +79,8 @@ public class CreateAccount extends BorderPane {
                                         username.getUsernameField().getText() + ".Recipe"
                                         );
                                         
+
+            sAccount.setUsername(username.getUsernameField().getText());
             RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
     
             recipeList.setRecipeList(userRecipes);

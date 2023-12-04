@@ -41,9 +41,8 @@ public class DetailView extends BorderPane{
         if(!response.getInstructions().contains("Inputted Ingredients: ")){
             ingredients = "Inputted Ingredients: " + response.getIngredients() + "\n";
         }
-        response.setInstructions(ingredients + response.getInstructions());
 
-        details = new Details(response.getInstructions(), response.getImageUrl());
+        details = new Details(ingredients + response.getInstructions(), response.getImageUrl());
         instructions = details.getInstructions().getText();
         
         this.setTop(header2);
@@ -72,42 +71,42 @@ public class DetailView extends BorderPane{
         });
 
         saveButton.setOnAction(e ->{
-            // if in edit mode 
-            if(inEditMode){
-                details.setEditable(false);
-                inEditMode = false; 
-                instructions = details.getInstructions().getText();
-                response.loadInstructions(instructions);
-                try {
-                    ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
-                    recipeList.setRecipeList(newRecipe);
-                    saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
+            
+            details.setEditable(false);
+            inEditMode = false; 
+            instructions = details.getInstructions().getText();
+            response.loadInstructions(instructions);
+            try {
+                PerformRequest request = new PerformRequest();
 
-                    recipeList.saveRecipe();
+                ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
+                /*
+                 * make a request to server using newRecipe's information as parameters
+                 */
 
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
+                System.out.println("RECIPE: " + response.getTitle() + "/" +
+                response.getIngredients() + "/" +
+                response.getInstructions() + "/" +
+                response.getMealType()+ "/" +
+                response.getImageUrl());
+                System.out.println("USERNAME: " + saveAccount.getUsername());
+                String result = request.performRecipeSaving("PUT", 
+                saveAccount.getUsername(), 
+                response.getTitle(), 
+                response.getIngredients(), 
+                response.getInstructions(), 
+                response.getMealType(),
+                response.getImageUrl(), null);
+
+                System.out.println("SAVE TO MONGODB RESULT: " + result);
+                recipeList.setRecipeList(newRecipe);
+                recipeList.saveRecipe();
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
             }
-            else {  
-                try {
-
-        
-                    ArrayList<Recipe> newRecipe = saveRecipe.saveARecipe(recipeList.getRecipeList(), response);
-                    recipeList.setRecipeList(newRecipe);
-                    response.setSaved(true); 
-
-                    saveAccount.saveRecipesForUser(saveAccount.getUsername(), newRecipe);
-                    recipeList.saveRecipe();
-                    
-
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                
-            }
+            
         });
 
         // if in edit mode, revert changes
@@ -127,12 +126,64 @@ public class DetailView extends BorderPane{
 
             ArrayList<Recipe> newList = DeleteRecipe.deleteTargetRecipe(recipeList.getRecipeList(), response);
             recipeList.setRecipeList(newList);
-            saveAccount.deleteRecipeFromDatabase(saveAccount.getUsername(), response);
+            PerformRequest request = new PerformRequest();
+            String oldTitle = response.getTitle();
+            if(response.getTitle().contains(" ")){
+                    oldTitle = response.getTitle().replaceAll(" ", "%20");
+            }
+            String result = request.performRequest("DELETE",
+            null,
+            null, 
+            saveAccount.getUsername() + "_" + oldTitle);
+            // saveAccount.deleteRecipeFromDatabase(String username, String title);
             recipeList.saveRecipe();
+            System.out.println(result);
 
         });
 
         refreshButton.setOnAction(e->{
+            try {
+                System.out.println("RECIPE INGREDIENT: " + response.getIngredients());
+                if(response.getIngredients() != "" && response.getMealType() != ""){
+                    PerformRequest request = new PerformRequest();
+                    System.out.println("RECIPE INGREDIENTS #22222222222: " + response.getIngredients());
+                    String ingredients = response.getIngredients();
+                    if(response.getIngredients().contains(" ")){
+                        ingredients = response.getIngredients().replaceAll(" ", "%20");
+                    }
+                    String result = request.performRequest("GET", 
+                    null, 
+                    null,
+                    ingredients + "&" + response.getMealType() + "_" + "Create");
+                    System.out.println("RESPONSE: " + result);
+                    response.setTitle(result);
+                    
+                    System.out.println("TITLE: "+ response.getTitle());
+                    response.setInstructions(result);
+                    String newTitle = response.getTitle();
+                    if(newTitle.contains(" ")){
+                        newTitle = response.getIngredients().replaceAll(" ", "%20");
+                    }
+                    String url = request.performRequest("GET", 
+                    null, 
+                    null, 
+                    newTitle + "." + "DallE");
+                    System.out.println(url);
+                    response.setImageUrl(url);
+                    System.out.println(response.getImageUrl());
+                    DetailView detailFrame = new DetailView(currStage, response, currApp, recipeList, saveAccount);
+                    Scene scene = new Scene(detailFrame, 500, 600);
+                    currStage.setTitle("Detail View");
+                    currStage.setScene(scene);
+                    currStage.setResizable(true);
+                    currStage.show();
+                }
+                
+                
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
             /* 
             ChatGPT chatGPT = new ChatGPT();
             DallE dallE = new DallE(); 
