@@ -33,7 +33,7 @@ public class CreateAccount extends BorderPane {
 
     private Label errorLabel; 
     private VBox errorContainer;  // Container for error labels
-
+    private PerformRequest request;
 
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; -fx-font-size: 14";
 
@@ -60,26 +60,28 @@ public class CreateAccount extends BorderPane {
 
     // Add button functionality
     loginButton.setOnAction(e -> {
+        request = new PerformRequest();
+        String response = request.performRequest("GET", 
+                                null, 
+                                null,
+                                username.getUsernameField().getText() + "." + password.getPasswordField().getText()
+                             );
+        
+        
         errorContainer.getChildren().clear();
         saveAccount sAccount = new saveAccount();
-        boolean result = sAccount.loginAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
-        DallE dallE = new DallE();
     
-        if (result) {
+        if (response.equals("Login Successful")) {
+
+            ArrayList<Recipe> userRecipes = request.performRecipeRequest("GET", 
+                                        null, 
+                                        null, 
+                                        username.getUsernameField().getText() + ".Recipe"
+                                        );
+                                        
+
             sAccount.setUsername(username.getUsernameField().getText());
-            ArrayList<Recipe> userRecipes = sAccount.readDatabase(username.getUsernameField().getText());
             RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
-    
-            if (!userRecipes.isEmpty()) {
-                for (Recipe r : userRecipes) {
-                    try {
-                        String url = dallE.createImage(r.getTitle());
-                        r.setImageUrl(url);
-                    } catch (IOException | InterruptedException | URISyntaxException ex) {
-                        ex.printStackTrace(); 
-                    }
-                }
-            }
     
             recipeList.setRecipeList(userRecipes);
     
@@ -93,6 +95,7 @@ public class CreateAccount extends BorderPane {
             errorContainer.getChildren().add(errorLabel);
             errorLabel.setVisible(true);
         }
+        System.out.println(response);
     });
     
 
@@ -100,6 +103,15 @@ public class CreateAccount extends BorderPane {
 
     // Add button functionality
     signUpButton.setOnAction(e -> {
+        request = new PerformRequest();
+        String response = request.performRequest("POST", 
+                                username.getUsernameField().getText(), 
+                                password.getPasswordField().getText(),
+                                null
+                             );
+        /*
+         * When signUp is pressed, go to CreateAccount Request Handler in Server
+         
         errorContainer.getChildren().clear();
         saveAccount sAccount = new saveAccount();
         boolean saved = sAccount.generateNewAccount(username.getUsernameField().getText(), password.getPasswordField().getText());
@@ -119,6 +131,8 @@ public class CreateAccount extends BorderPane {
                 currStage.setScene(signInListView.getRecipeListScene());
             }   
         }
+        */
+        System.out.println(response);
     });
 
     // Add button functionality

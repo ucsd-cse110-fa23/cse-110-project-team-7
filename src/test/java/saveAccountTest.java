@@ -22,6 +22,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
@@ -154,20 +155,46 @@ public class saveAccountTest {
         when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
         when(mockFindIterable.first()).thenReturn(Mockito.mock(Document.class));
 
-        saveAccount.saveRecipesForUser(userName, recipeList);
+        saveAccount.saveRecipeForUser(userName, "Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1");
+        saveAccount.saveRecipeForUser(userName, "Recipe2", "Ingredients2", "Instructions2", "Image2", "Meal Type 2");
 
-        verify(mockCollection, times(1)).find(any(Bson.class));
-        verify(mockCollection, times(1)).replaceOne(any(Bson.class), any());
+        verify(mockCollection, times(2)).find(any(Bson.class));
+        verify(mockCollection, times(2)).replaceOne(any(Bson.class), any());
+    }
+
+    @Test
+    public void saveAfterEditRecipesForUserTest() {
+        String userName = "testUser";
+        ArrayList<Recipe> recipeList = new ArrayList<>(Arrays.asList(
+                new Recipe("Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1"),
+                new Recipe("Recipe2", "Ingredients2", "Instructions2", "Image2", "Meal Type 2")
+        ));
+
+        when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
+        when(mockFindIterable.first()).thenReturn(Mockito.mock(Document.class));
+
+        saveAccount.saveRecipeForUser(userName, "Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1");
+        saveAccount.saveRecipeForUser(userName, "Recipe2", "Ingredients2", "Instructions2", "Image2", "Meal Type 2");
+
+        verify(mockCollection, times(2)).find(any(Bson.class));
+        verify(mockCollection, times(2)).replaceOne(any(Bson.class), any());
+
+        saveAccount.saveRecipeForUser(userName, "Recipe2", "Ingredients2", "Instructions3", "Image2", "Meal Type 2");
+
+        verify(mockCollection, times(3)).find(any(Bson.class));
+        verify(mockCollection, times(3)).replaceOne(any(Bson.class), any());
+
     }
 
 
     @Test
     public void deleteRecipeFromDatabaseTest() {
         String username = "testUser";
-        Recipe recipeToDelete = new Recipe("Test Recipe", "Test", "Test", "Test", "Test");
+        String recipeTitleToDelete = "Test Recipe";
 
-        when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(null);
-        saveAccount.deleteRecipeFromDatabase(username, recipeToDelete);
+        when(mockCollection.updateOne(any(Bson.class), any(Bson.class))).thenReturn(Mockito.mock(UpdateResult.class));
+
+        saveAccount.deleteRecipeFromDatabase(username, recipeTitleToDelete);
 
         ArgumentCaptor<Bson> filterCaptor = ArgumentCaptor.forClass(Bson.class);
         ArgumentCaptor<Bson> updateCaptor = ArgumentCaptor.forClass(Bson.class);
@@ -177,12 +204,12 @@ public class saveAccountTest {
         Bson actualFilter = filterCaptor.getValue();
         Bson actualUpdate = updateCaptor.getValue();
 
-        assertEquals(eq("_id", username), actualFilter); 
-        assertEquals(pull("recipes", new Document("Title", "Test Recipe")
-                                        .append("Ingredients", "Test")
-                                        .append("Instructions", "Test")
-                                        .append("Image", "Test")
-                                        .append("Meal Type", "Test")), actualUpdate);
+        assertEquals(eq("_id", username), actualFilter);
+
+        // Construct the expected pull update
+        Bson expectedUpdate = pull("recipes", eq("Title", recipeTitleToDelete));
+        
+        assertEquals(expectedUpdate, actualUpdate);
     }
 
 

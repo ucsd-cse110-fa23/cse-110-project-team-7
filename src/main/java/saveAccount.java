@@ -2,6 +2,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -13,7 +14,7 @@ import java.util.*;
 
 public class saveAccount {
 
-    String uri = "mongodb://ajkristanto:1g9rhJSw6pKCwJwj@ac-m9szzsy-shard-00-00.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-01.h0guhqq.mongodb.net:27017,ac-m9szzsy-shard-00-02.h0guhqq.mongodb.net:27017/?ssl=true&replicaSet=atlas-103fsu-shard-0&authSource=admin&retryWrites=true&w=majority";
+    String uri = "mongodb+srv://admin:cXgKxmLpdvsylEUR@cluster0.zth582l.mongodb.net/?retryWrites=true&w=majority";
     MongoClient mongoClient;
     MongoDatabase accountDb;
     MongoCollection<Document> accountsCollection;
@@ -47,6 +48,7 @@ public class saveAccount {
                 .append("recipes", new ArrayList<>());;
 
         accountsCollection.insertOne(newUser);
+        setUsername(userName);
         return true;
     }
 
@@ -79,51 +81,73 @@ public class saveAccount {
 
     
 
-    public void saveRecipesForUser(String userName, ArrayList<Recipe> recipeList) {
+    public boolean saveRecipeForUser(String userName, String title, String ingredients, String instructions, String imageUrl, String mealType) {
         if (userName.equals("")) {
             System.out.println("Error: Empty username");
-            return;
+            return false;
         }
-    
+
         Bson filter = eq("_id", userName);
         Document user = accountsCollection.find(filter).first();
-    
+
         if (user != null) {
             List<Document> existingRecipes = (List<Document>) user.get("recipes", List.class);
-    
+
             if (existingRecipes == null) {
                 existingRecipes = new ArrayList<>();
                 user.put("recipes", existingRecipes);
-            } else {
-                existingRecipes.clear();
             }
-    
-            for (Recipe recipe : recipeList) {
-                Document recipeDocument = new Document("Title", recipe.getTitle())
-                        .append("Ingredients", recipe.getIngredients())
-                        .append("Instructions", recipe.getInstructions())
-                        .append("Image", recipe.getImageUrl())
-                        .append("Meal Type", recipe.getMealType());
-    
+
+            // Check if the recipe with the given title already exists
+            boolean recipeExists = false;
+            for (Document recipeDoc : existingRecipes) {
+                if (title.equals(recipeDoc.getString("Title"))) {
+                    // Update existing recipe
+                    recipeDoc.put("Ingredients", ingredients);
+                    recipeDoc.put("Instructions", instructions);
+                    recipeDoc.put("Image", imageUrl);
+                    recipeDoc.put("Meal Type", mealType);
+                    recipeExists = true;
+                    break;
+                }
+            }
+
+            if (!recipeExists) {
+                // If the recipe doesn't exist, add a new one
+                Document recipeDocument = new Document("Title", title)
+                        .append("Ingredients", ingredients)
+                        .append("Instructions", instructions)
+                        .append("Image", imageUrl)
+                        .append("Meal Type", mealType);
+
                 existingRecipes.add(recipeDocument);
             }
-    
+
             accountsCollection.replaceOne(filter, user);
+            return true;
         } else {
             System.out.println("User not found: " + userName);
+            return false;
         }
     }
+
+
     
 
-    public void deleteRecipeFromDatabase(String username, Recipe recipe) {
+    public boolean deleteRecipeFromDatabase(String username, String title) {
         Bson filter = eq("_id", username);
-        Bson update = pull("recipes", new Document("Title", recipe.getTitle())
-                                            .append("Ingredients", recipe.getIngredients())
-                                            .append("Instructions", recipe.getInstructions())
-                                            .append("Image", recipe.getImageUrl())
-                                            .append("Meal Type", recipe.getMealType()));
-    
-        accountsCollection.updateOne(filter, update);
+        Bson update = pull("recipes", eq("Title", title));
+
+        UpdateResult result = accountsCollection.updateOne(filter, update);
+
+        // Check if the update was successful
+        if (result.getModifiedCount() > 0) {
+            System.out.println("Recipe deleted: " + title);
+            return true; 
+        } else {
+            System.out.println("Recipe not found: " + title);
+            return false; // Recipe not found or deletion unsuccessful
+        }
     }
     
     

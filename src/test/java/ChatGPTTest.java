@@ -18,7 +18,7 @@ public class ChatGPTTest {
     class ChatGPTMock implements IChatGPT {
 
         @Override
-        public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
+        public String getCookingInstruction(String ingredients, String mealType) throws IOException, InterruptedException, URISyntaxException {
             return "Fake API: This is a fake cooking instruction for testing.";
         }
 
@@ -26,7 +26,7 @@ public class ChatGPTTest {
 
     class ChatGPTMock2 implements IChatGPT{
         @Override
-        public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
+        public String getCookingInstruction(String ingredients, String mealType) throws IOException, InterruptedException, URISyntaxException {
             throw new IOException("Fake API exception");
         }
     }
@@ -42,20 +42,19 @@ public class ChatGPTTest {
         fakeChatGPT2 = new ChatGPTMock2();
     }
 
-    public String getCookingInstruction(Recipe recipe) throws IOException, InterruptedException, URISyntaxException {
+    public String getCookingInstruction(String ingredients, String mealType) throws IOException, InterruptedException, URISyntaxException {
         if(real){
-            return fakeChatGPT.getCookingInstruction(recipe);
+            return fakeChatGPT.getCookingInstruction(ingredients, mealType);
         }
-        return fakeChatGPT2.getCookingInstruction(recipe);
+        return fakeChatGPT2.getCookingInstruction(ingredients, mealType);
     }
 
     @Test
     public void testGetCookingInstructionSuccess() throws Exception {
         // Call the method as if it were the real API
-        Recipe recipe = new Recipe();
         real = true;
 
-        String response = getCookingInstruction(recipe);
+        String response = getCookingInstruction("ingredients", "mealType");
         //assertEquals(recipe.getMealType(), "Lunch");
         // Assert the response
         assertEquals(response, "Fake API: This is a fake cooking instruction for testing.");
@@ -64,7 +63,7 @@ public class ChatGPTTest {
     @Test
     public void testGetCookingInstructionException() throws Exception {
        Exception exception = assertThrows(IOException.class, () -> {
-            getCookingInstruction(new Recipe());
+            getCookingInstruction("ingredients", "mealType");
         });
 
         // You can add more specific assertions on the exception if needed
