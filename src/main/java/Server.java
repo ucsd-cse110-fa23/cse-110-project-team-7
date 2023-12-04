@@ -25,6 +25,7 @@ public class Server {
     // TODO: create the context
     // server.createContext("/", new RequestHandler(data));
     server.createContext("/", new RequestHandler(data, accountManager));
+    server.createContext("/recipe", new URLHandler(data, accountManager));
     // server.createContext("/recipes", new RequestHandler(data));
     // server.createContext("/recorder", new RequestHandler(data));
     // (?) server.createContext("/recipeid", new RequestHandler(data));

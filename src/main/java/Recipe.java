@@ -7,14 +7,12 @@ public class Recipe{
     public String title;
     public String instructions; 
     public String imageUrl; 
-    public boolean saved;
 
     public Recipe(){
         this.title = "";
         this.mealType = ""; 
         this.ingredients = "";
         this.instructions = "";
-        this.saved = false;
     }
 
     public Recipe(String title, String ingredients, String instructions, String image, String mealType){
@@ -23,20 +21,12 @@ public class Recipe{
         this.instructions = instructions;
         this.imageUrl = image;
         this.mealType = mealType;
-        this.saved = false;
     }
 
     public String getMealType(){
         return this.mealType;
     }
 
-    public boolean getSaved(){
-        return this.saved;
-    }
-
-    public void setSaved(boolean s){
-        this.saved = s;
-    }
 
     public String getTitle(){
         return this.title;
