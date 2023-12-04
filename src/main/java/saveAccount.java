@@ -200,6 +200,8 @@ public class saveAccount {
             Bson filter = and(eq("_id", username), eq("recipes.Title", title));
 
             Document user = accountsCollection.find(filter).first();
+            System.out.println("DEBUG: Filter in findRecipe: " + filter);
+            System.out.println("DEBUG: User document in findRecipe: " + user);
 
             if (user != null) {
                 List<Document> recipes = user.getList("recipes", Document.class);
@@ -211,9 +213,10 @@ public class saveAccount {
                             String instructions = recipeDoc.getString("Instructions");
                             String image = recipeDoc.getString("Image");
                             String mealType = recipeDoc.getString("Meal Type");
+                            System.out.println("DEBUG: Recipe document in findRecipe: " + recipeDoc);
 
                             result = new Recipe(title, ingredients, instructions, image, mealType);
-                            break; // Stop searching once the recipe is found
+                            return result; 
                         }
                     }
                 }
