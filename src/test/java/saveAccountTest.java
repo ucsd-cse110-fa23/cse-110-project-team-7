@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -13,9 +12,6 @@ import org.mockito.ArgumentMatchers;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -31,6 +27,7 @@ import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
+// All testing under this is credits to ChatGPT version 3.5
 public class saveAccountTest {
 
     @Mock
@@ -54,7 +51,6 @@ public class saveAccountTest {
 
         when(mockDatabase.getCollection(anyString())).thenReturn(mockCollection);
         when(mockCollection.find(any(Bson.class), ArgumentMatchers.<Class<Document>>any())).thenReturn(mockFindIterable);
-
         saveAccount = new saveAccount(mockDatabase, mockCollection);
    }
 
@@ -225,7 +221,8 @@ public class saveAccountTest {
  
         when(mockCollection.find(eq("_id", username))).thenReturn(Mockito.mock(FindIterable.class));
         when(mockCollection.find(eq("_id", username)).first()).thenReturn(mockUser);
- 
+        System.out.println("DEBUG: MOCK USER " + mockUser);
+
         // Act
         ArrayList<Recipe> result = saveAccount.readDatabase(username);
  
@@ -244,6 +241,49 @@ public class saveAccountTest {
      
 
     }
+    @Test
+    public void findRecipeTest() {
+        // Arrange
+        String username = "testUser";
+        String recipeTitle = "Recipe1";
+
+        List<Document> mockRecipes = Arrays.asList(
+                 new Document("Title", "Recipe1").append("Ingredients", "Ingredients1").append("Instructions", "Instructions1"),
+                 new Document("Title", "Recipe2").append("Ingredients", "Ingredients2").append("Instructions", "Instructions2")
+        );
+        when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
+
+        when(mockFindIterable.first()).thenReturn(new Document("_id", username).append("recipes", mockRecipes));
+        Recipe result = saveAccount.findRecipe(username, recipeTitle);
+
+        System.out.println("DEBUG: Interaction with mockCollection.find: " + Mockito.mockingDetails(mockCollection).getInvocations());
+        System.out.println("DEBUG: Result from findRecipe: " + result);
+
+        assertNotNull(result, "Expected a non-null result");
+        assertEquals(recipeTitle, result.getTitle());
+
+    }
+
+
+
+    
+    @Test
+    public void findNoRecipeTest() {
+        String username = "testUser";
+
+        List<Document> mockRecipes = Arrays.asList(
+                 new Document("Title", "Recipe1").append("Ingredients", "Ingredients1").append("Instructions", "Instructions1"),
+                 new Document("Title", "Recipe2").append("Ingredients", "Ingredients2").append("Instructions", "Instructions2")
+        );
+        when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
+
+        when(mockFindIterable.first()).thenReturn(new Document("_id", username).append("recipes", mockRecipes));
+        
+        Recipe result = saveAccount.findRecipe("testUser", "Recipe3");
+        assertNull(result); 
+   
+    }
+
 
 
 }

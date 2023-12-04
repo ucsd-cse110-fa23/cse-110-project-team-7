@@ -185,12 +185,7 @@ public class RequestHandler implements HttpHandler {
         return "Error";
     }
     }
-/*
- * handleMongoDBGet
- * handleDallE
- * handleChatGPT
- * handleWhisper
- */
+
     private String handlePost(HttpExchange httpExchange) throws IOException {
         /*
          * Make this call generateNewAccount in the saveAccount class

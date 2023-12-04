@@ -192,6 +192,42 @@ public class saveAccount {
     
         return result;
     }
+
+    public Recipe findRecipe(String username, String title) {
+        Recipe result = null;
+
+        try {
+            Bson filter = and(eq("_id", username), eq("recipes.Title", title));
+
+            Document user = accountsCollection.find(filter).first();
+            System.out.println("DEBUG: Filter in findRecipe: " + filter);
+            System.out.println("DEBUG: User document in findRecipe: " + user);
+
+            if (user != null) {
+                List<Document> recipes = user.getList("recipes", Document.class);
+
+                if (recipes != null) {
+                    for (Document recipeDoc : recipes) {
+                        if (title.equals(recipeDoc.getString("Title"))) {
+                            String ingredients = recipeDoc.getString("Ingredients");
+                            String instructions = recipeDoc.getString("Instructions");
+                            String image = recipeDoc.getString("Image");
+                            String mealType = recipeDoc.getString("Meal Type");
+                            System.out.println("DEBUG: Recipe document in findRecipe: " + recipeDoc);
+
+                            result = new Recipe(title, ingredients, instructions, image, mealType);
+                            return result; 
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
     
     
 

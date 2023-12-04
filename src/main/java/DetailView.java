@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -28,7 +29,8 @@ public class DetailView extends BorderPane{
     private Button deleteButton;
     private Button saveButton;
     private Button refreshButton;
-
+    private Button shareButton; 
+    
     private boolean inEditMode = false; 
     String instructions;
     String ingredients = ""; 
@@ -54,6 +56,7 @@ public class DetailView extends BorderPane{
         deleteButton = footer2.getDeleteButton();
         saveButton = footer2.getSaveButton();
         refreshButton = footer2.getRefreshButton();
+        shareButton = footer2.getShareButton();
 
         
 
@@ -135,9 +138,27 @@ public class DetailView extends BorderPane{
             null,
             null, 
             saveAccount.getUsername() + "_" + oldTitle);
-            // saveAccount.deleteRecipeFromDatabase(String username, String title);
             recipeList.saveRecipe();
             System.out.println(result);
+
+        });
+
+        shareButton.setOnAction(e->{
+
+            // we pull from database 
+            // we somehow add it to a page 
+            // and create a link to that page
+            //PerformRequest request = new PerformRequest();
+            //request.
+            String linkTitle = response.getTitle();
+            if(response.getTitle().contains(" ")){
+                linkTitle = response.getTitle().replaceAll(" ", "%20");
+            }
+            footer2.setText("http://localhost:8100/recipe/?=" + saveAccount.getUsername() + 
+            "_" + linkTitle);
+
+            footer2.showShareLink(); // show link 
+            
 
         });
 
@@ -181,29 +202,8 @@ public class DetailView extends BorderPane{
                 
                 
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            /* 
-            ChatGPT chatGPT = new ChatGPT();
-            DallE dallE = new DallE(); 
-                try {
-                    String newRecipe = chatGPT.getCookingInstruction(response);
-                    response.setTitle(newRecipe);
-                    response.setInstructions(newRecipe);
-                    String url = dallE.createImage(response.getTitle());
-                    response.setImageUrl(url);
-                    DetailView detailFrame = new DetailView(currStage, response, currApp, recipeList, saveAccount);
-                    Scene scene = new Scene(detailFrame, 500, 600);
-                    currStage.setTitle("Detail View");
-                    currStage.setScene(scene);
-                    currStage.setResizable(true);
-                    currStage.show();
-                } catch ( Exception e1) {
-                    e1.printStackTrace();
-                    
-                }
-            */
             
 
         });
@@ -244,16 +244,27 @@ class Footer2 extends HBox {
     private Button deleteButton;
     private Button cancelButton; 
     private Button refreshButton; 
+    private Button shareButton; 
+    private TextArea shareLink;
 
 
     Footer2(RecipeList recipeList, Recipe r) {
-        this.setPrefSize(500, 60);
+        this.setPrefSize(500, 100);
         this.setStyle("-fx-background-color: #FFFFFF;");
         this.setSpacing(15);
 
         // set a default style for buttons - background color, font size, italics
         String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #D3D3D3;  -fx-font-weight: bold; -fx-font: 11 arial;";
+        String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
+        shareLink = new TextArea("No Link"); 
+        shareLink.setStyle(defaultLabelStyle);
+        shareLink.setVisible(true);
+        shareLink.setPrefSize(200, 50);
+        shareLink.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color
+        shareLink.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text area
+        shareLink.setEditable(false);
+        
         editButton = new Button("Edit"); // text displayed on add button
         editButton.setStyle(defaultButtonStyle); // styling the button
 
@@ -269,14 +280,29 @@ class Footer2 extends HBox {
         refreshButton = new Button("Refresh");
         refreshButton.setStyle(defaultButtonStyle);
 
-        
+        shareButton = new Button("Share");
+        shareButton.setStyle(defaultButtonStyle);
 
         if(r.recipeExists(recipeList.getRecipeList())){
             refreshButton.setVisible(false);
         }
 
+        
 
-        this.getChildren().addAll(editButton, saveButton, deleteButton, refreshButton); // adding buttons to footer
+
+       // Create a HBox for shareLink
+        HBox shareLinkHBox = new HBox();
+        shareLinkHBox.getChildren().add(shareLink);
+
+        // Create an HBox for buttons
+        HBox buttonsHBox = new HBox();
+        buttonsHBox.getChildren().addAll(editButton, saveButton, deleteButton, shareButton, refreshButton);
+
+        // Create a StackPane to stack shareLinkVBox on top of buttonsHBox
+        //StackPane stackPane = new StackPane();
+        //stackPane.getChildren().addAll(buttonsHBox, shareLinkHBox);
+
+        this.getChildren().addAll(buttonsHBox, shareLinkHBox);
     }
 
     public Button getEditButton(){
@@ -292,6 +318,15 @@ class Footer2 extends HBox {
     }
     public Button getRefreshButton(){
         return refreshButton;
+    }
+    public Button getShareButton(){
+        return shareButton;
+    }
+    public void showShareLink() {
+        shareLink.setVisible(true);
+    }
+    public void setText(String text){
+        shareLink.setText(text);
     }
 
 }
