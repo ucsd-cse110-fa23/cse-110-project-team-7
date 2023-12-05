@@ -33,7 +33,7 @@ public class PerformRequest {
             }
             
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            //String response = "";
+
             
             String inputLine;
             StringBuilder response = new StringBuilder();
@@ -42,16 +42,13 @@ public class PerformRequest {
             }
             String finalResponse = response.toString();
 
-            // while ((inputLine = in.readLine()) != null) {
-            //     response += inputLine;
-            // }
+  
             in.close();
-            System.out.println("Perform request response: " + response);
             return finalResponse;
             
         } catch (Exception ex) {
-            ex.printStackTrace();
-            return "Error: " + ex.getMessage();
+            //ex.printStackTrace();
+            return "Error: ";
         }
     }
 
@@ -77,7 +74,6 @@ public class PerformRequest {
                 response.append(inputLine);
             }
             in.close();
-            System.out.println("Received response: " + response.toString()); // Request Received
 
             ArrayList<Recipe> recipeList = parseRecipeResponse(response.toString());
 
@@ -105,14 +101,12 @@ public class PerformRequest {
 
             if (method.equals("POST") || method.equals("PUT")) {
                 OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                System.out.println("USERNAME IN PERFORM REQUEST: " + username);
                 out.write(username + "~" + title + "~" + ingredients + "~" + instructions + "~" + image + "~" + mealType);
                 out.flush();
                 out.close();
             }
             
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            //String response = "";
             
             String inputLine;
             StringBuilder response = new StringBuilder();
@@ -121,11 +115,7 @@ public class PerformRequest {
             }
             String finalResponse = response.toString();
 
-            // while ((inputLine = in.readLine()) != null) {
-            //     response += inputLine;
-            // }
             in.close();
-            System.out.println("Perform request response: " + response);
             return finalResponse;
             
         } catch (Exception ex) {
@@ -133,8 +123,7 @@ public class PerformRequest {
             return "Error: " + ex.getMessage();
         }
     }
-private ArrayList<Recipe> parseRecipeResponse(String jsonResponse) {
-    System.out.println("Received JSON response: " + jsonResponse);
+    private ArrayList<Recipe> parseRecipeResponse(String jsonResponse) {
 
     ArrayList<Recipe> recipeList = new ArrayList<>();
 
@@ -160,6 +149,8 @@ private ArrayList<Recipe> parseRecipeResponse(String jsonResponse) {
     return recipeList;
 }
 
+// ChatGPT 3.5 
+// Asked chatGPT how to populate a Recipe class from a JSON
 private Recipe createRecipeFromJson(JSONObject jsonRecipe) {
     // parse json and populate recipe 
     String title = jsonRecipe.getString("Title");

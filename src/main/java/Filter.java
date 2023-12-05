@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class Filter {
     public static ArrayList<Recipe> filterRecipes(ArrayList<Recipe> recipes, String mealType){

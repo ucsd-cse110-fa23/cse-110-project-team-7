@@ -1,14 +1,9 @@
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 interface IDallE{
@@ -50,8 +45,6 @@ public class DallE implements IDallE{
                 HttpResponse.BodyHandlers.ofString());
         // Process the response
         String responseBody = response.body();
-        System.out.println("DALL-E Response Body:");
-        System.out.println(responseBody);
 
         JSONObject responseJson = new JSONObject(responseBody);
 
@@ -62,8 +55,6 @@ public class DallE implements IDallE{
 
             if (dataObject != null && dataObject.has("url")) {
                 generatedImageURL = dataObject.getString("url");
-                System.out.println("DALL-E Response:");
-                System.out.println(generatedImageURL);
 
                 return generatedImageURL;
 
