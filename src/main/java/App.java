@@ -23,18 +23,25 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        /*
+         * If server is not active then return an error
+         * perform a request to the server to see if server is up
+         * if server active then do the following code
+         */
+        
         CreateAccount account = new CreateAccount(primaryStage, this);
-        createAccountScene = new Scene(account, 500, 600);
+        if (!account.getAutoCheckStr().contains("True")) {
+            createAccountScene = new Scene(account, 500, 600);
 
-
-
-        // Set the title of the app
-        primaryStage.setTitle("PantryPal");
-        // Create scene of mentioned size with the border pane
-        primaryStage.setScene(createAccountScene);
-        // Make window resizable
+            // Set the title of the app
+            primaryStage.setTitle("PantryPal");
+            // Create scene of mentioned size with the border pane
+            primaryStage.setScene(createAccountScene);
+        
+        }
+         // Make window resizable
         primaryStage.setResizable(true);
-        // Show the app
+        // Show the app  
         primaryStage.show();
     }
 
