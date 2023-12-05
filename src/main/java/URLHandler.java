@@ -40,7 +40,7 @@ public class URLHandler implements HttpHandler {
         String username; 
         String title;
         Recipe recipe = new Recipe();
-    // You can add specific handling for login-related GET requests if needed
+    
         if (query != null) {
         // Extract username and password
             username = query.substring(query.indexOf("=") + 1, query.indexOf("_"));

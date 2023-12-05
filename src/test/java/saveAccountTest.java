@@ -17,17 +17,14 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
-import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.*;
-// All testing under this is credits to ChatGPT version 3.5
 public class saveAccountTest {
 
     @Mock
@@ -55,7 +52,10 @@ public class saveAccountTest {
    }
 
 
-
+    // Source: ChatGPT version 3.5
+    // asked how to use Mockito generally then when I started coding I asked how to fix
+    // specific statements such as having to put Bson.class in the any function and 
+    // how to use ArgumentMatchers 
     @Test
     public void testGenerateNewAccount() {
         String userName = "testUsername";
@@ -75,7 +75,7 @@ public class saveAccountTest {
 
         assertTrue(saveAccount.accountExist(userName)); 
     }
-
+    // I just modified this from my previous test which uses ChatGPT
     @Test
     public void testGenerateExistingAccount() {
         String userName = "existingUser";
@@ -90,6 +90,7 @@ public class saveAccountTest {
         assertFalse(result);
     }
 
+    // I just modified this from my previous test which uses ChatGPT
     @Test
     public void testLoginAccount() {
         String userName = "testLoginUser";
@@ -109,6 +110,7 @@ public class saveAccountTest {
         assertTrue(result);
         
     }
+
 
 
     @Test
@@ -140,6 +142,7 @@ public class saveAccountTest {
         assertFalse(result);
     }
 
+    // ChatGPT 3.5 I asked how to return a document correctly when mocking b
     @Test
     public void saveRecipesForUserTest() {
         String userName = "testUser";
@@ -182,7 +185,8 @@ public class saveAccountTest {
 
     }
 
-
+    // ChatGPT 3.5 I asked how to use ArgumentCaptors and how to mimic a pull 
+    // in database to mockito 
     @Test
     public void deleteRecipeFromDatabaseTest() {
         String username = "testUser";
@@ -209,6 +213,7 @@ public class saveAccountTest {
     }
 
 
+    // ChatGPT 3.5 Asked how to mockUser and how to create the correct mock user 
     @Test 
     public void readDatabaseTest(){
          // Arrange
@@ -221,7 +226,6 @@ public class saveAccountTest {
  
         when(mockCollection.find(eq("_id", username))).thenReturn(Mockito.mock(FindIterable.class));
         when(mockCollection.find(eq("_id", username)).first()).thenReturn(mockUser);
-        System.out.println("DEBUG: MOCK USER " + mockUser);
 
         // Act
         ArrayList<Recipe> result = saveAccount.readDatabase(username);
@@ -241,9 +245,10 @@ public class saveAccountTest {
      
 
     }
+
+    
     @Test
     public void findRecipeTest() {
-        // Arrange
         String username = "testUser";
         String recipeTitle = "Recipe1";
 
@@ -256,15 +261,10 @@ public class saveAccountTest {
         when(mockFindIterable.first()).thenReturn(new Document("_id", username).append("recipes", mockRecipes));
         Recipe result = saveAccount.findRecipe(username, recipeTitle);
 
-        System.out.println("DEBUG: Interaction with mockCollection.find: " + Mockito.mockingDetails(mockCollection).getInvocations());
-        System.out.println("DEBUG: Result from findRecipe: " + result);
-
         assertNotNull(result, "Expected a non-null result");
         assertEquals(recipeTitle, result.getTitle());
 
     }
-
-
 
     
     @Test

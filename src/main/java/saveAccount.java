@@ -53,8 +53,6 @@ public class saveAccount {
     }
 
     public boolean loginAccount(String userName, String password) {
-        System.out.println("Entering loginAccount method");
-        System.out.println("UserName: " + userName);
         if (!accountExist(userName)) {
             System.out.println("Account doesn't exist");
             
@@ -78,9 +76,10 @@ public class saveAccount {
         
         return accountsCollection.find(filter, Document.class).first() != null;
     }
-
     
-
+    // Source: ChatGPT 3.5 November 23
+    // I asked how to make an ArrayList as a field in a collection and found out about
+    // List<Document> which allowed us to save objects in collection 
     public boolean saveRecipeForUser(String userName, String title, String ingredients, String instructions, String imageUrl, String mealType) {
         if (userName.equals("")) {
             System.out.println("Error: Empty username");
@@ -133,7 +132,9 @@ public class saveAccount {
 
 
     
-
+    // Source: ChatGPT 3.5 November 23
+    // Asked how to delete an element from a List<Document> because deleteOne works
+    // for deleting fields and not elements from a list 
     public boolean deleteRecipeFromDatabase(String username, String title) {
         Bson filter = eq("_id", username);
         Bson update = pull("recipes", eq("Title", title));
@@ -151,7 +152,6 @@ public class saveAccount {
     }
     
     
-
     public String getUsername(){
         return this.username;
     }
@@ -159,7 +159,10 @@ public class saveAccount {
     public void setUsername(String user){
         this.username = user;
     }
-
+    
+    // Source: ChatGPT 3.5 November 23
+    // I asked how to read from database and how to read from the list of documents
+    // specifically 
     public ArrayList<Recipe> readDatabase(String username) {
         ArrayList<Recipe> result = new ArrayList<>();
     
@@ -193,6 +196,8 @@ public class saveAccount {
         return result;
     }
 
+    // ChatGPT 3.5 December 3 2023 
+    // Asked how to find a specific recipe from a List of documents 
     public Recipe findRecipe(String username, String title) {
         Recipe result = null;
 
@@ -200,9 +205,7 @@ public class saveAccount {
             Bson filter = and(eq("_id", username), eq("recipes.Title", title));
 
             Document user = accountsCollection.find(filter).first();
-            System.out.println("DEBUG: Filter in findRecipe: " + filter);
-            System.out.println("DEBUG: User document in findRecipe: " + user);
-
+            
             if (user != null) {
                 List<Document> recipes = user.getList("recipes", Document.class);
 
@@ -213,7 +216,6 @@ public class saveAccount {
                             String instructions = recipeDoc.getString("Instructions");
                             String image = recipeDoc.getString("Image");
                             String mealType = recipeDoc.getString("Meal Type");
-                            System.out.println("DEBUG: Recipe document in findRecipe: " + recipeDoc);
 
                             result = new Recipe(title, ingredients, instructions, image, mealType);
                             return result; 

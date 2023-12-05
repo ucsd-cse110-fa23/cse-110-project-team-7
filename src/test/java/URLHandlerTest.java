@@ -15,19 +15,16 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-// Source: ChatGPT 3.5 December 3 2023 11:00 PM. Asked how to debug my code and organize it correctly
 public class URLHandlerTest {
 
     
@@ -58,8 +55,11 @@ public class URLHandlerTest {
         urlHandler = new URLHandler(new HashMap<>(), saveAccount);
    }
 
+    // Source: ChatGPT 3.5 December 3 2023 11:00 PM. 
+    // Asked how to debug my code and organize it correctly
+    // And asked how to get the response from HTML (ByteArrayOutputStream)
    @Test
-   void handleGet_ValidRequest_ReturnsExpectedResponse() throws IOException {
+   void handleGetValidRequest() throws IOException {
        String username = "testUser";
        String recipeTitle = "Recipe1";
 
@@ -93,7 +93,7 @@ public class URLHandlerTest {
 
 
     @Test
-    void handleGet_NoRecipeFound_ReturnsNotFoundResponse() throws IOException {
+    void handleGetFail() throws IOException {
         // Arrange
         URI uri = URI.create("/recipe?=testUser_NonexistentRecipe");
         HttpExchange httpExchange = mock(HttpExchange.class);

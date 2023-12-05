@@ -1,7 +1,4 @@
 import com.sun.net.httpserver.*;
-
-import javafx.scene.Scene;
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -68,45 +65,46 @@ public class RequestHandler implements HttpHandler {
     outStream.close();
 }
 
-
+    // ChatGPT 3.5 December 1 2023
+    // Asked ChatGPT how to convert Recipes to JSON so that the handler can read it 
     private String convertRecipesToJSON(ArrayList<Recipe> recipes) {
-    JSONArray jsonArray = new JSONArray();
+        JSONArray jsonArray = new JSONArray();
 
-    for (Recipe recipe : recipes) {
-        JSONObject jsonRecipe = new JSONObject();
-        jsonRecipe.put("Title", recipe.getTitle());
-        jsonRecipe.put("Instructions", recipe.getInstructions());
-        jsonRecipe.put("Ingredients", recipe.getIngredients());
-        jsonRecipe.put("Image", recipe.getImageUrl());
-        jsonRecipe.put("Meal Type", recipe.getMealType());
+        for (Recipe recipe : recipes) {
+            JSONObject jsonRecipe = new JSONObject();
+            jsonRecipe.put("Title", recipe.getTitle());
+            jsonRecipe.put("Instructions", recipe.getInstructions());
+            jsonRecipe.put("Ingredients", recipe.getIngredients());
+            jsonRecipe.put("Image", recipe.getImageUrl());
+            jsonRecipe.put("Meal Type", recipe.getMealType());
 
-        jsonArray.put(jsonRecipe);
+            jsonArray.put(jsonRecipe);
+        }
+
+        return jsonArray.toString();
     }
-
-    return jsonArray.toString();
-}
 
     private String handleGet(HttpExchange httpExchange) throws IOException {
         // Existing code for handling GET requests
-    URI uri = httpExchange.getRequestURI();
-    String query = uri.getRawQuery();
-    String username; 
-    String password;
-    // You can add specific handling for login-related GET requests if needed
-    if (query != null) {
-        // Extract username and password
-        username = query.substring(query.indexOf("=") + 1, query.indexOf("."));
-        password = query.substring(query.indexOf(".") + 1);
+        URI uri = httpExchange.getRequestURI();
+        String query = uri.getRawQuery();
+        String username; 
+        String password;
+        // You can add specific handling for login-related GET requests if needed
+        if (query != null) {
+            // Extract username and password
+            username = query.substring(query.indexOf("=") + 1, query.indexOf("."));
+            password = query.substring(query.indexOf(".") + 1);
 
-        // Perform login logic with MongoDB or other authentication mechanism
-        boolean loginResult = accountManager.loginAccount(username, password);
-        
-        // Send response back to the client
-        return loginResult ? "Login Successful" : "Login Failed";
-    } else {
-        return "Invalid Request Data";
+            // Perform login logic with MongoDB or other authentication mechanism
+            boolean loginResult = accountManager.loginAccount(username, password);
+            
+            // Send response back to the client
+            return loginResult ? "Login Successful" : "Login Failed";
+        } else {
+            return "Invalid Request Data";
+        }
     }
-}
 
     private ArrayList<Recipe> handleGetRecipes(HttpExchange httpExchange) throws IOException {
             URI uri = httpExchange.getRequestURI();
@@ -143,29 +141,27 @@ public class RequestHandler implements HttpHandler {
         String ingredients; 
         String mealType;
         ChatGPT chatGPT;
-    // You can add specific handling for login-related GET requests if needed
-    if (query != null) {
+        // You can add specific handling for login-related GET requests if needed
+        if (query != null) {
 
-        // Extract values for "ingredients" and "mealType"
-        ingredients = query.substring(query.indexOf("=") + 1, query.indexOf("&"));
-        System.out.println(ingredients);
-        if(ingredients.contains("%20")){
-            ingredients = ingredients.replaceAll("%20", " ");
+            // Extract values for "ingredients" and "mealType"
+            ingredients = query.substring(query.indexOf("=") + 1, query.indexOf("&"));
+            if(ingredients.contains("%20")){
+                ingredients = ingredients.replaceAll("%20", " ");
 
+            }
+            mealType = query.substring(query.indexOf("&") + 1, query.indexOf("_"));
+
+            chatGPT = new ChatGPT();
+
+            String response = chatGPT.getCookingInstruction(ingredients, mealType);
+            
+            
+            return response;
+            
+        } else {
+            return "Error";
         }
-        mealType = query.substring(query.indexOf("&") + 1, query.indexOf("_"));
-
-        chatGPT = new ChatGPT();
-
-        String response = chatGPT.getCookingInstruction(ingredients, mealType);
-        
-        System.out.println(response);
-        
-        return response;
-         
-    } else {
-        return "Error";
-    }
     }
 
     private String handleDallE(HttpExchange httpExchange) throws IOException, URISyntaxException, InterruptedException {
@@ -173,17 +169,17 @@ public class RequestHandler implements HttpHandler {
         String query = uri.getRawQuery();
         String title; 
         DallE dallE = new DallE();
-    if (query != null) {
-        
-        title = query.substring(query.indexOf("=") + 1, query.indexOf("."));
-        if(title.contains("%20")){
-            title = title.replaceAll("%20", " ");
+        if (query != null) {
+            
+            title = query.substring(query.indexOf("=") + 1, query.indexOf("."));
+            if(title.contains("%20")){
+                title = title.replaceAll("%20", " ");
 
+            }
+            return dallE.createImage(title);
+        } else {
+            return "Error";
         }
-        return dallE.createImage(title);
-    } else {
-        return "Error";
-    }
     }
 
     private String handlePost(HttpExchange httpExchange) throws IOException {
@@ -197,8 +193,7 @@ public class RequestHandler implements HttpHandler {
         if (parts.length == 2) {
             String username = parts[0].trim();
             String password = parts[1].trim();
-            System.out.println(username);
-            System.out.println(password);
+
             // Perform signup logic with MongoDB
             boolean signupResult = accountManager.generateNewAccount(username, password);
 
@@ -210,11 +205,7 @@ public class RequestHandler implements HttpHandler {
     }
     
     private String handlePut(HttpExchange httpExchange) throws IOException {
-        /*
-         * Make this method save recipes to MongoDB Database
-         */
-
-
+   
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         
@@ -228,7 +219,6 @@ public class RequestHandler implements HttpHandler {
 
         scanner.close();
 
-        System.out.println("putData: " + inputLine);
         String[] parts = inputLine.split("~");
 
         if (parts.length == 6) {
@@ -254,23 +244,22 @@ public class RequestHandler implements HttpHandler {
         String query = uri.getRawQuery();
         String username; 
         String title;
-    // You can add specific handling for login-related GET requests if needed
-    if (query != null) {
-        // Extract username and password
-        username = query.substring(query.indexOf("=") + 1, query.indexOf("_"));
-        title = query.substring(query.indexOf("_") + 1);
-        if(title.contains("%20")){
-            title = title.replaceAll("%20", " ");
-        }
-        System.out.println("Title after: " + title);
-        // Perform login logic with MongoDB or other authentication mechanism
-        boolean loginResult = accountManager.deleteRecipeFromDatabase(username, title);
         
-        // Send response back to the client
-        return loginResult ? "Delete Successful" : "Delete Failed";
-    } else {
-        return "Invalid Request Data";
-    }
+        if (query != null) {
+            // Extract username and password
+            username = query.substring(query.indexOf("=") + 1, query.indexOf("_"));
+            title = query.substring(query.indexOf("_") + 1);
+            if(title.contains("%20")){
+                title = title.replaceAll("%20", " ");
+            }
+            
+            boolean loginResult = accountManager.deleteRecipeFromDatabase(username, title);
+            
+            // Send response back to the client
+            return loginResult ? "Delete Successful" : "Delete Failed";
+        } else {
+            return "Invalid Request Data";
+        }
     }
 
 }

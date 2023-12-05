@@ -1,33 +1,24 @@
-import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import javax.sound.sampled.*;
 
-import org.json.JSONException;
 
-class mealType extends HBox{
+class mealType extends HBox {
     private Label type;
     private Label prompt;
 
-    mealType() throws Exception{
+    mealType() throws Exception {
         this.setPrefSize(500, 20);
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-        
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+                                                                                                     // color of recipe
+
         prompt = new Label();
         prompt.setText("Meal type: "); // create index label
         prompt.setPrefSize(60, 20); // set size of Index label
@@ -40,21 +31,23 @@ class mealType extends HBox{
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;"); // set background color of texfield
         type.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(type); // add textlabel to recipe
-        
+
     }
 
-    public Label getTypeField()  {
+    public Label getTypeField() {
         return this.type;
     }
 }
 
-class Ingredient extends HBox{
+class Ingredient extends HBox {
     private Label list;
     private Label prompt;
-    Ingredient(){
+
+    Ingredient() {
         this.setPrefSize(500, 20);
-        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of recipe
-        
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background
+                                                                                                     // color of recipe
+
         prompt = new Label();
         prompt.setText("Ingredient list: "); // create index label
         prompt.setPrefSize(80, 20); // set size of Index label
@@ -68,18 +61,18 @@ class Ingredient extends HBox{
         list.setPadding(new Insets(10, 0, 10, 0)); // adds some padding to the text field
         this.getChildren().add(list); // add textlabel to recipe
     }
-    public Label getTypeField()  {
+
+    public Label getTypeField() {
         return this.list;
     }
 }
-
 
 class CreateRecipeAppFrame extends FlowPane {
     private Ingredient ingredient;
     private mealType mType;
     private String currentTarget;
-    private boolean mealSelected= true; 
-    
+    private boolean mealSelected = true;
+
     private Button startButton;
     private Button stopButton;
     private Button createButton;
@@ -88,15 +81,15 @@ class CreateRecipeAppFrame extends FlowPane {
     private Label recordingLabel;
     private Label errorLabel;
 
-    public Recipe recipe = new Recipe(); 
-    
+    public Recipe recipe = new Recipe();
 
     // Set a default style for buttons and fields - background color, font size,
     // italics
     String defaultButtonStyle = "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
     String defaultLabelStyle = "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
 
-    CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList, saveAccount saveAccount) throws Exception {
+    CreateRecipeAppFrame(Stage currStage, App currApp, RecipeList recipeList, saveAccount saveAccount)
+            throws Exception {
         ingredient = new Ingredient();
         mType = new mealType();
         currStage.setResizable(true);
@@ -118,15 +111,12 @@ class CreateRecipeAppFrame extends FlowPane {
         createButton = new Button("Create");
         createButton.setStyle(defaultButtonStyle);
 
-
         recordingLabel = new Label("Recording...");
         recordingLabel.setStyle(defaultLabelStyle);
 
         errorLabel = new Label("Please input details.");
         errorLabel.setStyle(defaultLabelStyle);
 
-
-        
         this.getChildren().addAll(startButton, stopButton, createButton, recordingLabel, errorLabel);
 
         // Get the audio format
@@ -137,17 +127,16 @@ class CreateRecipeAppFrame extends FlowPane {
     }
 
     public void addListeners(Stage currStage, App currApp, RecipeList recipeList, saveAccount saveAccount) {
-       
+
         // Start Button
         startButton.setOnAction(e -> {
-            if(mealSelected){
+            if (mealSelected) {
                 currentTarget = "meal type";
-            }
-            else{
+            } else {
                 currentTarget = "ingredient list";
             }
             startRecording();
-            
+
         });
 
         // Stop Button
@@ -156,26 +145,28 @@ class CreateRecipeAppFrame extends FlowPane {
             try {
                 PerformRequest request = new PerformRequest();
                 String result = request.performRequest("GET", null, null, "Whisper");
-                if(currentTarget.equals("meal type")){
-                    if(recipe.checkMealType(result)){
+                if (result.contains("Error")) {
+                    errorLabel.setText("Server is down.");
+                    errorLabel.setVisible(true);
+                }
+                if (currentTarget.equals("meal type")) {
+                    if (recipe.checkMealType(result)) {
                         mType.getTypeField().setText(result.toLowerCase());
                         currentTarget = "";
                         recipe.setMealType(result);
                         mealSelected = false;
-                    }
-                    else{
+                    } else {
                         mType.getTypeField().setText("reinput meal type");
                         currentTarget = "";
                     }
                 }
-                if(currentTarget.equals("ingredient list")){
+                if (currentTarget.equals("ingredient list")) {
                     ingredient.getTypeField().setText(result.toLowerCase());
                     recipe.setIngredients(result);
-                    System.out.println("RECIPE INGREDIENT IN STOP: " + recipe.getIngredients());
 
                     currentTarget = "";
                 }
-                
+
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -183,56 +174,55 @@ class CreateRecipeAppFrame extends FlowPane {
 
         // create Button later
         createButton.setOnAction(e -> {
-            try {
-                System.out.println("RECIPE INGREDIENT: " + recipe.getIngredients());
-                if(recipe.getIngredients() != "" && recipe.getMealType() != ""){
+            try {                
+                if (recipe.getIngredients() != "" && recipe.getMealType() != "") {
                     PerformRequest request = new PerformRequest();
-                    System.out.println("RECIPE INGREDIENTS #22222222222: " + recipe.getIngredients());
                     String ingredients = recipe.getIngredients();
-                    if(recipe.getIngredients().contains(" ")){
+                    if (recipe.getIngredients().contains(" ")) {
                         ingredients = recipe.getIngredients().replaceAll(" ", "%20");
                     }
-                    String response = request.performRequest("GET", 
-                    null, 
-                    null,
-                    ingredients + "&" + recipe.getMealType() + "_" + "Create");
-                    System.out.println("RESPONSE: " + response);
+                    String response = request.performRequest("GET",
+                            null,
+                            null,
+                            ingredients + "&" + recipe.getMealType() + "_" + "Create");
+                    if (response.contains("Error")) {
+                        errorLabel.setText("Server is down.");
+                        errorLabel.setVisible(true);
+                    }
                     recipe.setTitle(response);
-                    
-                    System.out.println("TITLE: "+ recipe.getTitle());
+
                     recipe.setInstructions(response);
                     String title = recipe.getTitle();
-                    if(title.contains(" ")){
+                    if (title.contains(" ")) {
                         title = recipe.getIngredients().replaceAll(" ", "%20");
                     }
-                    String url = request.performRequest("GET", 
-                    null, 
-                    null, 
-                    title + "." + "DallE");
-                    System.out.println(url);
+                    String url = request.performRequest("GET",
+                            null,
+                            null,
+                            title + "." + "DallE");
+                    if (response.contains("Error")) {
+                        errorLabel.setText("Server is down.");
+                        errorLabel.setVisible(true);
+                    }
                     recipe.setImageUrl(url);
-                    System.out.println(recipe.getImageUrl());
                     DetailView detailFrame = new DetailView(currStage, recipe, currApp, recipeList, saveAccount);
                     Scene scene = new Scene(detailFrame, 500, 600);
                     currStage.setTitle("Detail View");
                     currStage.setScene(scene);
                     currStage.setResizable(true);
                     currStage.show();
-                }
-                else{
+                } else {
                     errorLabel.setVisible(true);
 
                 }
-                
-                
+
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            
+
         });
     }
-
 
     private AudioFormat getAudioFormat() {
         // the number of samples of audio per second.
@@ -261,40 +251,39 @@ class CreateRecipeAppFrame extends FlowPane {
 
     private void startRecording() {
         Thread t = new Thread(
-            new Runnable(){
-                @Override 
-                public void run(){
-                    try {
-                        // the format of the TargetDataLine
-                        DataLine.Info dataLineInfo = new DataLine.Info(
-                                TargetDataLine.class,
-                                audioFormat);
-                        // the TargetDataLine used to capture audio data from the microphone
-                        targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
-                        targetDataLine.open(audioFormat);
-                        targetDataLine.start();
-                        recordingLabel.setVisible(true);
-                        errorLabel.setVisible(false);
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // the format of the TargetDataLine
+                            DataLine.Info dataLineInfo = new DataLine.Info(
+                                    TargetDataLine.class,
+                                    audioFormat);
+                            // the TargetDataLine used to capture audio data from the microphone
+                            targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
+                            targetDataLine.open(audioFormat);
+                            targetDataLine.start();
+                            recordingLabel.setVisible(true);
+                            errorLabel.setVisible(false);
 
-                        // the AudioInputStream that will be used to write the audio data to a file
-                        AudioInputStream audioInputStream = new AudioInputStream(
-                                targetDataLine);
+                            // the AudioInputStream that will be used to write the audio data to a file
+                            AudioInputStream audioInputStream = new AudioInputStream(
+                                    targetDataLine);
 
-                        // the file that will contain the audio data
-                        File audioFile = new File("recording.wav");
-                        AudioSystem.write(
-                                audioInputStream,
-                                AudioFileFormat.Type.WAVE,
-                                audioFile);
-                        recordingLabel.setVisible(false);
-                        errorLabel.setVisible(false);
+                            // the file that will contain the audio data
+                            File audioFile = new File("recording.wav");
+                            AudioSystem.write(
+                                    audioInputStream,
+                                    AudioFileFormat.Type.WAVE,
+                                    audioFile);
+                            recordingLabel.setVisible(false);
+                            errorLabel.setVisible(false);
 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }       
-                }
-            }
-        );
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
         t.start();
     }
 
@@ -303,29 +292,3 @@ class CreateRecipeAppFrame extends FlowPane {
         targetDataLine.close();
     }
 }
-
-/* 
-public class AudioRecorder extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-
-        // Setting the Layout of the Window (Flow Pane)
-        CreateRecipeAppFrame root = new CreateRecipeAppFrame(primaryStage);
-
-        // Set the title of the app
-        primaryStage.setTitle("Voice Input");
-        // Create scene of mentioned size with the border pane
-        primaryStage.setScene(new Scene(root, 400, 200));
-        // Make window non-resizable
-        primaryStage.setResizable(false);
-        // Show the app
-        primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-}
-*/

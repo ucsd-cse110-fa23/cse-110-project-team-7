@@ -56,7 +56,6 @@ public class ChatGPT implements IChatGPT{
 
         // Process the response
         String responseBody = response.body();
-        //System.out.println(responseBody);
         JSONObject responseJson = new JSONObject(responseBody);
 
 
@@ -64,7 +63,6 @@ public class ChatGPT implements IChatGPT{
         String generatedText = choices.getJSONObject(0).getString("text");
 
 
-        System.out.println(generatedText);
         return generatedText;
     }
 

@@ -211,10 +211,6 @@ public class ListView extends BorderPane {
 
         this.recipeList = recipes;
 
-        // ArrayList<Recipe> list = ReadRecipes.readRecipes();
-        //recipeList.setRecipeList(recipes);
-        //recipeList.saveRecipe();
-
         // Initialise the Footer Object
         footer = new Footer();
 
@@ -292,7 +288,6 @@ public class ListView extends BorderPane {
         });
         
         sortBox.setOnAction(e->{
-            System.out.println("Sort Box was clicked");
             ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
             
             switch(sortBox.getValue().toString()){
@@ -313,16 +308,9 @@ public class ListView extends BorderPane {
                     recipeList.setRecipeList(Sort.oldestToNewestSort(defaultList));
                     recipeList.saveRecipe();
 
-                    // for(Recipe rec : recipeList.getRecipeList()) {
-                    //     System.out.println("Recipe Name: " + rec.getTitle());
-                    // }
-                   // recipeList.setRecipeList(defaultList);
                     break;
                 case "Newest to Oldest":
                     
-                    // for(Recipe rec : recipeList.getRecipeList()) {
-                    //     System.out.println("Recipe Name: " + rec.getTitle());
-                    // }
                     break;
             }
             recipeList.saveRecipe();
@@ -330,7 +318,6 @@ public class ListView extends BorderPane {
         });
 
         filterBox.setOnAction(e->{
-            System.out.println("Filter Box was clicked");
             ArrayList<Recipe> defaultList = new ArrayList<>(defaultList1); // Create a copy of defaultList1
             
             switch(filterBox.getValue().toString()){

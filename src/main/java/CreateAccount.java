@@ -1,8 +1,3 @@
-import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
@@ -11,13 +6,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CreateAccount extends BorderPane {
     private Header3 header3;
@@ -56,47 +48,59 @@ public class CreateAccount extends BorderPane {
 
         currStage.setResizable(true);
         this.setCenter(accountLogIn);
-        
+
         // Auto Login functionality
         try {
-            BufferedReader inputLine = new BufferedReader(new FileReader("loginInfo.txt"));
-            // String textFromText = "";
-            autoCheckStr = inputLine.readLine();
-            String userNameStr = inputLine.readLine();
-            String passwordStr = inputLine.readLine();
-            inputLine.close();
-            System.out.println("AUTO LOGIN USERNAME: " + userNameStr);
-            System.out.println("AUTO LOGIN PASSWORD: " + passwordStr);
 
-            if(autoCheckStr.contains("True")) {
-                request = new PerformRequest();
-                String result = request.performRequest("GET",
-                        null,
-                        null,
-                        userNameStr + "." + passwordStr);
-            
-                saveAccount sAccount = new saveAccount();
-                ArrayList<Recipe> userRecipes = request.performRecipeRequest("GET",
-                        null,
-                        null,
-                        userNameStr + ".Recipe");
+            String filePath = "loginInfo.txt";
 
-                sAccount.setUsername(userNameStr);
-                RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
+            // Create a File object
+            File file = new File(filePath);
 
-                recipeList.setRecipeList(userRecipes);
+            // Check if the file exists
+            if (file.exists()) {
 
-                Scene currentScene = currStage.getScene();
-                ListView loginListView = new ListView(currStage, currApp, recipeList, sAccount);
-                currStage.setScene(loginListView.getRecipeListScene());
-                
-                errorLabel.setVisible(false);
-                System.out.println(result);
-            }
+                BufferedReader inputLine = new BufferedReader(new FileReader("loginInfo.txt"));
+                // String textFromText = "";
+                autoCheckStr = inputLine.readLine();
+                String userNameStr = inputLine.readLine();
+                String passwordStr = inputLine.readLine();
+                inputLine.close();
+
+                if (autoCheckStr.contains("True")) {
+                    request = new PerformRequest();
+                    String result = request.performRequest("GET",
+                            null,
+                            null,
+                            userNameStr + "." + passwordStr);
+                    if (result.contains("Error")) {
+                        errorLabel.setText("Server is down.");
+                        errorLabel.setVisible(true);
+                    }
+                    saveAccount sAccount = new saveAccount();
+                    ArrayList<Recipe> userRecipes = request.performRecipeRequest("GET",
+                            null,
+                            null,
+                            userNameStr + ".Recipe");
+                    if (result.contains("Error")) {
+                        errorLabel.setText("Server is down.");
+                        errorLabel.setVisible(true);
+                    }
+                    sAccount.setUsername(userNameStr);
+                    RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
+
+                    recipeList.setRecipeList(userRecipes);
+
+                    ListView loginListView = new ListView(currStage, currApp, recipeList, sAccount);
+                    currStage.setScene(loginListView.getRecipeListScene());
+                    
+                }
+
+            } 
+
         } catch (Exception e2) {
             e2.printStackTrace();
         }
-
 
         // Add button functionality
         loginButton.setOnAction(e -> {
@@ -105,7 +109,10 @@ public class CreateAccount extends BorderPane {
                     null,
                     null,
                     username.getUsernameField().getText() + "." + password.getPasswordField().getText());
-
+            if (response.contains("Error")) {
+                errorLabel.setText("Server is down.");
+                errorLabel.setVisible(true);
+            }
             errorContainer.getChildren().clear();
             saveAccount sAccount = new saveAccount();
 
@@ -145,7 +152,6 @@ public class CreateAccount extends BorderPane {
                 errorContainer.getChildren().add(errorLabel);
                 errorLabel.setVisible(true);
             }
-            System.out.println(response);
         });
 
         // Add button functionality
@@ -155,42 +161,13 @@ public class CreateAccount extends BorderPane {
                     username.getUsernameField().getText(),
                     password.getPasswordField().getText(),
                     null);
-            /*
-             * When signUp is pressed, go to CreateAccount Request Handler in Server
-             * 
-             * errorContainer.getChildren().clear();
-             * saveAccount sAccount = new saveAccount();
-             * boolean saved =
-             * sAccount.generateNewAccount(username.getUsernameField().getText(),
-             * password.getPasswordField().getText());
-             * if (!saved) {
-             * errorContainer.getChildren().add(errorLabel);
-             * errorLabel.setVisible(true);
-             * } else {
-             * sAccount.setUsername(username.getUsernameField().getText());
-             * RecipeList recipeList = new RecipeList(currStage, currApp, sAccount);
-             * 
-             * Scene currentScene = currStage.getScene();
-             * if (currentScene != null) {
-             * 
-             * ListView signInListView = new ListView(currStage, currApp, recipeList,
-             * sAccount);
-             * 
-             * // Set the new scene with the new ListView
-             * currStage.setScene(signInListView.getRecipeListScene());
-             * }
-             * }
-             */
-            System.out.println(response);
+            if (response.contains("Error")) {
+                errorLabel.setText("Server is down.");
+                errorLabel.setVisible(true);
+            }
+            
         });
 
-        // auto login
-        // Add button functionality
-        // autoLogin.setOnAction(e -> {
-        // if(autoLogin.isSelected()){
-
-        // }
-        // });
     }
 
     public boolean autoLoginIsChecked() {
@@ -198,9 +175,9 @@ public class CreateAccount extends BorderPane {
     }
 
     public String getAutoCheckStr() {
-            return autoCheckStr;
+        return autoCheckStr;
     }
-    
+
     class Header3 extends HBox {
         private Text titleText;
 
