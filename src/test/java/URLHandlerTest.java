@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+// Source: ChatGPT 3.5 December 3 2023 11:00 PM. Asked how to debug my code and organize it correctly
 public class URLHandlerTest {
 
     
@@ -42,7 +43,7 @@ public class URLHandlerTest {
     @Mock
     private MongoCursor<Document> mockCursor;
 
-    @InjectMocks
+    @Mock
     private saveAccount saveAccount;
 
     @InjectMocks
@@ -54,45 +55,42 @@ public class URLHandlerTest {
 
         when(mockDatabase.getCollection(anyString())).thenReturn(mockCollection);
         when(mockCollection.find(any(Bson.class), ArgumentMatchers.<Class<Document>>any())).thenReturn(mockFindIterable);
-        saveAccount = new saveAccount(mockDatabase, mockCollection);
         urlHandler = new URLHandler(new HashMap<>(), saveAccount);
    }
 
+   @Test
+   void handleGet_ValidRequest_ReturnsExpectedResponse() throws IOException {
+       String username = "testUser";
+       String recipeTitle = "Recipe1";
 
+       when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
 
-//     @Test
-//     void handleGet_ValidRequest_ReturnsExpectedResponse() throws IOException {
-//         String username = "testUser";
-//         String recipeTitle = "Recipe1";
+       List<Document> mockRecipes = Arrays.asList(
+               new Document("Title", "Recipe1").append("Ingredients", "Ingredients1").append("Instructions", "Instructions1"),
+               new Document("Title", "Recipe2").append("Ingredients", "Ingredients2").append("Instructions", "Instructions2")
+       );
+       when(mockFindIterable.first()).thenReturn(new Document("_id", username).append("recipes", mockRecipes));
 
-//         List<Document> mockRecipes = Arrays.asList(
-//                  new Document("Title", "Recipe1").append("Ingredients", "Ingredients1").append("Instructions", "Instructions1"),
-//                  new Document("Title", "Recipe2").append("Ingredients", "Ingredients2").append("Instructions", "Instructions2")
-//         );
-//         when(mockCollection.find(any(Bson.class))).thenReturn(mockFindIterable);
+       URI uri = URI.create("/recipe?=" + username + "_" + recipeTitle);
+       HttpExchange httpExchange = mock(HttpExchange.class);
+       when(httpExchange.getRequestMethod()).thenReturn("GET");
+       when(httpExchange.getRequestURI()).thenReturn(uri);
 
-//         when(mockFindIterable.first()).thenReturn(new Document("_id", username).append("recipes", mockRecipes));
+       Recipe mockRecipe = new Recipe("Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1");
+       when(saveAccount.findRecipe(username, recipeTitle)).thenReturn(mockRecipe);
 
-//         URI uri = URI.create("/recipe?=testUser_Recipe1");
-//         HttpExchange httpExchange = mock(HttpExchange.class);
-//         when(httpExchange.getRequestMethod()).thenReturn("GET");
-//         when(httpExchange.getRequestURI()).thenReturn(uri);
-       
-//         Recipe mockRecipe = new Recipe("Recipe1", "Ingredients1", "Instructions1", "Image1", "Meal Type 1");
-//         when(saveAccount.findRecipe(username, recipeTitle)).thenReturn(mockRecipe);
-//         System.out.println("DEBUG: " + mockRecipe);
-//         ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream();
-//         when(httpExchange.getResponseBody()).thenReturn(responseOutputStream);
+       ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream();
+       when(httpExchange.getResponseBody()).thenReturn(responseOutputStream);
 
-//         urlHandler.handle(httpExchange);
+       urlHandler.handle(httpExchange);
 
-//         // Assert
-//         String expectedResponse = "<html><body><h1>Recipe1</h1><img src=\"Image1\"> <br>" +
-//                 "<p>Inputted Ingredients: Ingredients1</p> <br>" +
-//                 "<p>Instructions1</p></body></html>";
+       String expectedResponse = "<html><body><h1>Recipe1</h1><img src=\"Image1\"> <br>" +
+               "<p>Inputted Ingredients: Ingredients1</p> <br>" +
+               "<p>Instructions1</p></body></html>";
 
-//         assertEquals(expectedResponse, responseOutputStream.toString());
-//   }
+       assertEquals(expectedResponse, responseOutputStream.toString());
+   }
+
 
     @Test
     void handleGet_NoRecipeFound_ReturnsNotFoundResponse() throws IOException {

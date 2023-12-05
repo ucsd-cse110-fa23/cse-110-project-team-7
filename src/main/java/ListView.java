@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.text.*;
+
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 
@@ -269,6 +271,13 @@ public class ListView extends BorderPane {
         });
         logOutButton.setOnAction(e->{
             try{
+                
+                FileWriter writeLoginInfo = new FileWriter("loginInfo.txt", false);
+                writeLoginInfo.write("AutoLogin: False \n" +
+                                "" + "\n" +
+                                "");
+                writeLoginInfo.close();
+
                 CreateAccount createAccount = new CreateAccount(primaryStage, currApp);
                 Scene accountScene = new Scene(createAccount, 500,600);
                 primaryStage.setScene(accountScene);

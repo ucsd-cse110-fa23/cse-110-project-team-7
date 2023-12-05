@@ -48,6 +48,7 @@ public class URLHandler implements HttpHandler {
             if(title.contains("%20")){
                 title = title.replaceAll("%20", " ");
             }
+            
 
             recipe = accountManager.findRecipe(username, title);
             
