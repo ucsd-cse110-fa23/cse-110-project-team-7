@@ -4,9 +4,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.ArgumentCaptor;
-import static com.mongodb.client.model.Updates.*;
-import static com.mongodb.client.model.Updates.pull;
 import com.sun.net.httpserver.HttpExchange;
 
 import org.mockito.ArgumentMatchers;
@@ -18,7 +15,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.result.UpdateResult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,7 +26,6 @@ import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.IOException;
 import java.util.*;
 
 public class IntegrationTest {
